@@ -1,2 +1,0 @@
-# vca
-VCA App Project
