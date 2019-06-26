@@ -5,11 +5,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.WindowManager;
 import android.widget.MediaController;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 public class videoPlayerActivity extends AppCompatActivity {
 
-    VideoView videoView;
+    CustomVideoView cVideoView;
     int position = -1;
     private int stopPosition;
 
@@ -18,7 +19,19 @@ public class videoPlayerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_player);
 
-        videoView = (VideoView)findViewById(R.id.myPlayer);
+        cVideoView = (CustomVideoView)findViewById(R.id.my_player);
+        cVideoView.setPlayPauseListener(new CustomVideoView.PlayPauseListener() {
+            @Override
+            public void onPlay() {
+                Toast.makeText(videoPlayerActivity.this, "Playing!", Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onPause() {
+                Toast.makeText(videoPlayerActivity.this, "Paused!", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -32,43 +45,38 @@ public class videoPlayerActivity extends AppCompatActivity {
     private void playVideo() {
 
         MediaController mediaController = new MediaController(this);
-        mediaController.setAnchorView(videoView);
+        mediaController.setAnchorView(cVideoView);
 
-        videoView.setMediaController(mediaController);
-        videoView.setVideoPath(String.valueOf(MainActivity.fileArrayList.get(position)));
-        videoView.requestFocus();
+        cVideoView.setMediaController(mediaController);
+        cVideoView.setVideoPath(String.valueOf(MainActivity.fileArrayList.get(position)));
+        cVideoView.requestFocus();
 
         //start
-        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        cVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
 
-                videoView.start();
+                cVideoView.start();
 
             }
         });
 
-        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+        cVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                videoView.setVideoPath(String.valueOf(MainActivity.fileArrayList.get(position = position+1)));
-                videoView.start();
+                videoPlayerActivity.super.onBackPressed();
+                cVideoView.stopPlayback();
             }
-        });
 
+        });
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        videoView.stopPlayback();
+        cVideoView.stopPlayback();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        stopPosition = videoView.getCurrentPosition(); //stopPosition is an int
-        videoView.pause();
-    }
+
 
 }

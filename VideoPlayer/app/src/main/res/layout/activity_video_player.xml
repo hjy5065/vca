@@ -9,11 +9,24 @@
     tools:context=".videoPlayerActivity">
 
     <VideoView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/myPlayer"
-        android:keepScreenOn="true"
-        android:gravity="center"
+        android:id="@+id/videoView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:focusable="false"
+        android:focusableInTouchMode="false" ></VideoView>
+        <com.example.videoplayer.CustomVideoView
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:id="@+id/my_player" />
 
-        />
+
+
 </RelativeLayout>
