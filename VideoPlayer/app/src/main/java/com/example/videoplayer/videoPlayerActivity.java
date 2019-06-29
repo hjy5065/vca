@@ -9,7 +9,6 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.Toast;
-import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
 
 public class videoPlayerActivity extends AppCompatActivity {
 
