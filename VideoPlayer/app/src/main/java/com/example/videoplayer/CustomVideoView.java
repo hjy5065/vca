@@ -7,8 +7,7 @@ import android.widget.VideoView;
 public class CustomVideoView extends VideoView {
 
     private PlayPauseListener mListener;
-    private int mVideoWidth;
-    private int mVideoHeight;
+
 
     public CustomVideoView(Context context) {
         super(context);
@@ -46,4 +45,5 @@ public class CustomVideoView extends VideoView {
         void onPlay();
         void onPause();
     }
+
 }
