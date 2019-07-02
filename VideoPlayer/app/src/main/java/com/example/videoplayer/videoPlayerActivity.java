@@ -15,6 +15,7 @@ public class videoPlayerActivity extends AppCompatActivity {
     CustomVideoView cVideoView;
     int position = -1;
     ImageView img;
+    int microseconds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,12 +89,14 @@ public class videoPlayerActivity extends AppCompatActivity {
         img.setScaleType(ImageView.ScaleType.FIT_XY);
         img.bringToFront();
 
+        int currentPosition = cVideoView.getCurrentPosition();
+
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 
         try {
             retriever.setDataSource(String.valueOf(MainActivity.fileArrayList.get(position)));
 
-            img.setImageBitmap(retriever.getFrameAtTime(2000000, MediaMetadataRetriever.OPTION_CLOSEST));
+            img.setImageBitmap(retriever.getFrameAtTime(currentPosition*1000, MediaMetadataRetriever.OPTION_CLOSEST));
 
 
         } catch (IllegalArgumentException ex) {
