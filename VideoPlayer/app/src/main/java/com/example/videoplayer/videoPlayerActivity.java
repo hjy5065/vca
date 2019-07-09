@@ -6,16 +6,29 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.Toast;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 public class videoPlayerActivity extends AppCompatActivity {
 
     CustomVideoView cVideoView;
     int position = -1;
     ImageView img;
-    int microseconds;
+    private ArrayList<EditText> productNameArrayList = null;
+    private ArrayList<EditText> eCommerceInfoArrayList = null;
+    private ArrayList<EditText> appearanceTimeArrayList = null;
+    private ArrayList<EditText> quadrantNumberArrayList = null;
+
+    String productName;
+    String eCommerceInfo;
+    String appearanceTime;
+    String quadrantNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,17 +36,20 @@ public class videoPlayerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_video_player);
 
         cVideoView = (CustomVideoView) findViewById(R.id.my_player);
+
+        setStrings();
+
         cVideoView.setPlayPauseListener(new CustomVideoView.PlayPauseListener() {
             @Override
             public void onPlay() {
-                Toast.makeText(videoPlayerActivity.this, "Playing!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(videoPlayerActivity.this, productName, Toast.LENGTH_SHORT).show();
                 cVideoView.bringToFront();
 
             }
 
             @Override
             public void onPause() {
-                Toast.makeText(videoPlayerActivity.this, "Paused!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(videoPlayerActivity.this, quadrantNumber, Toast.LENGTH_SHORT).show();
                 execMetaDataRetriever();
             }
         });
@@ -113,5 +129,17 @@ public class videoPlayerActivity extends AppCompatActivity {
 
     }
 
+    public void setStrings(){
+        productNameArrayList = MainActivity.getProductNameArray();
+        productName = productNameArrayList.get(0).getText().toString();
 
+        quadrantNumberArrayList = MainActivity.getQuadrantNumberArray();
+        quadrantNumber = quadrantNumberArrayList.get(2).getText().toString();
+    }
+
+    /*
+    private void editImage(){
+
+    }
+    */
 }

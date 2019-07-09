@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">Video Player</string>
+
+    <string name="app_name">VCA</string>
+    <string name="product_name">Product Name</string>
+    <string name="time_of_appearance">Time of Appearance</string>
+    <string name="ecommerce">E-commerce Information</string>
+    <string name="quadrant_number">Quadrant Number</string>
+    <string name="upload_video">Upload Video</string>
+
 </resources>

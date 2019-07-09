@@ -13,6 +13,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.io.File;
@@ -28,10 +34,75 @@ public class MainActivity extends AppCompatActivity {
     File directory;
     boolean boolean_permission;
     public static ArrayList<File> fileArrayList = new ArrayList<>();
+    private static ArrayList<EditText> productNameArray = new ArrayList<EditText>();
+    private static ArrayList<EditText> eCommerceInfoArray = new ArrayList<EditText>();
+    private static ArrayList<EditText> appearanceTimeArray = new ArrayList<EditText>();
+    private static ArrayList<EditText> quadrantNumberArray = new ArrayList<EditText>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.product_log);
+
+        final LinearLayout linearLayoutInfo = findViewById(R.id.linearLayoutInfo);
+
+        final EditText productName = findViewById(R.id.productName);
+        productNameArray.add(productName);
+        final EditText eCommerceInfo = findViewById(R.id.eCommerceInfo);
+        eCommerceInfoArray.add(eCommerceInfo);
+        final EditText appearanceTime1 = findViewById(R.id.appearanceTime);
+        appearanceTimeArray.add(appearanceTime1);
+        final EditText quadrantNumber1 = findViewById(R.id.quadrantNumber);
+        quadrantNumberArray.add(quadrantNumber1);
+
+
+        final Button addButton = findViewById(R.id.add_button);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //Create EditText for appearance time
+                final EditText appearanceTime = new EditText(MainActivity.this);
+                appearanceTime.setInputType(InputType.TYPE_CLASS_DATETIME |InputType.TYPE_DATETIME_VARIATION_TIME);
+                //appearanceTime.setHint(R.string.time_of_appearance);
+                appearanceTime.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                appearanceTime.setPadding(20, 20, 20, 20);
+                appearanceTimeArray.add(appearanceTime);
+
+
+                //Create EditText for quadrant number
+                final EditText quadrantNumber = new EditText(MainActivity.this);
+                quadrantNumber.setInputType(InputType.TYPE_CLASS_NUMBER);
+                quadrantNumber.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                quadrantNumber.setPadding(20, 20, 20, 20);
+                quadrantNumberArray.add(quadrantNumber);
+
+                //Add EditText to LinearLayout
+                linearLayoutInfo.addView(appearanceTime);
+                linearLayoutInfo.addView(quadrantNumber);
+            }
+
+        });
+
+        final Button uploadVideoButton = findViewById(R.id.uploadVideoButton);
+        uploadVideoButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                setContentView(R.layout.activity_main);
+
+                myRecyclerView = (RecyclerView)findViewById(R.id.listVideoRecyler);
+
+                //Phone memory and SD card
+                directory = new File("/mnt/");
+
+                //directory = new File("/storage/");
+
+                GridLayoutManager manager = new GridLayoutManager(MainActivity.this, 2);
+                myRecyclerView.setLayoutManager(manager);
+
+                permissionForVideo();
+            }
+
+        });
+
+        /* Process when selecting video
         setContentView(R.layout.activity_main);
 
         myRecyclerView = (RecyclerView)findViewById(R.id.listVideoRecyler);
@@ -45,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         myRecyclerView.setLayoutManager(manager);
 
         permissionForVideo();
-
+        */
     }
 
     private void permissionForVideo() {
@@ -164,5 +235,18 @@ public class MainActivity extends AppCompatActivity {
 
         return fileArrayList;
 
+    }
+
+    public static ArrayList<EditText> getProductNameArray(){
+        return productNameArray;
+    }
+    public static ArrayList<EditText> geteCommerceInfoArray() {
+        return eCommerceInfoArray;
+    }
+    public static ArrayList<EditText> getAppearanceTimeArray() {
+        return appearanceTimeArray;
+    }
+    public static ArrayList<EditText> getQuadrantNumberArray() {
+        return quadrantNumberArray;
     }
 }
