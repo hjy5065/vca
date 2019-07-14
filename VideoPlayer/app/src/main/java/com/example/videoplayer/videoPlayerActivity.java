@@ -1,5 +1,14 @@
 package com.example.videoplayer;
 
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BlurMaskFilter;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -13,7 +22,12 @@ import android.widget.MediaController;
 import android.widget.Toast;
 
 import java.lang.reflect.Array;
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class videoPlayerActivity extends AppCompatActivity {
 
@@ -27,8 +41,13 @@ public class videoPlayerActivity extends AppCompatActivity {
 
     String productName;
     String eCommerceInfo;
-    String appearanceTime;
-    String quadrantNumber;
+    String appearanceTimeString;
+    String quadrantNumberString;
+    int appearanceTime;
+    int quadrantNumber;
+
+    Bitmap screenshot;
+    Bitmap[] screenshotQuadrants;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,19 +56,19 @@ public class videoPlayerActivity extends AppCompatActivity {
 
         cVideoView = (CustomVideoView) findViewById(R.id.my_player);
 
-        setStrings();
+        setValues();
 
         cVideoView.setPlayPauseListener(new CustomVideoView.PlayPauseListener() {
             @Override
             public void onPlay() {
-                Toast.makeText(videoPlayerActivity.this, productName, Toast.LENGTH_SHORT).show();
+                Toast.makeText(videoPlayerActivity.this, String.valueOf(appearanceTime), Toast.LENGTH_SHORT).show();
                 cVideoView.bringToFront();
 
             }
 
             @Override
             public void onPause() {
-                Toast.makeText(videoPlayerActivity.this, quadrantNumber, Toast.LENGTH_SHORT).show();
+                Toast.makeText(videoPlayerActivity.this, String.valueOf(quadrantNumber), Toast.LENGTH_SHORT).show();
                 execMetaDataRetriever();
             }
         });
@@ -112,7 +131,10 @@ public class videoPlayerActivity extends AppCompatActivity {
         try {
             retriever.setDataSource(String.valueOf(MainActivity.fileArrayList.get(position)));
 
-            img.setImageBitmap(retriever.getFrameAtTime(currentPosition*1000, MediaMetadataRetriever.OPTION_CLOSEST));
+            screenshot = retriever.getFrameAtTime(currentPosition*1000, MediaMetadataRetriever.OPTION_CLOSEST);
+            screenshotQuadrants = splitBitmap(screenshot);
+            screenshotQuadrants[0] = highlightImage(screenshotQuadrants[0]);
+            img.setImageBitmap(screenshotQuadrants[0]);
 
 
         } catch (IllegalArgumentException ex) {
@@ -129,17 +151,63 @@ public class videoPlayerActivity extends AppCompatActivity {
 
     }
 
-    public void setStrings(){
+    public void setValues(){
         productNameArrayList = MainActivity.getProductNameArray();
         productName = productNameArrayList.get(0).getText().toString();
 
+        eCommerceInfoArrayList = MainActivity.geteCommerceInfoArray();
+        eCommerceInfo = eCommerceInfoArrayList.get(0).getText().toString();
+
+
+        appearanceTimeArrayList = MainActivity.getAppearanceTimeArray();
+        appearanceTimeString = appearanceTimeArrayList.get(0).getText().toString();
+        String[] units = appearanceTimeString.split(":");
+        int minutes = Integer.parseInt(units[0]); //first element
+        int seconds = Integer.parseInt(units[1]); //second element
+        appearanceTime = 60 * minutes + seconds; //add up values
+
         quadrantNumberArrayList = MainActivity.getQuadrantNumberArray();
-        quadrantNumber = quadrantNumberArrayList.get(2).getText().toString();
+        quadrantNumberString = quadrantNumberArrayList.get(0).getText().toString();
+        quadrantNumber = Integer.parseInt(quadrantNumberString);
     }
 
-    /*
-    private void editImage(){
+    public Bitmap[] splitBitmap(Bitmap picture)
+    {
 
+        Bitmap[] imgs = new Bitmap[4];
+        imgs[0] = Bitmap.createBitmap(picture, 0, 0, picture.getWidth()/2 , picture.getHeight()/2);
+        imgs[1] = Bitmap.createBitmap(picture, picture.getWidth()/2, 0, picture.getWidth()/2, picture.getHeight()/2);
+        imgs[2] = Bitmap.createBitmap(picture,0, picture.getHeight()/2, picture.getWidth()/2,picture.getHeight()/2);
+        imgs[3] = Bitmap.createBitmap(picture, picture.getWidth()/2, picture.getHeight()/2, picture.getWidth()/2, picture.getHeight()/2);
+
+        return imgs;
     }
-    */
+
+    public Bitmap highlightImage(Bitmap src) {
+        // create new bitmap, which will be painted and becomes result image
+        Bitmap bmOut = Bitmap.createBitmap(src.getWidth() + 96, src.getHeight() + 96, Bitmap.Config.ARGB_8888);
+        // setup canvas for painting
+        Canvas canvas = new Canvas(bmOut);
+        // setup default color
+        canvas.drawColor(0, PorterDuff.Mode.CLEAR);
+        // create a blur paint for capturing alpha
+        Paint ptBlur = new Paint();
+        ptBlur.setMaskFilter(new BlurMaskFilter(15, BlurMaskFilter.Blur.NORMAL));
+        int[] offsetXY = new int[2];
+        // capture alpha into a bitmap
+        Bitmap bmAlpha = src.extractAlpha(ptBlur, offsetXY);
+        // create a color paint
+        Paint ptAlphaColor = new Paint();
+        ptAlphaColor.setColor(0xFFFFFFFF);
+        // paint color for captured alpha region (bitmap)
+        canvas.drawBitmap(bmAlpha, offsetXY[0], offsetXY[1], ptAlphaColor);
+        // free memory
+        bmAlpha.recycle();
+
+        // paint the image source
+        canvas.drawBitmap(src, 0, 0, null);
+
+        // return out final image
+        return bmOut;
+    }
 }
