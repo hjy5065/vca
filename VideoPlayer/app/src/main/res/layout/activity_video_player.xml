@@ -1,42 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000"
-    android:gravity="center"
     tools:context=".videoPlayerActivity">
 
     <ImageView
         android:id="@+id/img"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"
         android:focusable="false"
         android:focusableInTouchMode="false"
         app:srcCompat="@color/cardview_dark_background" />
 
     <VideoView
         android:id="@+id/videoView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_centerInParent="true"
+        android:layout_gravity="center"
         android:focusable="false"
-        android:focusableInTouchMode="false" ></VideoView>
+        android:focusableInTouchMode="false"></VideoView>
         <com.example.videoplayer.CustomVideoView
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_centerInParent="true"
+            android:layout_gravity="center"
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:id="@+id/my_player" />
 
 
-</RelativeLayout>
+</FrameLayout>

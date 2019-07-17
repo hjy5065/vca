@@ -14,11 +14,14 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.lang.reflect.Array;
@@ -48,13 +51,46 @@ public class videoPlayerActivity extends AppCompatActivity {
 
     Bitmap screenshot;
     Bitmap[] screenshotQuadrants;
+    Bitmap finalScreenshot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_player);
-
         cVideoView = (CustomVideoView) findViewById(R.id.my_player);
+
+        /*
+        cVideoView.post(new Runnable() {
+            @Override
+            public void run() {
+                // do resizing here
+                // AR = aspect ratio
+
+                float videoARWidth = 16.f;
+                float videoARHeight = 9.f;
+
+                // Phone screen aspect ratio height
+                float screenARHeight = 9.f;
+
+                // scale to screen AR height
+                float videoScale = screenARHeight / videoARHeight;
+
+                float videoARRatio = videoARWidth / videoARHeight;
+
+                // scale the ratio to screen
+                float videoScaledARRatio = videoARRatio * videoScale;
+
+                ViewGroup.LayoutParams layoutParams = cVideoView.getLayoutParams();
+
+                // make sure the VideoView matches the screen height
+                layoutParams.width = (int)(cVideoView.getHeight() * videoScaledARRatio);
+                cVideoView.setLayoutParams(layoutParams);
+            }
+        });
+
+        */
+
+
 
         setValues();
 
@@ -121,7 +157,7 @@ public class videoPlayerActivity extends AppCompatActivity {
 
     private void execMetaDataRetriever() {
         img = (ImageView) findViewById(R.id.img);
-        img.setScaleType(ImageView.ScaleType.FIT_XY);
+        img.setScaleType(ImageView.ScaleType.FIT_END);
         img.bringToFront();
 
         int currentPosition = cVideoView.getCurrentPosition();
@@ -133,8 +169,17 @@ public class videoPlayerActivity extends AppCompatActivity {
 
             screenshot = retriever.getFrameAtTime(currentPosition*1000, MediaMetadataRetriever.OPTION_CLOSEST);
             screenshotQuadrants = splitBitmap(screenshot);
-            screenshotQuadrants[0] = highlightImage(screenshotQuadrants[0]);
-            img.setImageBitmap(screenshotQuadrants[0]);
+            finalScreenshot = highlightImage(screenshotQuadrants[0]);
+
+
+            /*
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)img.getLayoutParams();
+            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+            img.setLayoutParams(params);
+            */
+
+            img.setImageBitmap(finalScreenshot);
 
 
         } catch (IllegalArgumentException ex) {
@@ -185,7 +230,7 @@ public class videoPlayerActivity extends AppCompatActivity {
 
     public Bitmap highlightImage(Bitmap src) {
         // create new bitmap, which will be painted and becomes result image
-        Bitmap bmOut = Bitmap.createBitmap(src.getWidth() + 96, src.getHeight() + 96, Bitmap.Config.ARGB_8888);
+        Bitmap bmOut = Bitmap.createBitmap(src.getWidth()+96, src.getHeight()+96, Bitmap.Config.ARGB_8888);
         // setup canvas for painting
         Canvas canvas = new Canvas(bmOut);
         // setup default color
@@ -210,4 +255,25 @@ public class videoPlayerActivity extends AppCompatActivity {
         // return out final image
         return bmOut;
     }
+
+    /**
+     * reduces the size of the image
+     * @param image
+     * @return
+
+    public Bitmap getResizedBitmap(Bitmap image) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        float bitmapRatio = (float)width / (float) height;
+        if (bitmapRatio > 1) {
+            width = screenshot.getWidth()/2;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = screenshot.getHeight()/2;
+            width = (int) (height * bitmapRatio);
+        }
+        return Bitmap.createScaledBitmap(image, width, height, true);
+    }
+    */
 }
