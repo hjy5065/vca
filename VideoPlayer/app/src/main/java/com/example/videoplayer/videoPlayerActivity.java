@@ -32,6 +32,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import wseemann.media.FFmpegMediaMetadataRetriever;
+
 public class videoPlayerActivity extends AppCompatActivity {
 
     CustomVideoView cVideoView;
@@ -162,14 +164,14 @@ public class videoPlayerActivity extends AppCompatActivity {
 
         int currentPosition = cVideoView.getCurrentPosition();
 
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        FFmpegMediaMetadataRetriever retriever = new FFmpegMediaMetadataRetriever();
 
         try {
             retriever.setDataSource(String.valueOf(MainActivity.fileArrayList.get(position)));
 
-            screenshot = retriever.getFrameAtTime(currentPosition*1000, MediaMetadataRetriever.OPTION_CLOSEST);
-            screenshotQuadrants = splitBitmap(screenshot);
-            finalScreenshot = highlightImage(screenshotQuadrants[0]);
+            screenshot = retriever.getFrameAtTime(currentPosition*1000, FFmpegMediaMetadataRetriever.OPTION_CLOSEST);
+            //screenshotQuadrants = splitBitmap(screenshot);
+            //finalScreenshot = highlightImage(screenshotQuadrants[0]);
 
 
             /*
@@ -179,7 +181,7 @@ public class videoPlayerActivity extends AppCompatActivity {
             img.setLayoutParams(params);
             */
 
-            img.setImageBitmap(finalScreenshot);
+            img.setImageBitmap(screenshot);
 
 
         } catch (IllegalArgumentException ex) {
