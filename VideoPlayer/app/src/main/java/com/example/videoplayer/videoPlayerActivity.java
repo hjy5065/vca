@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -14,6 +15,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -168,10 +170,27 @@ public class videoPlayerActivity extends AppCompatActivity {
 
         try {
             retriever.setDataSource(String.valueOf(MainActivity.fileArrayList.get(position)));
-
             screenshot = retriever.getFrameAtTime(currentPosition*1000, FFmpegMediaMetadataRetriever.OPTION_CLOSEST);
-            //screenshotQuadrants = splitBitmap(screenshot);
-            //finalScreenshot = highlightImage(screenshotQuadrants[0]);
+
+
+            String rotation = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);
+            retriever.release();
+
+            if (rotation.equals("90")){
+                Matrix matrix = new Matrix();
+                matrix.postRotate(90);
+                screenshot = Bitmap.createBitmap(screenshot, 0, 0, screenshot.getWidth(), screenshot.getHeight(), matrix, true);
+            }
+
+
+            Log.i("Screenshot width", String.valueOf(screenshot.getWidth()));
+
+
+            screenshotQuadrants = splitBitmap(screenshot);
+            finalScreenshot = highlightImage(screenshotQuadrants[0]);
+
+            Log.i("finalScreenshot width", String.valueOf(finalScreenshot.getWidth()));
+
 
 
             /*
@@ -181,7 +200,7 @@ public class videoPlayerActivity extends AppCompatActivity {
             img.setLayoutParams(params);
             */
 
-            img.setImageBitmap(screenshot);
+            img.setImageBitmap(finalScreenshot);
 
 
         } catch (IllegalArgumentException ex) {
@@ -232,7 +251,7 @@ public class videoPlayerActivity extends AppCompatActivity {
 
     public Bitmap highlightImage(Bitmap src) {
         // create new bitmap, which will be painted and becomes result image
-        Bitmap bmOut = Bitmap.createBitmap(src.getWidth()+96, src.getHeight()+96, Bitmap.Config.ARGB_8888);
+        Bitmap bmOut = Bitmap.createBitmap(src.getWidth(), src.getHeight(), Bitmap.Config.ARGB_8888);
         // setup canvas for painting
         Canvas canvas = new Canvas(bmOut);
         // setup default color
