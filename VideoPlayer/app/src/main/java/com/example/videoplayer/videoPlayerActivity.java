@@ -1,15 +1,19 @@
 package com.example.videoplayer;
 
+import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.media.Image;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -17,6 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -41,6 +46,7 @@ public class videoPlayerActivity extends AppCompatActivity {
     CustomVideoView cVideoView;
     int position = -1;
     ImageView img;
+
     private ArrayList<EditText> productNameArrayList = null;
     private ArrayList<EditText> eCommerceInfoArrayList = null;
     private ArrayList<EditText> appearanceTimeArrayList = null;
@@ -56,6 +62,12 @@ public class videoPlayerActivity extends AppCompatActivity {
     Bitmap screenshot;
     Bitmap[] screenshotQuadrants;
     Bitmap finalScreenshot;
+
+    FFmpegMediaMetadataRetriever retriever;
+    String rotation;
+
+    private Rect mSelection;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,7 +144,16 @@ public class videoPlayerActivity extends AppCompatActivity {
         cVideoView.setVideoPath(String.valueOf(MainActivity.fileArrayList.get(position)));
         cVideoView.requestFocus();
 
-        //start
+        retriever = new FFmpegMediaMetadataRetriever();
+        retriever.setDataSource(String.valueOf(MainActivity.fileArrayList.get(position)));
+        rotation = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);
+
+        if (rotation.equals("90")){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+
+
+            //start
         cVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
@@ -160,21 +181,12 @@ public class videoPlayerActivity extends AppCompatActivity {
 
 
     private void execMetaDataRetriever() {
-        img = (ImageView) findViewById(R.id.img);
-        img.setScaleType(ImageView.ScaleType.FIT_END);
-        img.bringToFront();
-
         int currentPosition = cVideoView.getCurrentPosition();
 
-        FFmpegMediaMetadataRetriever retriever = new FFmpegMediaMetadataRetriever();
-
         try {
-            retriever.setDataSource(String.valueOf(MainActivity.fileArrayList.get(position)));
             screenshot = retriever.getFrameAtTime(currentPosition*1000, FFmpegMediaMetadataRetriever.OPTION_CLOSEST);
-
-
-            String rotation = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);
             retriever.release();
+
 
             if (rotation.equals("90")){
                 Matrix matrix = new Matrix();
@@ -183,14 +195,8 @@ public class videoPlayerActivity extends AppCompatActivity {
             }
 
 
-            Log.i("Screenshot width", String.valueOf(screenshot.getWidth()));
-
-
-            screenshotQuadrants = splitBitmap(screenshot);
-            finalScreenshot = highlightImage(screenshotQuadrants[0]);
-
-            Log.i("finalScreenshot width", String.valueOf(finalScreenshot.getWidth()));
-
+            //screenshotQuadrants = splitBitmap(screenshot);
+            //finalScreenshot = highlightImage(screenshotQuadrants[0]);
 
 
             /*
@@ -200,7 +206,22 @@ public class videoPlayerActivity extends AppCompatActivity {
             img.setLayoutParams(params);
             */
 
-            img.setImageBitmap(finalScreenshot);
+
+            img = (ImageView) findViewById(R.id.img);
+            img.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            img.bringToFront();
+            img.setImageBitmap(screenshot);
+
+            ImageView quadrant1 = findViewById(R.id.quadrant1);
+            quadrant1.getLayoutParams().width = img.getWidth()/2;
+            quadrant1.getLayoutParams().height = img.getHeight()/2;
+            quadrant1.requestLayout();
+
+            quadrant1.setColorFilter(0x808fd2ea);
+            quadrant1.bringToFront();
+
+
+
 
 
         } catch (IllegalArgumentException ex) {
@@ -248,7 +269,7 @@ public class videoPlayerActivity extends AppCompatActivity {
 
         return imgs;
     }
-
+/*
     public Bitmap highlightImage(Bitmap src) {
         // create new bitmap, which will be painted and becomes result image
         Bitmap bmOut = Bitmap.createBitmap(src.getWidth(), src.getHeight(), Bitmap.Config.ARGB_8888);
@@ -277,7 +298,6 @@ public class videoPlayerActivity extends AppCompatActivity {
         return bmOut;
     }
 
-    /**
      * reduces the size of the image
      * @param image
      * @return
@@ -297,4 +317,5 @@ public class videoPlayerActivity extends AppCompatActivity {
         return Bitmap.createScaledBitmap(image, width, height, true);
     }
     */
+
 }
