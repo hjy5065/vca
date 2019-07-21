@@ -20,6 +20,7 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
@@ -68,6 +69,13 @@ public class videoPlayerActivity extends AppCompatActivity {
 
     private Rect mSelection;
 
+    ImageView quadrant1;
+    ImageView quadrant2;
+    ImageView quadrant3;
+    ImageView quadrant4;
+
+    boolean isPlaying = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,15 +121,19 @@ public class videoPlayerActivity extends AppCompatActivity {
         cVideoView.setPlayPauseListener(new CustomVideoView.PlayPauseListener() {
             @Override
             public void onPlay() {
-                Toast.makeText(videoPlayerActivity.this, String.valueOf(appearanceTime), Toast.LENGTH_SHORT).show();
                 cVideoView.bringToFront();
-
+                if (cVideoView.getCurrentPosition() <= (appearanceTime+1)*1000 && cVideoView.getCurrentPosition() >= appearanceTime*1000){
+                    hideQuadrants();
+                }
+                isPlaying = true;
             }
 
             @Override
             public void onPause() {
-                Toast.makeText(videoPlayerActivity.this, String.valueOf(quadrantNumber), Toast.LENGTH_SHORT).show();
-                execMetaDataRetriever();
+                if (cVideoView.getCurrentPosition() <= (appearanceTime+1)*1000 && cVideoView.getCurrentPosition() >= appearanceTime*1000){
+                    execMetaDataRetriever();
+                }
+                isPlaying = false;
             }
         });
 
@@ -212,15 +224,7 @@ public class videoPlayerActivity extends AppCompatActivity {
             img.bringToFront();
             img.setImageBitmap(screenshot);
 
-            ImageView quadrant1 = findViewById(R.id.quadrant1);
-            quadrant1.getLayoutParams().width = img.getWidth()/2;
-            quadrant1.getLayoutParams().height = img.getHeight()/2;
-            quadrant1.requestLayout();
-
-            quadrant1.setColorFilter(0x808fd2ea);
-            quadrant1.bringToFront();
-
-
+            setQuadrants();
 
 
 
@@ -245,7 +249,6 @@ public class videoPlayerActivity extends AppCompatActivity {
         eCommerceInfoArrayList = MainActivity.geteCommerceInfoArray();
         eCommerceInfo = eCommerceInfoArrayList.get(0).getText().toString();
 
-
         appearanceTimeArrayList = MainActivity.getAppearanceTimeArray();
         appearanceTimeString = appearanceTimeArrayList.get(0).getText().toString();
         String[] units = appearanceTimeString.split(":");
@@ -256,6 +259,64 @@ public class videoPlayerActivity extends AppCompatActivity {
         quadrantNumberArrayList = MainActivity.getQuadrantNumberArray();
         quadrantNumberString = quadrantNumberArrayList.get(0).getText().toString();
         quadrantNumber = Integer.parseInt(quadrantNumberString);
+    }
+
+    public void setQuadrants(){
+        if (quadrantNumber == 1){
+            quadrant1 = findViewById(R.id.quadrant1);
+            quadrant1.setBackgroundResource(R.drawable.highlight);
+            quadrant1.getLayoutParams().width = img.getWidth()/2;
+            quadrant1.getLayoutParams().height = img.getHeight()/2;
+            quadrant1.requestLayout();
+            quadrant1.setColorFilter(0x808fd2ea);
+            quadrant1.bringToFront();
+            quadrant1.setVisibility(View.VISIBLE);
+        }
+        else if (quadrantNumber == 2){
+            quadrant2 = findViewById(R.id.quadrant2);
+            quadrant2.setBackgroundResource(R.drawable.highlight);
+            quadrant2.getLayoutParams().width = img.getWidth()/2;
+            quadrant2.getLayoutParams().height = img.getHeight()/2;
+            quadrant2.requestLayout();
+            quadrant2.setColorFilter(0x808fd2ea);
+            quadrant2.bringToFront();
+            quadrant2.setVisibility(View.VISIBLE);
+        }
+        else if (quadrantNumber == 3){
+            quadrant3 = findViewById(R.id.quadrant3);
+            quadrant3.setBackgroundResource(R.drawable.highlight);
+            quadrant3.getLayoutParams().width = img.getWidth()/2;
+            quadrant3.getLayoutParams().height = img.getHeight()/2;
+            quadrant3.requestLayout();
+            quadrant3.setColorFilter(0x808fd2ea);
+            quadrant3.bringToFront();
+            quadrant3.setVisibility(View.VISIBLE);
+        }
+        else{
+            quadrant4 = findViewById(R.id.quadrant4);
+            quadrant4.setBackgroundResource(R.drawable.highlight);
+            quadrant4.getLayoutParams().width = img.getWidth()/2;
+            quadrant4.getLayoutParams().height = img.getHeight()/2;
+            quadrant4.requestLayout();
+            quadrant4.setColorFilter(0x808fd2ea);
+            quadrant4.bringToFront();
+            quadrant4.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void hideQuadrants(){
+        if (quadrantNumber == 1){
+            quadrant1.setImageResource(0);
+        }
+        else if (quadrantNumber == 2){
+            quadrant2.setImageResource(0);
+        }
+        else if (quadrantNumber == 3){
+            quadrant3.setImageResource(0);
+        }
+        else{
+            quadrant4.setImageResource(0);
+        }
     }
 
     public Bitmap[] splitBitmap(Bitmap picture)
