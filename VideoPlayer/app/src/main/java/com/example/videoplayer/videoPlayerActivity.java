@@ -74,58 +74,29 @@ public class videoPlayerActivity extends AppCompatActivity {
     ImageView quadrant3;
     ImageView quadrant4;
 
-    boolean isPlaying = true;
+    boolean executed = false;
 
+    private MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_player);
+
         cVideoView = (CustomVideoView) findViewById(R.id.my_player);
 
-        /*
-        cVideoView.post(new Runnable() {
-            @Override
-            public void run() {
-                // do resizing here
-                // AR = aspect ratio
-
-                float videoARWidth = 16.f;
-                float videoARHeight = 9.f;
-
-                // Phone screen aspect ratio height
-                float screenARHeight = 9.f;
-
-                // scale to screen AR height
-                float videoScale = screenARHeight / videoARHeight;
-
-                float videoARRatio = videoARWidth / videoARHeight;
-
-                // scale the ratio to screen
-                float videoScaledARRatio = videoARRatio * videoScale;
-
-                ViewGroup.LayoutParams layoutParams = cVideoView.getLayoutParams();
-
-                // make sure the VideoView matches the screen height
-                layoutParams.width = (int)(cVideoView.getHeight() * videoScaledARRatio);
-                cVideoView.setLayoutParams(layoutParams);
-            }
-        });
-
-        */
-
-
-
         setValues();
+
 
         cVideoView.setPlayPauseListener(new CustomVideoView.PlayPauseListener() {
             @Override
             public void onPlay() {
                 cVideoView.bringToFront();
-                if (cVideoView.getCurrentPosition() <= (appearanceTime+1)*1000 && cVideoView.getCurrentPosition() >= appearanceTime*1000){
+                if(executed){
                     hideQuadrants();
+                    executed = false;
                 }
-                isPlaying = true;
+
             }
 
             @Override
@@ -133,7 +104,11 @@ public class videoPlayerActivity extends AppCompatActivity {
                 if (cVideoView.getCurrentPosition() <= (appearanceTime+1)*1000 && cVideoView.getCurrentPosition() >= appearanceTime*1000){
                     execMetaDataRetriever();
                 }
-                isPlaying = false;
+            }
+
+            @Override
+            public void onResume() {
+
             }
         });
 
@@ -207,16 +182,9 @@ public class videoPlayerActivity extends AppCompatActivity {
             }
 
 
-            //screenshotQuadrants = splitBitmap(screenshot);
-            //finalScreenshot = highlightImage(screenshotQuadrants[0]);
+            screenshotQuadrants = splitBitmap(screenshot);
+            //screenshotQuadrants[2] = highlightImage(screenshotQuadrants[2]);
 
-
-            /*
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)img.getLayoutParams();
-            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-            params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-            img.setLayoutParams(params);
-            */
 
 
             img = (ImageView) findViewById(R.id.img);
@@ -224,8 +192,10 @@ public class videoPlayerActivity extends AppCompatActivity {
             img.bringToFront();
             img.setImageBitmap(screenshot);
 
+
             setQuadrants();
 
+            executed = true;
 
 
         } catch (IllegalArgumentException ex) {
@@ -262,60 +232,57 @@ public class videoPlayerActivity extends AppCompatActivity {
     }
 
     public void setQuadrants(){
+
         if (quadrantNumber == 1){
             quadrant1 = findViewById(R.id.quadrant1);
-            quadrant1.setBackgroundResource(R.drawable.highlight);
+            quadrant1.setImageBitmap(screenshotQuadrants[0]);
             quadrant1.getLayoutParams().width = img.getWidth()/2;
             quadrant1.getLayoutParams().height = img.getHeight()/2;
             quadrant1.requestLayout();
             quadrant1.setColorFilter(0x808fd2ea);
             quadrant1.bringToFront();
-            quadrant1.setVisibility(View.VISIBLE);
         }
         else if (quadrantNumber == 2){
             quadrant2 = findViewById(R.id.quadrant2);
-            quadrant2.setBackgroundResource(R.drawable.highlight);
+            quadrant2.setImageBitmap(screenshotQuadrants[1]);
             quadrant2.getLayoutParams().width = img.getWidth()/2;
             quadrant2.getLayoutParams().height = img.getHeight()/2;
             quadrant2.requestLayout();
             quadrant2.setColorFilter(0x808fd2ea);
             quadrant2.bringToFront();
-            quadrant2.setVisibility(View.VISIBLE);
         }
         else if (quadrantNumber == 3){
             quadrant3 = findViewById(R.id.quadrant3);
-            quadrant3.setBackgroundResource(R.drawable.highlight);
-            quadrant3.getLayoutParams().width = img.getWidth()/2;
-            quadrant3.getLayoutParams().height = img.getHeight()/2;
+            quadrant3.setImageBitmap(screenshotQuadrants[2]);
+            quadrant3.getLayoutParams().width = (img.getWidth()/2);
+            quadrant3.getLayoutParams().height = (img.getHeight()/2);
             quadrant3.requestLayout();
             quadrant3.setColorFilter(0x808fd2ea);
             quadrant3.bringToFront();
-            quadrant3.setVisibility(View.VISIBLE);
         }
         else{
             quadrant4 = findViewById(R.id.quadrant4);
-            quadrant4.setBackgroundResource(R.drawable.highlight);
+            quadrant4.setImageBitmap(screenshotQuadrants[3]);
             quadrant4.getLayoutParams().width = img.getWidth()/2;
             quadrant4.getLayoutParams().height = img.getHeight()/2;
             quadrant4.requestLayout();
             quadrant4.setColorFilter(0x808fd2ea);
             quadrant4.bringToFront();
-            quadrant4.setVisibility(View.VISIBLE);
         }
     }
 
     public void hideQuadrants(){
         if (quadrantNumber == 1){
-            quadrant1.setImageResource(0);
+            quadrant1.setColorFilter(null);
         }
         else if (quadrantNumber == 2){
-            quadrant2.setImageResource(0);
+            quadrant2.setColorFilter(null);
         }
         else if (quadrantNumber == 3){
-            quadrant3.setImageResource(0);
+            quadrant3.setColorFilter(null);
         }
         else{
-            quadrant4.setImageResource(0);
+            quadrant4.setColorFilter(null);
         }
     }
 
@@ -330,17 +297,20 @@ public class videoPlayerActivity extends AppCompatActivity {
 
         return imgs;
     }
-/*
+
+    /*
+
     public Bitmap highlightImage(Bitmap src) {
+        Log.e("Highlight","Done");
         // create new bitmap, which will be painted and becomes result image
-        Bitmap bmOut = Bitmap.createBitmap(src.getWidth(), src.getHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap bmOut = Bitmap.createBitmap(src.getWidth()+7, src.getHeight()+7, Bitmap.Config.ARGB_8888);
         // setup canvas for painting
         Canvas canvas = new Canvas(bmOut);
         // setup default color
         canvas.drawColor(0, PorterDuff.Mode.CLEAR);
         // create a blur paint for capturing alpha
         Paint ptBlur = new Paint();
-        ptBlur.setMaskFilter(new BlurMaskFilter(15, BlurMaskFilter.Blur.NORMAL));
+        ptBlur.setMaskFilter(new BlurMaskFilter(14, BlurMaskFilter.Blur.NORMAL));
         int[] offsetXY = new int[2];
         // capture alpha into a bitmap
         Bitmap bmAlpha = src.extractAlpha(ptBlur, offsetXY);
@@ -359,10 +329,7 @@ public class videoPlayerActivity extends AppCompatActivity {
         return bmOut;
     }
 
-     * reduces the size of the image
-     * @param image
-     * @return
-
+    /*
     public Bitmap getResizedBitmap(Bitmap image) {
         int width = image.getWidth();
         int height = image.getHeight();

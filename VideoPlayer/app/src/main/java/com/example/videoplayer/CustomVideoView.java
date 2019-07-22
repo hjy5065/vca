@@ -41,9 +41,18 @@ public class CustomVideoView extends VideoView {
         }
     }
 
+    @Override
+    public void resume() {
+        super.start();
+        if (mListener != null) {
+            mListener.onResume();
+        }
+    }
+
     public static interface PlayPauseListener {
         void onPlay();
         void onPause();
+        void onResume();
     }
 
 }

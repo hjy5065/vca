@@ -14,6 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/img"
         android:layout_alignRight="@id/img"
+        android:scaleType="fitStart"
         app:srcCompat="@drawable/highlight" />
 
     <ImageView
@@ -22,6 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/img"
         android:layout_alignLeft="@id/img"
+        android:scaleType="fitEnd"
         app:srcCompat="@drawable/highlight" />
 
     <ImageView
@@ -30,6 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/img"
         android:layout_alignRight="@id/img"
+        android:scaleType="fitStart"
         app:srcCompat="@drawable/highlight" />
 
     <ImageView
@@ -38,6 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/img"
         android:layout_alignLeft="@id/img"
+        android:scaleType="fitEnd"
         app:srcCompat="@drawable/highlight" />
 
     <ImageView
