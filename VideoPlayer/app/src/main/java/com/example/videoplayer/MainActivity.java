@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -36,37 +38,70 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<File> fileArrayList = new ArrayList<>();
     private static ArrayList<EditText> productNameArray = new ArrayList<EditText>();
     private static ArrayList<EditText> eCommerceInfoArray = new ArrayList<EditText>();
-    private static ArrayList<EditText> appearanceTimeArray = new ArrayList<EditText>();
+    private static ArrayList<EditText> appearanceTimeStartArray = new ArrayList<EditText>();
+    private static ArrayList<EditText> appearanceTimeEndArray = new ArrayList<EditText>();
     private static ArrayList<EditText> quadrantNumberArray = new ArrayList<EditText>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.product_log);
+        setContentView(R.layout.product_log2);
 
-        final LinearLayout linearLayoutInfo = findViewById(R.id.linearLayoutInfo);
+        final ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
 
-        final EditText productName = findViewById(R.id.productName);
+
+        final EditText productName = findViewById(R.id.editText_name);
         productNameArray.add(productName);
-        final EditText eCommerceInfo = findViewById(R.id.eCommerceInfo);
+        final EditText eCommerceInfo = findViewById(R.id.editText_link);
         eCommerceInfoArray.add(eCommerceInfo);
-        final EditText appearanceTime1 = findViewById(R.id.appearanceTime);
-        appearanceTimeArray.add(appearanceTime1);
-        final EditText quadrantNumber1 = findViewById(R.id.quadrantNumber);
+        final EditText appearanceTimeStart1 = findViewById(R.id.editText_time_start);
+        appearanceTimeStartArray.add(appearanceTimeStart1);
+        final EditText appearanceTimeEnd1 = findViewById(R.id.editText_time_end);
+        appearanceTimeEndArray.add(appearanceTimeEnd1);
+        final EditText quadrantNumber1 = findViewById(R.id.editText_location);
         quadrantNumberArray.add(quadrantNumber1);
 
 
-        final Button addButton = findViewById(R.id.add_button);
+        final Button addButton = findViewById(R.id.button_add_times);
+
         addButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                
                 //Create EditText for appearance time
-                final EditText appearanceTime = new EditText(MainActivity.this);
+                final EditText appearanceTimeStart = new EditText(MainActivity.this);
+                appearanceTimeStart.setInputType(InputType.TYPE_CLASS_DATETIME |InputType.TYPE_DATETIME_VARIATION_TIME);
+                appearanceTimeStart.setHint(R.string.time_hint_start);
+                appearanceTimeStart.setId(appearanceTimeStart.generateViewId());
+
+
+                final EditText appearanceTimeEnd = new EditText(MainActivity.this);
+                appearanceTimeEnd.setInputType(InputType.TYPE_CLASS_DATETIME |InputType.TYPE_DATETIME_VARIATION_TIME);
+                appearanceTimeEnd.setHint(R.string.time_hint_end);
+                appearanceTimeEnd.setId(appearanceTimeEnd.generateViewId());
+
+
+                constraintLayout.addView(appearanceTimeStart, 0);
+                constraintLayout.addView(appearanceTimeEnd, 0);
+
+
+                ConstraintSet set = new ConstraintSet();
+                set.clone(constraintLayout);
+
+
+                set.connect(appearanceTimeStart.getId(), ConstraintSet.TOP, R.id.editText_time_start, ConstraintSet.BOTTOM, 16);
+                set.connect(appearanceTimeEnd.getId(), ConstraintSet.TOP, R.id.editText_time_end, ConstraintSet.BOTTOM, 16);
+                set.connect(appearanceTimeEnd.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 16);
+                set.connect(appearanceTimeStart.getId(), ConstraintSet.END, appearanceTimeEnd.getId(), ConstraintSet.START, 8);
+
+
+                set.applyTo(constraintLayout);
+
+                /*
                 appearanceTime.setInputType(InputType.TYPE_CLASS_DATETIME |InputType.TYPE_DATETIME_VARIATION_TIME);
                 //appearanceTime.setHint(R.string.time_of_appearance);
-                appearanceTime.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                appearanceTime.setLayoutParams(new ConstraintLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT));
                 appearanceTime.setPadding(20, 20, 20, 20);
                 appearanceTimeArray.add(appearanceTime);
-
 
                 //Create EditText for quadrant number
                 final EditText quadrantNumber = new EditText(MainActivity.this);
@@ -78,11 +113,15 @@ public class MainActivity extends AppCompatActivity {
                 //Add EditText to LinearLayout
                 linearLayoutInfo.addView(appearanceTime);
                 linearLayoutInfo.addView(quadrantNumber);
+
+                */
+
             }
 
         });
 
-        final Button uploadVideoButton = findViewById(R.id.uploadVideoButton);
+        //Originally uploadvideobutton, so soon to replace R.id.button_confirm to button_upload
+        final Button uploadVideoButton = findViewById(R.id.button_confirm);
         uploadVideoButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 setContentView(R.layout.activity_main);
@@ -101,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
+
 
         /* Process when selecting video
         setContentView(R.layout.activity_main);
@@ -243,10 +283,10 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<EditText> geteCommerceInfoArray() {
         return eCommerceInfoArray;
     }
-    public static ArrayList<EditText> getAppearanceTimeArray() {
-        return appearanceTimeArray;
-    }
+    public static ArrayList<EditText> getAppearanceTimeStartArray() { return appearanceTimeStartArray; }
+    public static ArrayList<EditText> getAppearanceTimeEndArray() {return appearanceTimeEndArray;}
     public static ArrayList<EditText> getQuadrantNumberArray() {
         return quadrantNumberArray;
     }
+
 }

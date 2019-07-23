@@ -50,14 +50,16 @@ public class videoPlayerActivity extends AppCompatActivity {
 
     private ArrayList<EditText> productNameArrayList = null;
     private ArrayList<EditText> eCommerceInfoArrayList = null;
-    private ArrayList<EditText> appearanceTimeArrayList = null;
+    private ArrayList<EditText> appearanceTimeStartArrayList = null;
+    private ArrayList<EditText> appearanceTimeEndArrayList = null;
     private ArrayList<EditText> quadrantNumberArrayList = null;
 
     String productName;
     String eCommerceInfo;
     String appearanceTimeString;
     String quadrantNumberString;
-    int appearanceTime;
+    int appearanceTimeStart;
+    int appearanceTimeEnd;
     int quadrantNumber;
 
     Bitmap screenshot;
@@ -101,7 +103,7 @@ public class videoPlayerActivity extends AppCompatActivity {
 
             @Override
             public void onPause() {
-                if (cVideoView.getCurrentPosition() <= (appearanceTime+1)*1000 && cVideoView.getCurrentPosition() >= appearanceTime*1000){
+                if (cVideoView.getCurrentPosition() <= (appearanceTimeStart+1)*1000 && cVideoView.getCurrentPosition() >= appearanceTimeStart*1000){
                     execMetaDataRetriever();
                 }
             }
@@ -219,12 +221,12 @@ public class videoPlayerActivity extends AppCompatActivity {
         eCommerceInfoArrayList = MainActivity.geteCommerceInfoArray();
         eCommerceInfo = eCommerceInfoArrayList.get(0).getText().toString();
 
-        appearanceTimeArrayList = MainActivity.getAppearanceTimeArray();
-        appearanceTimeString = appearanceTimeArrayList.get(0).getText().toString();
+        appearanceTimeStartArrayList = MainActivity.getAppearanceTimeStartArray();
+        appearanceTimeString = appearanceTimeStartArrayList.get(0).getText().toString();
         String[] units = appearanceTimeString.split(":");
         int minutes = Integer.parseInt(units[0]); //first element
         int seconds = Integer.parseInt(units[1]); //second element
-        appearanceTime = 60 * minutes + seconds; //add up values
+        appearanceTimeStart = 60 * minutes + seconds; //add up values
 
         quadrantNumberArrayList = MainActivity.getQuadrantNumberArray();
         quadrantNumberString = quadrantNumberArrayList.get(0).getText().toString();
