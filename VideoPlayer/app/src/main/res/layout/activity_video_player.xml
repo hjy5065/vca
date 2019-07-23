@@ -1,11 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000"
+    android:id="@+id/relativeLayout"
     tools:context=".videoPlayerActivity">
+
+    <ImageView
+        android:id="@+id/quadrant4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/img"
+        android:layout_alignRight="@id/img"
+        android:scaleType="fitStart"
+        app:srcCompat="@drawable/highlight" />
+
+    <ImageView
+        android:id="@+id/quadrant3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/img"
+        android:layout_alignLeft="@id/img"
+        android:scaleType="fitEnd"
+        app:srcCompat="@drawable/highlight" />
+
+    <ImageView
+        android:id="@+id/quadrant2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/img"
+        android:layout_alignRight="@id/img"
+        android:scaleType="fitStart"
+        app:srcCompat="@drawable/highlight" />
+
+    <ImageView
+        android:id="@+id/quadrant1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/img"
+        android:layout_alignLeft="@id/img"
+        android:scaleType="fitEnd"
+        app:srcCompat="@drawable/highlight" />
 
     <ImageView
         android:id="@+id/img"
@@ -13,6 +50,8 @@
         android:layout_height="match_parent"
         android:focusable="false"
         android:focusableInTouchMode="false"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
         app:srcCompat="@color/cardview_dark_background" />
 
     <VideoView
@@ -33,4 +72,4 @@
             android:id="@+id/my_player" />
 
 
-</FrameLayout>
+</RelativeLayout>
