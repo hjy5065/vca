@@ -80,9 +80,6 @@ public class MainActivity extends AppCompatActivity {
                 linearLayout.addView(newRowView, timeRowIndex);
 
 
-
-
-
                 View view = linearLayout.getChildAt(timeRowIndex);
 
                 EditText appearanceTimeStart = (EditText) view.findViewById(R.id.editText_added_time_start);
