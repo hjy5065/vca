@@ -20,4 +20,8 @@
     <string name="button_add_message">Add Feature</string>
     <string name="button_confirm_message">Confirm</string>
 
+    <string name="button_remove_msg">Remove</string>
+    <string name="button_upload_msg">Upload</string>
+    <string name="button_back_msg">Back</string>
+
 </resources>
