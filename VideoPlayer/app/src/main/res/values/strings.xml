@@ -1,10 +1,23 @@
 <resources>
-
     <string name="app_name">VCA</string>
-    <string name="product_name">Product Name</string>
-    <string name="time_of_appearance">Time of Appearance</string>
-    <string name="ecommerce">E-commerce Information</string>
-    <string name="quadrant_number">Quadrant Number</string>
-    <string name="upload_video">Upload Video</string>
+
+    <string name="title_message">Feature Selection:</string>
+
+    <string name="name_message">Product Name</string>
+    <string name="name_hint">name</string>
+
+    <string name="link_message">Product Link</string>
+    <string name="link_hint">web link</string>
+
+    <string name="location_message">Screen Location</string>
+    <string name="location_hint">quadrant 1-4</string>
+
+    <string name="time_message">Time</string>
+    <string name="time_hint_start">start</string>
+    <string name="time_hint_end">end</string>
+
+    <string name="add_time_loc_message">Add Time + Location</string>
+    <string name="button_add_message">Add Feature</string>
+    <string name="button_confirm_message">Confirm</string>
 
 </resources>
