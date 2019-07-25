@@ -2,6 +2,7 @@ package com.example.videoplayer;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -16,11 +17,16 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -42,13 +48,12 @@ public class MainActivity extends AppCompatActivity {
     private static ArrayList<EditText> appearanceTimeEndArray = new ArrayList<EditText>();
     private static ArrayList<EditText> quadrantNumberArray = new ArrayList<EditText>();
 
+    static int timeRowIndex = 4;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.product_log2);
-
-        final ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
-
+        setContentView(R.layout.product_log);
 
         final EditText productName = findViewById(R.id.editText_name);
         productNameArray.add(productName);
@@ -61,69 +66,122 @@ public class MainActivity extends AppCompatActivity {
         final EditText quadrantNumber1 = findViewById(R.id.editText_location);
         quadrantNumberArray.add(quadrantNumber1);
 
-
         final Button addButton = findViewById(R.id.button_add_times);
 
         addButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                
-                //Create EditText for appearance time
+
+                final LinearLayout linearLayout = findViewById(R.id.linearLayoutInfo);
+                //getLayoutInflater().inflate(R.layout.add_time, linearLayout);
+                //nthChild++;
+
+                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View newRowView = inflater.inflate(R.layout.add_time, null);
+                linearLayout.addView(newRowView, timeRowIndex);
+
+
+
+
+
+                View view = linearLayout.getChildAt(timeRowIndex);
+
+                EditText appearanceTimeStart = (EditText) view.findViewById(R.id.editText_added_time_start);
+                appearanceTimeStartArray.add(appearanceTimeStart);
+
+                EditText appearanceTimeEnd = (EditText) view.findViewById(R.id.editText_added_time_end);
+                appearanceTimeEndArray.add(appearanceTimeEnd);
+
+                EditText quadrantNumber = (EditText) view.findViewById(R.id.editText_added_loc);
+                quadrantNumberArray.add(quadrantNumber);
+
+
+                timeRowIndex++;
+
+
+
+                /*
+
+                for (int i = 0; i < linearLayout.getChildCount(); i++) {
+                    View view = linearLayout.getChildAt(i);
+
+                    EditText start = (EditText) view
+                            .findViewById(R.id.editText_added_time_start);
+                    EditText end = (EditText) view
+                            .findViewById(R.id.editText_added_time_end);
+                    EditText loc = (EditText) view
+                            .findViewById(R.id.editText_added_loc);
+
+                    ed_item.getText().toString().trim();
+                    ed_value.getText().toString().trim();
+                    ed_value1.getText().toString().trim();
+                }
+
+                /*
+                final LinearLayout horizontal = new LinearLayout(MainActivity.this);
+                horizontal.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                horizontal.setOrientation(LinearLayout.HORIZONTAL);
+                horizontal.setGravity(Gravity.RIGHT);
+
                 final EditText appearanceTimeStart = new EditText(MainActivity.this);
                 appearanceTimeStart.setInputType(InputType.TYPE_CLASS_DATETIME |InputType.TYPE_DATETIME_VARIATION_TIME);
-                appearanceTimeStart.setHint(R.string.time_hint_start);
-                appearanceTimeStart.setId(appearanceTimeStart.generateViewId());
-
+                appearanceTimeStart.setHint("start");
+                ViewGroup.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                ((LinearLayout.LayoutParams) params).setMarginEnd(50);
+                appearanceTimeStart.setLayoutParams(params);
+                appearanceTimeStartArray.add(appearanceTimeStart);
 
                 final EditText appearanceTimeEnd = new EditText(MainActivity.this);
                 appearanceTimeEnd.setInputType(InputType.TYPE_CLASS_DATETIME |InputType.TYPE_DATETIME_VARIATION_TIME);
-                appearanceTimeEnd.setHint(R.string.time_hint_end);
-                appearanceTimeEnd.setId(appearanceTimeEnd.generateViewId());
+                appearanceTimeEnd.setHint("end");
+                appearanceTimeEnd.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                appearanceTimeEndArray.add(appearanceTimeEnd);
 
-
-                constraintLayout.addView(appearanceTimeStart, 0);
-                constraintLayout.addView(appearanceTimeEnd, 0);
-
-
-                ConstraintSet set = new ConstraintSet();
-                set.clone(constraintLayout);
-
-
-                set.connect(appearanceTimeStart.getId(), ConstraintSet.TOP, R.id.editText_time_start, ConstraintSet.BOTTOM, 16);
-                set.connect(appearanceTimeEnd.getId(), ConstraintSet.TOP, R.id.editText_time_end, ConstraintSet.BOTTOM, 16);
-                set.connect(appearanceTimeEnd.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 16);
-                set.connect(appearanceTimeStart.getId(), ConstraintSet.END, appearanceTimeEnd.getId(), ConstraintSet.START, 8);
-
-
-                set.applyTo(constraintLayout);
 
                 /*
-                appearanceTime.setInputType(InputType.TYPE_CLASS_DATETIME |InputType.TYPE_DATETIME_VARIATION_TIME);
-                //appearanceTime.setHint(R.string.time_of_appearance);
-                appearanceTime.setLayoutParams(new ConstraintLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT));
-                appearanceTime.setPadding(20, 20, 20, 20);
-                appearanceTimeArray.add(appearanceTime);
-
-                //Create EditText for quadrant number
                 final EditText quadrantNumber = new EditText(MainActivity.this);
                 quadrantNumber.setInputType(InputType.TYPE_CLASS_NUMBER);
                 quadrantNumber.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 quadrantNumber.setPadding(20, 20, 20, 20);
                 quadrantNumberArray.add(quadrantNumber);
 
-                //Add EditText to LinearLayout
-                linearLayoutInfo.addView(appearanceTime);
-                linearLayoutInfo.addView(quadrantNumber);
 
+                //Add EditText to LinearLayout
+                horizontal.addView(appearanceTimeStart);
+                horizontal.addView(appearanceTimeEnd);
+                //linearLayout.addView(quadrantNumber);
+                linearLayout.addView(horizontal);
                 */
+
 
             }
 
         });
 
+
         //Originally uploadvideobutton, so soon to replace R.id.button_confirm to button_upload
         final Button uploadVideoButton = findViewById(R.id.button_confirm);
         uploadVideoButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+
+                /*
+
+                final LinearLayout linearLayout = findViewById(R.id.linearLayoutInfo);
+                int childcount = linearLayout.getChildCount();
+                for (int i=4; i < childcount; i++){
+                    View view = linearLayout.getChildAt(i);
+                    EditText appearanceTimeStart = (EditText) view.findViewById(R.id.editText_added_time_start);
+                    appearanceTimeStartArray.add(appearanceTimeStart);
+
+                    EditText appearanceTimeEnd = (EditText) view.findViewById(R.id.editText_added_time_end);
+                    appearanceTimeEndArray.add(appearanceTimeEnd);
+
+                    EditText quadrantNumber = (EditText) view.findViewById(R.id.editText_added_loc);
+                    quadrantNumberArray.add(quadrantNumber);
+
+                    // do whatever you would want to do with this View
+                }
+                */
+
                 setContentView(R.layout.activity_main);
 
                 myRecyclerView = (RecyclerView)findViewById(R.id.listVideoRecyler);
@@ -158,6 +216,7 @@ public class MainActivity extends AppCompatActivity {
         permissionForVideo();
         */
     }
+
 
     private void permissionForVideo() {
         //if not granted

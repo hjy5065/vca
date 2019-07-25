@@ -50,14 +50,14 @@ public class videoPlayerActivity extends AppCompatActivity {
 
     private ArrayList<EditText> productNameArrayList = null;
     private ArrayList<EditText> eCommerceInfoArrayList = null;
-    private ArrayList<EditText> appearanceTimeStartArrayList = null;
-    private ArrayList<EditText> appearanceTimeEndArrayList = null;
-    private ArrayList<EditText> quadrantNumberArrayList = null;
+    private ArrayList<Integer> appearanceTimeStartArrayList = new ArrayList<Integer>();
+    private ArrayList<Integer> appearanceTimeEndArrayList = new ArrayList<Integer>();
+    private ArrayList<Integer> quadrantNumberArrayList = new ArrayList<Integer>();
+
+    private ArrayList<Integer> timeStart = null;
 
     String productName;
     String eCommerceInfo;
-    String appearanceTimeString;
-    String quadrantNumberString;
     int appearanceTimeStart;
     int appearanceTimeEnd;
     int quadrantNumber;
@@ -87,7 +87,31 @@ public class videoPlayerActivity extends AppCompatActivity {
 
         cVideoView = (CustomVideoView) findViewById(R.id.my_player);
 
-        setValues();
+        //SET VALUES
+        productNameArrayList = MainActivity.getProductNameArray();
+        //productName = productNameArrayList.get(0).getText().toString();
+
+        eCommerceInfoArrayList = MainActivity.geteCommerceInfoArray();
+        //eCommerceInfo = eCommerceInfoArrayList.get(0).getText().toString();
+
+
+        for (int i = 0; i < MainActivity.getQuadrantNumberArray().size(); i++){
+            quadrantNumberArrayList.add(Integer.parseInt(MainActivity.getQuadrantNumberArray().get(i).getText().toString()));
+            //quadrantNumberArrayList = MainActivity.getQuadrantNumberArray();
+            //quadrantNumber = Integer.parseInt(quadrantNumberArrayList.get(2).getText().toString());
+        }
+
+        for (int i = 0; i < MainActivity.getAppearanceTimeStartArray().size(); i++){
+            appearanceTimeStartArrayList.add((convertTime(MainActivity.getAppearanceTimeStartArray().get(i).getText().toString()))*1000);
+            //appearanceTimeStartArrayList = MainActivity.getAppearanceTimeStartArray();
+            //appearanceTimeStart = convertTime(appearanceTimeStartArrayList.get(2).getText().toString());
+        }
+
+        for (int i = 0; i < MainActivity.getAppearanceTimeEndArray().size(); i++){
+            appearanceTimeEndArrayList.add((convertTime(MainActivity.getAppearanceTimeEndArray().get(i).getText().toString()))*1000);
+            //appearanceTimeEndArrayList = MainActivity.getAppearanceTimeEndArray();
+            //appearanceTimeEnd = convertTime(appearanceTimeEndArrayList.get(2).getText().toString());
+        }
 
 
         cVideoView.setPlayPauseListener(new CustomVideoView.PlayPauseListener() {
@@ -95,7 +119,7 @@ public class videoPlayerActivity extends AppCompatActivity {
             public void onPlay() {
                 cVideoView.bringToFront();
                 if(executed){
-                    hideQuadrants();
+                    //hideQuadrants();
                     executed = false;
                 }
 
@@ -103,9 +127,22 @@ public class videoPlayerActivity extends AppCompatActivity {
 
             @Override
             public void onPause() {
-                if (cVideoView.getCurrentPosition() <= (appearanceTimeStart+1)*1000 && cVideoView.getCurrentPosition() >= appearanceTimeStart*1000){
-                    execMetaDataRetriever();
+                int closest = appearanceTimeStartArrayList.get(0);
+                int distance = Math.abs(closest - cVideoView.getCurrentPosition());
+                for(int i: appearanceTimeStartArrayList){
+                    int distanceI = Math.abs(i - cVideoView.getCurrentPosition());
+                    if(distance > distanceI) {
+                        closest = i;
+                        distance = distanceI;
+                    }
                 }
+
+
+
+                if (cVideoView.getCurrentPosition() <= closest+1000 && cVideoView.getCurrentPosition() >= closest){
+                    execMetaDataRetriever(appearanceTimeStartArrayList.indexOf(closest));
+                }
+
             }
 
             @Override
@@ -169,12 +206,14 @@ public class videoPlayerActivity extends AppCompatActivity {
     }
 
 
-    private void execMetaDataRetriever() {
+    private void execMetaDataRetriever(int quadrantIndex) {
+        Log.e("MetaDataRetriever", "Working");
         int currentPosition = cVideoView.getCurrentPosition();
 
         try {
             screenshot = retriever.getFrameAtTime(currentPosition*1000, FFmpegMediaMetadataRetriever.OPTION_CLOSEST);
             retriever.release();
+            Log.e("Took a screenshot", "Yes");
 
 
             if (rotation.equals("90")){
@@ -195,47 +234,43 @@ public class videoPlayerActivity extends AppCompatActivity {
             img.setImageBitmap(screenshot);
 
 
+            quadrantNumber = quadrantNumberArrayList.get(quadrantIndex);
             setQuadrants();
 
             executed = true;
 
 
         } catch (IllegalArgumentException ex) {
+            Log.e("Catch", "Illegal argument exception");
             ex.printStackTrace();
         } catch (RuntimeException ex) {
+            Log.e("Catch", "RuntimeException");
             ex.printStackTrace();
         } finally {
+            Log.e("Finally","retriever.release");
             try {
                 retriever.release();
             } catch (RuntimeException ex) {
+                Log.e("Catch inside finally", "Runtime Exception");
             }
         }
 
 
     }
 
-    public void setValues(){
-        productNameArrayList = MainActivity.getProductNameArray();
-        productName = productNameArrayList.get(0).getText().toString();
 
-        eCommerceInfoArrayList = MainActivity.geteCommerceInfoArray();
-        eCommerceInfo = eCommerceInfoArrayList.get(0).getText().toString();
-
-        appearanceTimeStartArrayList = MainActivity.getAppearanceTimeStartArray();
-        appearanceTimeString = appearanceTimeStartArrayList.get(0).getText().toString();
-        String[] units = appearanceTimeString.split(":");
+    public int convertTime(String time){
+        String[] units = time.split(":");
         int minutes = Integer.parseInt(units[0]); //first element
         int seconds = Integer.parseInt(units[1]); //second element
-        appearanceTimeStart = 60 * minutes + seconds; //add up values
+        return 60 * minutes + seconds; //add up values
 
-        quadrantNumberArrayList = MainActivity.getQuadrantNumberArray();
-        quadrantNumberString = quadrantNumberArrayList.get(0).getText().toString();
-        quadrantNumber = Integer.parseInt(quadrantNumberString);
     }
 
     public void setQuadrants(){
 
         if (quadrantNumber == 1){
+            Log.e("Quadrant 1", "Highlighted");
             quadrant1 = findViewById(R.id.quadrant1);
             quadrant1.setImageBitmap(screenshotQuadrants[0]);
             quadrant1.getLayoutParams().width = img.getWidth()/2;
@@ -245,6 +280,7 @@ public class videoPlayerActivity extends AppCompatActivity {
             quadrant1.bringToFront();
         }
         else if (quadrantNumber == 2){
+            Log.e("Quadrant 2", "Highlighted");
             quadrant2 = findViewById(R.id.quadrant2);
             quadrant2.setImageBitmap(screenshotQuadrants[1]);
             quadrant2.getLayoutParams().width = img.getWidth()/2;
@@ -254,6 +290,7 @@ public class videoPlayerActivity extends AppCompatActivity {
             quadrant2.bringToFront();
         }
         else if (quadrantNumber == 3){
+            Log.e("Quadrant 3", "Highlighted");
             quadrant3 = findViewById(R.id.quadrant3);
             quadrant3.setImageBitmap(screenshotQuadrants[2]);
             quadrant3.getLayoutParams().width = (img.getWidth()/2);
@@ -263,6 +300,7 @@ public class videoPlayerActivity extends AppCompatActivity {
             quadrant3.bringToFront();
         }
         else{
+            Log.e("Quadrant 4", "Highlighted");
             quadrant4 = findViewById(R.id.quadrant4);
             quadrant4.setImageBitmap(screenshotQuadrants[3]);
             quadrant4.getLayoutParams().width = img.getWidth()/2;
@@ -290,7 +328,7 @@ public class videoPlayerActivity extends AppCompatActivity {
 
     public Bitmap[] splitBitmap(Bitmap picture)
     {
-
+        Log.e("Split bitmap", "Yes");
         Bitmap[] imgs = new Bitmap[4];
         imgs[0] = Bitmap.createBitmap(picture, 0, 0, picture.getWidth()/2 , picture.getHeight()/2);
         imgs[1] = Bitmap.createBitmap(picture, picture.getWidth()/2, 0, picture.getWidth()/2, picture.getHeight()/2);
