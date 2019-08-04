@@ -1,5 +1,7 @@
 package com.example.videoplayer;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -17,6 +19,8 @@ import android.media.Image;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Environment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,12 +36,21 @@ import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
+import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
+import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
+import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
+import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
+
+import java.io.File;
+import java.io.FileFilter;
 import java.lang.reflect.Array;
 import java.sql.Time;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 import wseemann.media.FFmpegMediaMetadataRetriever;
@@ -80,10 +93,16 @@ public class videoPlayerActivity extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
 
+    private FFmpeg ffmpeg;
+    private String filePath;
+    private Bitmap bmp;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_player);
+        loadFFMpegBinary();
 
         cVideoView = (CustomVideoView) findViewById(R.id.my_player);
 
@@ -127,6 +146,8 @@ public class videoPlayerActivity extends AppCompatActivity {
 
             @Override
             public void onPause() {
+                execMetaDataRetriever(3);
+                /*
                 int closest = appearanceTimeStartArrayList.get(0);
                 int distance = Math.abs(closest - cVideoView.getCurrentPosition());
                 for(int i: appearanceTimeStartArrayList){
@@ -142,6 +163,7 @@ public class videoPlayerActivity extends AppCompatActivity {
                 if (cVideoView.getCurrentPosition() <= closest+1000 && cVideoView.getCurrentPosition() >= closest){
                     execMetaDataRetriever(appearanceTimeStartArrayList.indexOf(closest));
                 }
+                */
 
             }
 
@@ -207,9 +229,13 @@ public class videoPlayerActivity extends AppCompatActivity {
 
 
     private void execMetaDataRetriever(int quadrantIndex) {
-        Log.e("MetaDataRetriever", "Working");
         int currentPosition = cVideoView.getCurrentPosition();
+        double position = (double)currentPosition/(double)1000;
+        extractImagesVideo(position);
 
+
+
+        /*
         try {
             screenshot = retriever.getFrameAtTime(currentPosition*1000, FFmpegMediaMetadataRetriever.OPTION_CLOSEST);
             retriever.release();
@@ -254,6 +280,7 @@ public class videoPlayerActivity extends AppCompatActivity {
                 Log.e("Catch inside finally", "Runtime Exception");
             }
         }
+        */
 
 
     }
@@ -311,6 +338,7 @@ public class videoPlayerActivity extends AppCompatActivity {
         }
     }
 
+    /*
     public void hideQuadrants(){
         if (quadrantNumber == 1){
             quadrant1.setColorFilter(null);
@@ -325,6 +353,7 @@ public class videoPlayerActivity extends AppCompatActivity {
             quadrant4.setColorFilter(null);
         }
     }
+    */
 
     public Bitmap[] splitBitmap(Bitmap picture)
     {
@@ -386,4 +415,131 @@ public class videoPlayerActivity extends AppCompatActivity {
     }
     */
 
+    private void extractImagesVideo(double startTime) {
+        File moviesDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES
+        );
+
+        String filePrefix = "extract_picture";
+        String fileExtn = ".jpg";
+
+
+        File dir = new File(moviesDir, "VCA");
+        int fileNo = 0;
+
+        if (!dir.exists()){
+            dir.mkdir();
+            Log.e("Just made one", "VCA folder");
+        }
+
+        /*If VCA20 already exists, next folder will be VCA21.
+        while (dir.exists()) {
+            fileNo++;
+            dir = new File(moviesDir, "VCA" + fileNo);
+
+        }
+        */
+        dir.mkdir();
+        filePath = dir.getAbsolutePath();
+        File dest = new File(dir, filePrefix + "%03d" + fileExtn);
+        String[] complexCommand = {"-y", "-i", String.valueOf(MainActivity.fileArrayList.get(position)), "-preset", "ultrafast", "-vframes", "1", "-ss", "" + startTime, dest.getAbsolutePath()};
+        execFFmpegBinary(complexCommand);
+
+    }
+
+    /**
+     * Load FFmpeg binary
+     */
+    private void loadFFMpegBinary() {
+        try {
+            if (ffmpeg == null) {
+                Log.d("VCA", "ffmpeg : era nulo");
+                ffmpeg = FFmpeg.getInstance(this);
+            }
+            ffmpeg.loadBinary(new LoadBinaryResponseHandler() {
+                @Override
+                public void onFailure() {
+                    showUnsupportedExceptionDialog();
+                }
+
+                @Override
+                public void onSuccess() {
+                    Log.d("VCA", "ffmpeg : correct Loaded");
+                }
+            });
+        } catch (FFmpegNotSupportedException e) {
+            showUnsupportedExceptionDialog();
+        } catch (Exception e) {
+            Log.d("VCA", "EXception no controlada : " + e);
+        }
+    }
+
+    private void showUnsupportedExceptionDialog() {
+        new AlertDialog.Builder(videoPlayerActivity.this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("Not Supported")
+                .setMessage("Device Not Supported")
+                .setCancelable(false)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        videoPlayerActivity.this.finish();
+                    }
+                })
+                .create()
+                .show();
+
+    }
+
+    private void execFFmpegBinary(final String[] command) {
+        try {
+            ffmpeg.execute(command, new ExecuteBinaryResponseHandler() {
+                @Override
+                public void onFailure(String s) {
+                    Log.d("VCA", "FAILED with output : " + s);
+                }
+
+                @Override
+                public void onSuccess(String s) {
+                    Log.e("VCA", "SUCCESS" + s);
+
+                    File dir = new File(filePath);
+
+                    File[] listFile = dir.listFiles();
+
+
+                    bmp = BitmapFactory.decodeFile(String.valueOf(listFile[0]));
+                    img = findViewById(R.id.img);
+                    img.setImageBitmap(bmp);
+                    img.bringToFront();
+
+                    editImage(0);
+                }
+
+                @Override
+                public void onProgress(String s) {
+                    Log.d("VCA", "progress : " + s);
+                }
+
+                @Override
+                public void onStart() {
+                    Log.d("VCA", "Started command : ffmpeg " + command);
+                }
+
+                @Override
+                public void onFinish() {
+                    Log.d("VCA", "Finished command : ffmpeg " + command);
+                }
+            });
+        } catch (FFmpegCommandAlreadyRunningException e) {
+            // do nothing for now
+        }
+    }
+
+    private void editImage(int quadrantIndex){
+        screenshotQuadrants = splitBitmap(bmp);
+        quadrantNumber = quadrantNumberArrayList.get(quadrantIndex);
+        Log.e("Quadrant number", String.valueOf(quadrantNumber));
+        setQuadrants();
+    }
 }
