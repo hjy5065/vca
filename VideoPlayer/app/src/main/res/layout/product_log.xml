@@ -173,8 +173,9 @@ xmlns:android="http://schemas.android.com/apk/res/android"
                     android:id="@+id/button_confirm"
                     android:layout_width="109dp"
                     android:layout_height="59dp"
-                    android:text="@string/button_confirm_message"
-                    android:layout_alignParentEnd="true"/>
+                    android:layout_alignParentEnd="true"
+                    android:onClick="confirmFeatures"
+                    android:text="@string/button_confirm_message" />
 
             </RelativeLayout>
         </LinearLayout>

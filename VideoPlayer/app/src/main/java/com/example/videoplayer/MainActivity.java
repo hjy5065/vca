@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -27,6 +28,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -35,6 +37,7 @@ import java.util.ArrayList;
 import static android.os.Build.VERSION.SDK_INT;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String EXTRA_FEATUREARRAY = "com.example.videoplayer.FEATUREARRAY";
 
     RecyclerView myRecyclerView;
     MyAdapter obj_adapter;
@@ -43,10 +46,12 @@ public class MainActivity extends AppCompatActivity {
     boolean boolean_permission;
     public static ArrayList<File> fileArrayList = new ArrayList<>();
     private static ArrayList<EditText> productNameArray = new ArrayList<EditText>();
-    private static ArrayList<EditText> eCommerceInfoArray = new ArrayList<EditText>();
+    private static ArrayList<EditText> eCommerceInfoArray = new ArrayList<>();
     private static ArrayList<EditText> appearanceTimeStartArray = new ArrayList<EditText>();
     private static ArrayList<EditText> appearanceTimeEndArray = new ArrayList<EditText>();
     private static ArrayList<EditText> quadrantNumberArray = new ArrayList<EditText>();
+    static ArrayList<String> featureInfoArray = new ArrayList<String>();
+    private static int entryCount = 0;
 
     static int timeRowIndex = 4;
 
@@ -55,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.product_log);
 
+        /*
         final EditText productName = findViewById(R.id.editText_name);
         productNameArray.add(productName);
         final EditText eCommerceInfo = findViewById(R.id.editText_link);
@@ -65,11 +71,13 @@ public class MainActivity extends AppCompatActivity {
         appearanceTimeEndArray.add(appearanceTimeEnd1);
         final EditText quadrantNumber1 = findViewById(R.id.editText_location);
         quadrantNumberArray.add(quadrantNumber1);
+        */
 
-        final Button addButton = findViewById(R.id.button_add_times);
+        final Button addTimesButton = findViewById(R.id.button_add_times);
 
-        addButton.setOnClickListener(new View.OnClickListener() {
+        addTimesButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                entryCount++;
 
                 final LinearLayout linearLayout = findViewById(R.id.linearLayoutInfo);
                 //getLayoutInflater().inflate(R.layout.add_time, linearLayout);
@@ -81,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                 View view = linearLayout.getChildAt(timeRowIndex);
+
 
                 EditText appearanceTimeStart = (EditText) view.findViewById(R.id.editText_added_time_start);
                 appearanceTimeStartArray.add(appearanceTimeStart);
@@ -96,67 +105,42 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-                /*
-
-                for (int i = 0; i < linearLayout.getChildCount(); i++) {
-                    View view = linearLayout.getChildAt(i);
-
-                    EditText start = (EditText) view
-                            .findViewById(R.id.editText_added_time_start);
-                    EditText end = (EditText) view
-                            .findViewById(R.id.editText_added_time_end);
-                    EditText loc = (EditText) view
-                            .findViewById(R.id.editText_added_loc);
-
-                    ed_item.getText().toString().trim();
-                    ed_value.getText().toString().trim();
-                    ed_value1.getText().toString().trim();
-                }
-
-                /*
-                final LinearLayout horizontal = new LinearLayout(MainActivity.this);
-                horizontal.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                horizontal.setOrientation(LinearLayout.HORIZONTAL);
-                horizontal.setGravity(Gravity.RIGHT);
-
-                final EditText appearanceTimeStart = new EditText(MainActivity.this);
-                appearanceTimeStart.setInputType(InputType.TYPE_CLASS_DATETIME |InputType.TYPE_DATETIME_VARIATION_TIME);
-                appearanceTimeStart.setHint("start");
-                ViewGroup.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                ((LinearLayout.LayoutParams) params).setMarginEnd(50);
-                appearanceTimeStart.setLayoutParams(params);
-                appearanceTimeStartArray.add(appearanceTimeStart);
-
-                final EditText appearanceTimeEnd = new EditText(MainActivity.this);
-                appearanceTimeEnd.setInputType(InputType.TYPE_CLASS_DATETIME |InputType.TYPE_DATETIME_VARIATION_TIME);
-                appearanceTimeEnd.setHint("end");
-                appearanceTimeEnd.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                appearanceTimeEndArray.add(appearanceTimeEnd);
-
-
-                /*
-                final EditText quadrantNumber = new EditText(MainActivity.this);
-                quadrantNumber.setInputType(InputType.TYPE_CLASS_NUMBER);
-                quadrantNumber.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                quadrantNumber.setPadding(20, 20, 20, 20);
-                quadrantNumberArray.add(quadrantNumber);
-
-
-                //Add EditText to LinearLayout
-                horizontal.addView(appearanceTimeStart);
-                horizontal.addView(appearanceTimeEnd);
-                //linearLayout.addView(quadrantNumber);
-                linearLayout.addView(horizontal);
-                */
-
-
             }
 
         });
 
 
+        final Button addFeatureButton = findViewById(R.id.button_add);
+
+        /* Adds feature information to appropriate arrayLists and clears
+         * editText boxes on click. */
+        addFeatureButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                final EditText productName = findViewById(R.id.editText_name);
+                final EditText eCommerceInfo = findViewById(R.id.editText_link);
+                final EditText appearanceTimeStart = findViewById(R.id.editText_time_start);
+                final EditText appearanceTimeEnd = findViewById(R.id.editText_time_end);
+                final EditText quadrantNumber = findViewById(R.id.editText_location);
+                productNameArray.add(productName);
+                eCommerceInfoArray.add(eCommerceInfo);
+             //   for (int i = 0; i <= getAppearanceTimeStartArray().size(); i++) {
+             //       getAppearanceTimeStartArray().add(appearanceTimeStart1.get);
+             //   }
+                appearanceTimeStartArray.add(appearanceTimeStart);
+                appearanceTimeEndArray.add(appearanceTimeEnd);
+                quadrantNumberArray.add(quadrantNumber);
+
+                featureInfoArray = generateFtrDesc(featureInfoArray);
+                productName.setText(productName.getHint(), TextView.BufferType.EDITABLE);
+                eCommerceInfo.setText(eCommerceInfo.getHint(), TextView.BufferType.EDITABLE);
+                appearanceTimeStart.setText(appearanceTimeStart.getHint(), TextView.BufferType.EDITABLE);
+                appearanceTimeEnd.setText(appearanceTimeEnd.getHint(), TextView.BufferType.EDITABLE);
+                quadrantNumber.setText(quadrantNumber.getHint(), TextView.BufferType.EDITABLE);
+            }
+        });
+
         //Originally uploadvideobutton, so soon to replace R.id.button_confirm to button_upload
-        final Button uploadVideoButton = findViewById(R.id.button_confirm);
+        final Button uploadVideoButton = findViewById(R.id.button_add);
         uploadVideoButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
@@ -196,23 +180,47 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-
-        /* Process when selecting video
-        setContentView(R.layout.activity_main);
-
-        myRecyclerView = (RecyclerView)findViewById(R.id.listVideoRecyler);
-
-        //Phone memory and SD card
-        directory = new File("/mnt/");
-
-        //directory = new File("/storage/");
-
-        GridLayoutManager manager = new GridLayoutManager(MainActivity.this, 2);
-        myRecyclerView.setLayoutManager(manager);
-
-        permissionForVideo();
-        */
+        final Button confirmButton = findViewById(R.id.button_confirm);
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, confirmationPageActivity.class);
+                intent.putExtra(EXTRA_FEATUREARRAY, featureInfoArray);
+                startActivity(intent);
+            }
+        });
     }
+
+    /** constructs an array of strings(feature descriptions) which will be passed to confirmation page */
+    private ArrayList<String> generateFtrDesc(ArrayList<String> featureInfoArray) {
+        String feature = makeFtrText(productNameArray, eCommerceInfoArray, appearanceTimeStartArray, appearanceTimeEndArray, quadrantNumberArray);
+        featureInfoArray.add(feature);
+        return featureInfoArray;
+    }
+
+
+    /** constructs a string to be displayed for one feature in confirmationPage */
+    private String makeFtrText(ArrayList<EditText> nameArray, ArrayList<EditText> eCommerceInfo, ArrayList<EditText> timeStart, ArrayList<EditText> timeEnd, ArrayList<EditText> quadLoc) {
+        int numTimes = timeStart.size();
+        String feature = "Product: ";
+        feature.concat(nameArray.get(0).getText().toString());
+        feature.concat(", link: ");
+        feature.concat(eCommerceInfo.get(0).getText().toString());
+        feature.concat(", time(s): ");
+        for (int i=0; i < numTimes; i++) {
+            feature.concat(timeStart.get(i).getText().toString());
+            feature.concat("-");
+            feature.concat(timeEnd.get(i).getText().toString());
+            if (i != numTimes-1) {
+                feature.concat(" ");
+            } else {
+                feature.concat(", ");
+            }
+        }
+        feature.concat("quadrant location: ");
+        feature.concat(quadLoc.get(0).getText().toString());
+        return feature;
+    }
+
 
 
     private void permissionForVideo() {
@@ -333,16 +341,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public static ArrayList<EditText> getProductNameArray(){
-        return productNameArray;
-    }
-    public static ArrayList<EditText> geteCommerceInfoArray() {
-        return eCommerceInfoArray;
-    }
-    public static ArrayList<EditText> getAppearanceTimeStartArray() { return appearanceTimeStartArray; }
+    public static ArrayList<EditText> getProductNameArray(){return productNameArray;}
+    public static ArrayList<EditText> geteCommerceInfoArray() {return eCommerceInfoArray;}
+    public static ArrayList<EditText> getAppearanceTimeStartArray() {return appearanceTimeStartArray; }
     public static ArrayList<EditText> getAppearanceTimeEndArray() {return appearanceTimeEndArray;}
-    public static ArrayList<EditText> getQuadrantNumberArray() {
-        return quadrantNumberArray;
-    }
+    public static ArrayList<EditText> getQuadrantNumberArray() {return quadrantNumberArray; }
+    public static ArrayList<String> getFeatureInfoArray() {return featureInfoArray;}
 
 }
