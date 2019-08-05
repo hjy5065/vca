@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -50,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
     private static ArrayList<EditText> quadrantNumberArray = new ArrayList<EditText>();
 
     static int timeRowIndex = 4;
-    static int featureRowIndex = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,25 +99,6 @@ public class MainActivity extends AppCompatActivity {
                 timeRowIndex++;
 
 
-
-
-                /*
-
-                final LinearLayout linearLayout2 = findViewById(R.id.confirmation_page);
-
-                LayoutInflater inflater2 = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View newRowView2 = inflater2.inflate(R.layout.add_confirmation, null);
-                linearLayout.addView(newRowView2, featureRowIndex);
-
-                View view2 = linearLayout2.getChildAt(featureRowIndex);
-
-                TextView addedFeature = (TextView) view2.findViewById(R.id.added_feature);
-                addedFeature.setText(addedName.getText().toString() + addedLink.getText().toString() +
-                        addedTimeStart.getText().toString() + addedTimeEnd.getText().toString() +addedQuadrantNumber.getText().toString());
-
-                featureRowIndex++;
-                */
-
             }
         });
 
@@ -126,38 +107,8 @@ public class MainActivity extends AppCompatActivity {
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                setContentView(R.layout.confirmation_page);
-
-                final TextView feature1 = findViewById(R.id.tv_feature);
-                feature1.setText(productName.getText().toString() + eCommerceInfo.getText().toString() + appearanceTimeStart1.getText().toString()
-                        + appearanceTimeEnd1.getText().toString() + quadrantNumber1.getText().toString());
-
-
-                for (int i = featureRowIndex; i < productNameArray.size(); i++){
-                    final LinearLayout linearLayout2 = findViewById(R.id.confirmation_page);
-
-                    LayoutInflater inflater2 = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    View newRowView2 = inflater2.inflate(R.layout.add_confirmation, null);
-                    linearLayout2.addView(newRowView2, featureRowIndex);
-
-                    View view2 = linearLayout2.getChildAt(featureRowIndex);
-
-                    TextView addedFeature = (TextView) view2.findViewById(R.id.added_feature);
-                    addedFeature.setText(productNameArray.get(i).getText().toString() + eCommerceInfoArray.get(i).getText().toString() +
-                            appearanceTimeStartArray.get(i).getText().toString() + appearanceTimeEndArray.get(i).getText().toString() +quadrantNumberArray.get(i).getText().toString());
-                    Log.e("i", String.valueOf(i));
-                    featureRowIndex++;
-                }
-
-
-
-                final LinearLayout linearLayout = findViewById(R.id.confirmation_page);
-
-                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View newRowView = inflater.inflate(R.layout.upload_back, null);
-                linearLayout.addView(newRowView, featureRowIndex);
-
+                Intent intent = new Intent(MainActivity.this, confirmationActivity.class);
+                startActivity(intent);
 
             }
         });
