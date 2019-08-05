@@ -106,6 +106,14 @@ public class videoPlayerActivity extends AppCompatActivity {
 
         cVideoView = (CustomVideoView) findViewById(R.id.my_player);
 
+        Log.e("Product name", String.valueOf(MainActivity.getProductNameArray().get(1).getText().toString()));
+        Log.e("Time Start", String.valueOf(MainActivity.getAppearanceTimeStartArray().get(1).getText().toString()));
+        Log.e("Time End", String.valueOf(MainActivity.getAppearanceTimeEndArray().get(1).getText().toString()));
+        Log.e("Quadrant Number", String.valueOf(MainActivity.getQuadrantNumberArray().get(1).getText().toString()));
+        Log.e("eCommerce Info", String.valueOf(MainActivity.geteCommerceInfoArray().get(1).getText().toString()));
+
+
+
         //SET VALUES
         productNameArrayList = MainActivity.getProductNameArray();
         //productName = productNameArrayList.get(0).getText().toString();
@@ -157,9 +165,6 @@ public class videoPlayerActivity extends AppCompatActivity {
                         distance = distanceI;
                     }
                 }
-
-
-
                 if (cVideoView.getCurrentPosition() <= closest+1000 && cVideoView.getCurrentPosition() >= closest){
                     execMetaDataRetriever(appearanceTimeStartArrayList.indexOf(closest));
                 }
@@ -201,7 +206,7 @@ public class videoPlayerActivity extends AppCompatActivity {
         }
 
 
-            //start
+        //start
         cVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
@@ -240,32 +245,20 @@ public class videoPlayerActivity extends AppCompatActivity {
             screenshot = retriever.getFrameAtTime(currentPosition*1000, FFmpegMediaMetadataRetriever.OPTION_CLOSEST);
             retriever.release();
             Log.e("Took a screenshot", "Yes");
-
-
             if (rotation.equals("90")){
                 Matrix matrix = new Matrix();
                 matrix.postRotate(90);
                 screenshot = Bitmap.createBitmap(screenshot, 0, 0, screenshot.getWidth(), screenshot.getHeight(), matrix, true);
             }
-
-
             screenshotQuadrants = splitBitmap(screenshot);
             //screenshotQuadrants[2] = highlightImage(screenshotQuadrants[2]);
-
-
-
             img = (ImageView) findViewById(R.id.img);
             img.setScaleType(ImageView.ScaleType.FIT_CENTER);
             img.bringToFront();
             img.setImageBitmap(screenshot);
-
-
             quadrantNumber = quadrantNumberArrayList.get(quadrantIndex);
             setQuadrants();
-
             executed = true;
-
-
         } catch (IllegalArgumentException ex) {
             Log.e("Catch", "Illegal argument exception");
             ex.printStackTrace();
@@ -368,7 +361,6 @@ public class videoPlayerActivity extends AppCompatActivity {
     }
 
     /*
-
     public Bitmap highlightImage(Bitmap src) {
         Log.e("Highlight","Done");
         // create new bitmap, which will be painted and becomes result image
@@ -390,19 +382,15 @@ public class videoPlayerActivity extends AppCompatActivity {
         canvas.drawBitmap(bmAlpha, offsetXY[0], offsetXY[1], ptAlphaColor);
         // free memory
         bmAlpha.recycle();
-
         // paint the image source
         canvas.drawBitmap(src, 0, 0, null);
-
         // return out final image
         return bmOut;
     }
-
     /*
     public Bitmap getResizedBitmap(Bitmap image) {
         int width = image.getWidth();
         int height = image.getHeight();
-
         float bitmapRatio = (float)width / (float) height;
         if (bitmapRatio > 1) {
             width = screenshot.getWidth()/2;
@@ -436,7 +424,6 @@ public class videoPlayerActivity extends AppCompatActivity {
         while (dir.exists()) {
             fileNo++;
             dir = new File(moviesDir, "VCA" + fileNo);
-
         }
         */
         dir.mkdir();
@@ -542,4 +529,7 @@ public class videoPlayerActivity extends AppCompatActivity {
         Log.e("Quadrant number", String.valueOf(quadrantNumber));
         setQuadrants();
     }
+
+
+
 }

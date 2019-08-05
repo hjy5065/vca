@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -37,7 +36,6 @@ import java.util.ArrayList;
 import static android.os.Build.VERSION.SDK_INT;
 
 public class MainActivity extends AppCompatActivity {
-    public static final String EXTRA_FEATUREARRAY = "com.example.videoplayer.FEATUREARRAY";
 
     RecyclerView myRecyclerView;
     MyAdapter obj_adapter;
@@ -46,21 +44,19 @@ public class MainActivity extends AppCompatActivity {
     boolean boolean_permission;
     public static ArrayList<File> fileArrayList = new ArrayList<>();
     private static ArrayList<EditText> productNameArray = new ArrayList<EditText>();
-    private static ArrayList<EditText> eCommerceInfoArray = new ArrayList<>();
+    private static ArrayList<EditText> eCommerceInfoArray = new ArrayList<EditText>();
     private static ArrayList<EditText> appearanceTimeStartArray = new ArrayList<EditText>();
     private static ArrayList<EditText> appearanceTimeEndArray = new ArrayList<EditText>();
     private static ArrayList<EditText> quadrantNumberArray = new ArrayList<EditText>();
-    static ArrayList<String> featureInfoArray = new ArrayList<String>();
-    private static int entryCount = 0;
 
     static int timeRowIndex = 4;
+    static int featureRowIndex = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.product_log);
 
-        /*
         final EditText productName = findViewById(R.id.editText_name);
         productNameArray.add(productName);
         final EditText eCommerceInfo = findViewById(R.id.editText_link);
@@ -71,13 +67,108 @@ public class MainActivity extends AppCompatActivity {
         appearanceTimeEndArray.add(appearanceTimeEnd1);
         final EditText quadrantNumber1 = findViewById(R.id.editText_location);
         quadrantNumberArray.add(quadrantNumber1);
-        */
 
-        final Button addTimesButton = findViewById(R.id.button_add_times);
+        final Button addFeaturesButton = findViewById(R.id.button_add);
 
-        addTimesButton.setOnClickListener(new View.OnClickListener() {
+        addFeaturesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
-                entryCount++;
+                final LinearLayout linearLayout = findViewById(R.id.linearLayoutInfo);
+
+                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View newRowView = inflater.inflate(R.layout.add_feature, null);
+                linearLayout.addView(newRowView, timeRowIndex);
+
+                View view = linearLayout.getChildAt(timeRowIndex);
+
+                EditText addedName = (EditText) view.findViewById(R.id.added_name);
+                productNameArray.add(addedName);
+
+                EditText addedLink = (EditText) view.findViewById(R.id.added_link);
+                eCommerceInfoArray.add(addedLink);
+
+                EditText addedTimeStart = (EditText) view.findViewById(R.id.added_time_start);
+                appearanceTimeStartArray.add(addedTimeStart);
+
+                EditText addedTimeEnd = (EditText) view.findViewById(R.id.added_time_end);
+                appearanceTimeEndArray.add(addedTimeEnd);
+
+                EditText addedQuadrantNumber = (EditText) view.findViewById(R.id.added_loc);
+                quadrantNumberArray.add(addedQuadrantNumber);
+
+                timeRowIndex++;
+
+
+
+
+                /*
+
+                final LinearLayout linearLayout2 = findViewById(R.id.confirmation_page);
+
+                LayoutInflater inflater2 = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View newRowView2 = inflater2.inflate(R.layout.add_confirmation, null);
+                linearLayout.addView(newRowView2, featureRowIndex);
+
+                View view2 = linearLayout2.getChildAt(featureRowIndex);
+
+                TextView addedFeature = (TextView) view2.findViewById(R.id.added_feature);
+                addedFeature.setText(addedName.getText().toString() + addedLink.getText().toString() +
+                        addedTimeStart.getText().toString() + addedTimeEnd.getText().toString() +addedQuadrantNumber.getText().toString());
+
+                featureRowIndex++;
+                */
+
+            }
+        });
+
+        final Button confirmButton = findViewById(R.id.button_confirm);
+
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                setContentView(R.layout.confirmation_page);
+
+                final TextView feature1 = findViewById(R.id.tv_feature);
+                feature1.setText(productName.getText().toString() + eCommerceInfo.getText().toString() + appearanceTimeStart1.getText().toString()
+                        + appearanceTimeEnd1.getText().toString() + quadrantNumber1.getText().toString());
+
+
+                for (int i = featureRowIndex; i < productNameArray.size(); i++){
+                    final LinearLayout linearLayout2 = findViewById(R.id.confirmation_page);
+
+                    LayoutInflater inflater2 = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    View newRowView2 = inflater2.inflate(R.layout.add_confirmation, null);
+                    linearLayout2.addView(newRowView2, featureRowIndex);
+
+                    View view2 = linearLayout2.getChildAt(featureRowIndex);
+
+                    TextView addedFeature = (TextView) view2.findViewById(R.id.added_feature);
+                    addedFeature.setText(productNameArray.get(i).getText().toString() + eCommerceInfoArray.get(i).getText().toString() +
+                            appearanceTimeStartArray.get(i).getText().toString() + appearanceTimeEndArray.get(i).getText().toString() +quadrantNumberArray.get(i).getText().toString());
+                    Log.e("i", String.valueOf(i));
+                    featureRowIndex++;
+                }
+
+
+
+                final LinearLayout linearLayout = findViewById(R.id.confirmation_page);
+
+                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View newRowView = inflater.inflate(R.layout.upload_back, null);
+                linearLayout.addView(newRowView, featureRowIndex);
+
+
+            }
+        });
+
+        /*
+
+        final Button addButton = findViewById(R.id.button_add_times);
+
+
+        addButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
 
                 final LinearLayout linearLayout = findViewById(R.id.linearLayoutInfo);
                 //getLayoutInflater().inflate(R.layout.add_time, linearLayout);
@@ -89,7 +180,6 @@ public class MainActivity extends AppCompatActivity {
 
 
                 View view = linearLayout.getChildAt(timeRowIndex);
-
 
                 EditText appearanceTimeStart = (EditText) view.findViewById(R.id.editText_added_time_start);
                 appearanceTimeStartArray.add(appearanceTimeStart);
@@ -104,64 +194,16 @@ public class MainActivity extends AppCompatActivity {
                 timeRowIndex++;
 
 
-
             }
 
         });
+        */
 
 
-        final Button addFeatureButton = findViewById(R.id.button_add);
-
-        /* Adds feature information to appropriate arrayLists and clears
-         * editText boxes on click. */
-        addFeatureButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                final EditText productName = findViewById(R.id.editText_name);
-                final EditText eCommerceInfo = findViewById(R.id.editText_link);
-                final EditText appearanceTimeStart = findViewById(R.id.editText_time_start);
-                final EditText appearanceTimeEnd = findViewById(R.id.editText_time_end);
-                final EditText quadrantNumber = findViewById(R.id.editText_location);
-                productNameArray.add(productName);
-                eCommerceInfoArray.add(eCommerceInfo);
-             //   for (int i = 0; i <= getAppearanceTimeStartArray().size(); i++) {
-             //       getAppearanceTimeStartArray().add(appearanceTimeStart1.get);
-             //   }
-                appearanceTimeStartArray.add(appearanceTimeStart);
-                appearanceTimeEndArray.add(appearanceTimeEnd);
-                quadrantNumberArray.add(quadrantNumber);
-
-                featureInfoArray = generateFtrDesc(featureInfoArray);
-                productName.setText(productName.getHint(), TextView.BufferType.EDITABLE);
-                eCommerceInfo.setText(eCommerceInfo.getHint(), TextView.BufferType.EDITABLE);
-                appearanceTimeStart.setText(appearanceTimeStart.getHint(), TextView.BufferType.EDITABLE);
-                appearanceTimeEnd.setText(appearanceTimeEnd.getHint(), TextView.BufferType.EDITABLE);
-                quadrantNumber.setText(quadrantNumber.getHint(), TextView.BufferType.EDITABLE);
-            }
-        });
-
-        //Originally uploadvideobutton, so soon to replace R.id.button_confirm to button_upload
-        final Button uploadVideoButton = findViewById(R.id.button_add);
+        /* WHEN READY FOR UPLOAD
+        final Button uploadVideoButton = findViewById(R.id.???);
         uploadVideoButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
-                /*
-
-                final LinearLayout linearLayout = findViewById(R.id.linearLayoutInfo);
-                int childcount = linearLayout.getChildCount();
-                for (int i=4; i < childcount; i++){
-                    View view = linearLayout.getChildAt(i);
-                    EditText appearanceTimeStart = (EditText) view.findViewById(R.id.editText_added_time_start);
-                    appearanceTimeStartArray.add(appearanceTimeStart);
-
-                    EditText appearanceTimeEnd = (EditText) view.findViewById(R.id.editText_added_time_end);
-                    appearanceTimeEndArray.add(appearanceTimeEnd);
-
-                    EditText quadrantNumber = (EditText) view.findViewById(R.id.editText_added_loc);
-                    quadrantNumberArray.add(quadrantNumber);
-
-                    // do whatever you would want to do with this View
-                }
-                */
 
                 setContentView(R.layout.activity_main);
 
@@ -179,48 +221,9 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
+        */
 
-        final Button confirmButton = findViewById(R.id.button_confirm);
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, confirmationPageActivity.class);
-                intent.putExtra(EXTRA_FEATUREARRAY, featureInfoArray);
-                startActivity(intent);
-            }
-        });
     }
-
-    /** constructs an array of strings(feature descriptions) which will be passed to confirmation page */
-    private ArrayList<String> generateFtrDesc(ArrayList<String> featureInfoArray) {
-        String feature = makeFtrText(productNameArray, eCommerceInfoArray, appearanceTimeStartArray, appearanceTimeEndArray, quadrantNumberArray);
-        featureInfoArray.add(feature);
-        return featureInfoArray;
-    }
-
-
-    /** constructs a string to be displayed for one feature in confirmationPage */
-    private String makeFtrText(ArrayList<EditText> nameArray, ArrayList<EditText> eCommerceInfo, ArrayList<EditText> timeStart, ArrayList<EditText> timeEnd, ArrayList<EditText> quadLoc) {
-        int numTimes = timeStart.size();
-        String feature = "Product: ";
-        feature.concat(nameArray.get(0).getText().toString());
-        feature.concat(", link: ");
-        feature.concat(eCommerceInfo.get(0).getText().toString());
-        feature.concat(", time(s): ");
-        for (int i=0; i < numTimes; i++) {
-            feature.concat(timeStart.get(i).getText().toString());
-            feature.concat("-");
-            feature.concat(timeEnd.get(i).getText().toString());
-            if (i != numTimes-1) {
-                feature.concat(" ");
-            } else {
-                feature.concat(", ");
-            }
-        }
-        feature.concat("quadrant location: ");
-        feature.concat(quadLoc.get(0).getText().toString());
-        return feature;
-    }
-
 
 
     private void permissionForVideo() {
@@ -341,11 +344,16 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public static ArrayList<EditText> getProductNameArray(){return productNameArray;}
-    public static ArrayList<EditText> geteCommerceInfoArray() {return eCommerceInfoArray;}
-    public static ArrayList<EditText> getAppearanceTimeStartArray() {return appearanceTimeStartArray; }
+    public static ArrayList<EditText> getProductNameArray(){
+        return productNameArray;
+    }
+    public static ArrayList<EditText> geteCommerceInfoArray() {
+        return eCommerceInfoArray;
+    }
+    public static ArrayList<EditText> getAppearanceTimeStartArray() { return appearanceTimeStartArray; }
     public static ArrayList<EditText> getAppearanceTimeEndArray() {return appearanceTimeEndArray;}
-    public static ArrayList<EditText> getQuadrantNumberArray() {return quadrantNumberArray; }
-    public static ArrayList<String> getFeatureInfoArray() {return featureInfoArray;}
+    public static ArrayList<EditText> getQuadrantNumberArray() {
+        return quadrantNumberArray;
+    }
 
 }

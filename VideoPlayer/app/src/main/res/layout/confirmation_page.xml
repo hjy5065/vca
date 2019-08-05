@@ -1,383 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <ScrollView
-        android:layout_width="395dp"
-        android:layout_height="715dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="1350dp">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/confirmation_page">
 
-            <TextView
-                android:id="@+id/tv_feature"
-                android:layout_width="287dp"
-                android:layout_height="66dp"
-                android:layout_marginStart="1dp"
-                android:layout_marginLeft="1dp"
-                android:layout_toEndOf="@+id/buttonRemove"
-                android:layout_toRightOf="@+id/buttonRemove"
-                android:gravity="center_vertical"
-                android:text="TextView" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tv_feature2"
-                android:layout_width="287dp"
-                android:layout_height="66dp"
-                android:layout_below="@+id/tv_feature"
-                android:layout_marginStart="1dp"
-                android:layout_marginLeft="1dp"
-                android:layout_marginTop="1dp"
-                android:layout_toEndOf="@+id/buttonRemove2"
-                android:layout_toRightOf="@+id/buttonRemove2"
-                android:gravity="center_vertical"
-                android:text="TextView" />
+                <Button
+                    android:id="@+id/buttonRemove"
+                    android:layout_width="108dp"
+                    android:layout_height="66dp"
+                    android:text="@string/button_remove_msg" />
 
-            <TextView
-                android:id="@+id/tv_feature3"
-                android:layout_width="287dp"
-                android:layout_height="66dp"
-                android:layout_below="@+id/tv_feature2"
-                android:layout_marginStart="1dp"
-                android:layout_marginLeft="1dp"
-                android:layout_marginTop="1dp"
-                android:layout_toEndOf="@+id/buttonRemove3"
-                android:layout_toRightOf="@+id/buttonRemove3"
-                android:gravity="center_vertical"
-                android:text="TextView" />
+                <TextView
+                        android:id="@+id/tv_feature"
+                        android:layout_width="287dp"
+                        android:layout_height="66dp"
+                        android:layout_marginStart="1dp"
+                        android:layout_marginLeft="1dp"
+                        android:layout_toEndOf="@+id/buttonRemove"
+                        android:layout_toRightOf="@+id/buttonRemove"
+                        android:gravity="center_vertical"
+                        android:text="TextView" />
 
-            <TextView
-                android:id="@+id/tv_feature4"
-                android:layout_width="287dp"
-                android:layout_height="66dp"
-                android:layout_below="@+id/tv_feature3"
-                android:layout_marginStart="1dp"
-                android:layout_marginLeft="1dp"
-                android:layout_marginTop="1dp"
-                android:layout_toEndOf="@+id/buttonRemove4"
-                android:layout_toRightOf="@+id/buttonRemove4"
-                android:gravity="center_vertical"
-                android:text="TextView" />
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 
-            <TextView
-                android:id="@+id/tv_feature5"
-                android:layout_width="287dp"
-                android:layout_height="66dp"
-                android:layout_below="@+id/tv_feature4"
-                android:layout_marginStart="1dp"
-                android:layout_marginLeft="1dp"
-                android:layout_marginTop="1dp"
-                android:layout_toEndOf="@+id/buttonRemove5"
-                android:layout_toRightOf="@+id/buttonRemove5"
-                android:gravity="center_vertical"
-                android:text="TextView" />
-
-            <TextView
-                android:id="@+id/tv_feature6"
-                android:layout_width="287dp"
-                android:layout_height="66dp"
-                android:layout_below="@+id/tv_feature5"
-                android:layout_marginStart="1dp"
-                android:layout_marginLeft="1dp"
-                android:layout_marginTop="1dp"
-                android:layout_toEndOf="@+id/buttonRemove6"
-                android:layout_toRightOf="@+id/buttonRemove6"
-                android:gravity="center_vertical"
-                android:text="TextView" />
-
-            <TextView
-                android:id="@+id/tv_feature7"
-                android:layout_width="287dp"
-                android:layout_height="66dp"
-                android:layout_below="@+id/tv_feature6"
-                android:layout_marginStart="1dp"
-                android:layout_marginLeft="1dp"
-                android:layout_marginTop="1dp"
-                android:layout_toEndOf="@+id/buttonRemove7"
-                android:layout_toRightOf="@+id/buttonRemove7"
-                android:gravity="center_vertical"
-                android:text="TextView" />
-
-            <TextView
-                android:id="@+id/tv_feature8"
-                android:layout_width="287dp"
-                android:layout_height="66dp"
-                android:layout_below="@+id/tv_feature7"
-                android:layout_marginStart="1dp"
-                android:layout_marginLeft="1dp"
-                android:layout_marginTop="1dp"
-                android:layout_toEndOf="@+id/buttonRemove8"
-                android:layout_toRightOf="@+id/buttonRemove8"
-                android:gravity="center_vertical"
-                android:text="TextView" />
-
-            <TextView
-                android:id="@+id/tv_feature9"
-                android:layout_width="287dp"
-                android:layout_height="66dp"
-                android:layout_below="@+id/tv_feature8"
-                android:layout_marginStart="1dp"
-                android:layout_marginLeft="1dp"
-                android:layout_marginTop="1dp"
-                android:layout_toEndOf="@+id/buttonRemove9"
-                android:layout_toRightOf="@+id/buttonRemove9"
-                android:gravity="center_vertical"
-                android:text="TextView" />
-
-            <TextView
-                android:id="@+id/tv_feature10"
-                android:layout_width="287dp"
-                android:layout_height="66dp"
-                android:layout_below="@+id/tv_feature9"
-                android:layout_marginStart="1dp"
-                android:layout_marginLeft="1dp"
-                android:layout_marginTop="1dp"
-                android:layout_toEndOf="@+id/buttonRemove10"
-                android:layout_toRightOf="@+id/buttonRemove10"
-                android:gravity="center_vertical"
-                android:text="TextView" />
-
-            <TextView
-                android:id="@+id/tv_feature11"
-                android:layout_width="287dp"
-                android:layout_height="66dp"
-                android:layout_below="@+id/tv_feature10"
-                android:layout_marginStart="1dp"
-                android:layout_marginLeft="1dp"
-                android:layout_marginTop="1dp"
-                android:layout_toEndOf="@+id/buttonRemove11"
-                android:layout_toRightOf="@+id/buttonRemove11"
-                android:gravity="center_vertical"
-                android:text="TextView" />
-
-            <TextView
-                android:id="@+id/tv_feature12"
-                android:layout_width="287dp"
-                android:layout_height="66dp"
-                android:layout_below="@+id/tv_feature11"
-                android:layout_marginStart="1dp"
-                android:layout_marginLeft="1dp"
-                android:layout_marginTop="1dp"
-                android:layout_toEndOf="@+id/buttonRemove12"
-                android:layout_toRightOf="@+id/buttonRemove12"
-                android:gravity="center_vertical"
-                android:text="TextView" />
-
-            <TextView
-                android:id="@+id/tv_feature13"
-                android:layout_width="287dp"
-                android:layout_height="66dp"
-                android:layout_below="@+id/tv_feature12"
-                android:layout_marginStart="1dp"
-                android:layout_marginLeft="1dp"
-                android:layout_marginTop="1dp"
-                android:layout_toEndOf="@+id/buttonRemove13"
-                android:layout_toRightOf="@+id/buttonRemove13"
-                android:gravity="center_vertical"
-                android:text="TextView" />
-
-            <TextView
-                android:id="@+id/tv_feature14"
-                android:layout_width="287dp"
-                android:layout_height="66dp"
-                android:layout_below="@+id/tv_feature13"
-                android:layout_marginStart="1dp"
-                android:layout_marginLeft="1dp"
-                android:layout_marginTop="1dp"
-                android:layout_toEndOf="@+id/buttonRemove14"
-                android:layout_toRightOf="@+id/buttonRemove14"
-                android:gravity="center_vertical"
-                android:text="TextView" />
-
-            <TextView
-                android:id="@+id/tv_feature15"
-                android:layout_width="287dp"
-                android:layout_height="66dp"
-                android:layout_below="@+id/tv_feature14"
-                android:layout_marginStart="1dp"
-                android:layout_marginLeft="1dp"
-                android:layout_marginTop="1dp"
-                android:layout_toEndOf="@+id/buttonRemove15"
-                android:layout_toRightOf="@+id/buttonRemove15"
-                android:gravity="center_vertical"
-                android:text="TextView" />
-
-            <TextView
-                android:id="@+id/tv_feature16"
-                android:layout_width="287dp"
-                android:layout_height="66dp"
-                android:layout_below="@+id/tv_feature15"
-                android:layout_marginStart="1dp"
-                android:layout_marginLeft="1dp"
-                android:layout_marginTop="1dp"
-                android:layout_toEndOf="@+id/buttonRemove16"
-                android:layout_toRightOf="@+id/buttonRemove16"
-                android:gravity="center_vertical"
-                android:text="TextView" />
-
-            <Button
-                android:id="@+id/buttonRemove"
-                android:layout_width="108dp"
-                android:layout_height="66dp"
-                android:text="@string/button_remove_msg" />
-
-            <Button
-                android:id="@+id/buttonRemove2"
-                android:layout_width="108dp"
-                android:layout_height="66dp"
-                android:layout_below="@+id/buttonRemove"
-                android:layout_marginTop="1dp"
-                android:text="@string/button_remove_msg" />
-
-            <Button
-                android:id="@+id/buttonRemove3"
-                android:layout_width="108dp"
-                android:layout_height="66dp"
-                android:layout_below="@+id/buttonRemove2"
-                android:layout_marginTop="1dp"
-                android:text="@string/button_remove_msg" />
-
-            <Button
-                android:id="@+id/buttonRemove4"
-                android:layout_width="108dp"
-                android:layout_height="66dp"
-                android:layout_below="@+id/buttonRemove3"
-                android:layout_marginTop="1dp"
-                android:text="@string/button_remove_msg" />
-
-            <Button
-                android:id="@+id/buttonRemove5"
-                android:layout_width="108dp"
-                android:layout_height="66dp"
-                android:layout_below="@+id/buttonRemove4"
-                android:layout_marginTop="1dp"
-                android:text="@string/button_remove_msg" />
-
-            <Button
-                android:id="@+id/buttonRemove6"
-                android:layout_width="108dp"
-                android:layout_height="66dp"
-                android:layout_below="@+id/buttonRemove5"
-                android:layout_marginTop="1dp"
-                android:text="@string/button_remove_msg" />
-
-            <Button
-                android:id="@+id/buttonRemove7"
-                android:layout_width="108dp"
-                android:layout_height="66dp"
-                android:layout_below="@+id/buttonRemove6"
-                android:layout_marginTop="1dp"
-                android:text="@string/button_remove_msg" />
-
-            <Button
-                android:id="@+id/buttonRemove8"
-                android:layout_width="108dp"
-                android:layout_height="66dp"
-                android:layout_below="@+id/buttonRemove7"
-                android:layout_marginTop="1dp"
-                android:text="@string/button_remove_msg" />
-
-            <Button
-                android:id="@+id/buttonRemove9"
-                android:layout_width="108dp"
-                android:layout_height="66dp"
-                android:layout_below="@+id/buttonRemove8"
-                android:layout_marginTop="1dp"
-                android:text="@string/button_remove_msg" />
-
-            <Button
-                android:id="@+id/buttonRemove10"
-                android:layout_width="108dp"
-                android:layout_height="66dp"
-                android:layout_below="@+id/buttonRemove9"
-                android:layout_marginTop="1dp"
-                android:text="@string/button_remove_msg" />
-
-            <Button
-                android:id="@+id/buttonRemove11"
-                android:layout_width="108dp"
-                android:layout_height="66dp"
-                android:layout_below="@+id/buttonRemove10"
-                android:layout_marginTop="1dp"
-                android:text="@string/button_remove_msg" />
-
-            <Button
-                android:id="@+id/buttonRemove12"
-                android:layout_width="108dp"
-                android:layout_height="66dp"
-                android:layout_below="@+id/buttonRemove11"
-                android:layout_marginTop="1dp"
-                android:text="@string/button_remove_msg" />
-
-            <Button
-                android:id="@+id/buttonRemove13"
-                android:layout_width="108dp"
-                android:layout_height="66dp"
-                android:layout_below="@+id/buttonRemove12"
-                android:layout_marginTop="1dp"
-                android:text="@string/button_remove_msg" />
-
-            <Button
-                android:id="@+id/buttonRemove14"
-                android:layout_width="108dp"
-                android:layout_height="66dp"
-                android:layout_below="@+id/buttonRemove13"
-                android:layout_marginTop="1dp"
-                android:text="@string/button_remove_msg" />
-
-            <Button
-                android:id="@+id/buttonRemove15"
-                android:layout_width="108dp"
-                android:layout_height="66dp"
-                android:layout_below="@+id/buttonRemove14"
-                android:layout_marginTop="1dp"
-                android:text="@string/button_remove_msg" />
-
-            <Button
-                android:id="@+id/buttonRemove16"
-                android:layout_width="108dp"
-                android:layout_height="66dp"
-                android:layout_below="@+id/buttonRemove15"
-                android:layout_marginTop="1dp"
-                android:text="@string/button_remove_msg" />
-
-            <Button
-                android:id="@+id/buttonUpload"
-                android:layout_width="279dp"
-                android:layout_height="101dp"
-                android:layout_below="@+id/buttonRemove16"
-                android:layout_marginStart="13dp"
-                android:layout_marginLeft="13dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_toEndOf="@+id/button_back"
-                android:layout_toRightOf="@+id/button_back"
-                android:text="@string/button_upload_msg" />
-
-            <Button
-                android:id="@+id/button_back"
-                android:layout_width="108dp"
-                android:layout_height="101dp"
-                android:layout_below="@+id/buttonRemove16"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_marginStart="0dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/button_back_msg" />
-
-        </RelativeLayout>
-    </ScrollView>
-
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
