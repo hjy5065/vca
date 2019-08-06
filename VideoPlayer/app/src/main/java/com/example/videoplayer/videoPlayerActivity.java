@@ -106,11 +106,11 @@ public class videoPlayerActivity extends AppCompatActivity {
 
         cVideoView = (CustomVideoView) findViewById(R.id.my_player);
 
-        Log.e("Product name", String.valueOf(MainActivity.getProductNameArray().get(1).getText().toString()));
-        Log.e("Time Start", String.valueOf(MainActivity.getAppearanceTimeStartArray().get(1).getText().toString()));
-        Log.e("Time End", String.valueOf(MainActivity.getAppearanceTimeEndArray().get(1).getText().toString()));
-        Log.e("Quadrant Number", String.valueOf(MainActivity.getQuadrantNumberArray().get(1).getText().toString()));
-        Log.e("eCommerce Info", String.valueOf(MainActivity.geteCommerceInfoArray().get(1).getText().toString()));
+        Log.e("Product name", String.valueOf(MainActivity.getProductNameArray().get(0).getText().toString()));
+        Log.e("Time Start", String.valueOf(MainActivity.getAppearanceTimeStartArray().get(0).getText().toString()));
+        Log.e("Time End", String.valueOf(MainActivity.getAppearanceTimeEndArray().get(0).getText().toString()));
+        Log.e("Quadrant Number", String.valueOf(MainActivity.getQuadrantNumberArray().get(0).getText().toString()));
+        Log.e("eCommerce Info", String.valueOf(MainActivity.geteCommerceInfoArray().get(0).getText().toString()));
 
 
 

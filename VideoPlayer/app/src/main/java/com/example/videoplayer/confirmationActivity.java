@@ -1,9 +1,20 @@
 package com.example.videoplayer;
 
+import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,20 +22,30 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
+
+import static android.os.Build.VERSION.SDK_INT;
+import static com.example.videoplayer.MainActivity.fileArrayList;
 
 public class confirmationActivity extends AppCompatActivity {
 
     int featureRowIndex = 1;
+    private ArrayList<Integer> removedIndices = new ArrayList<Integer>();
 
     private ArrayList<EditText> productNameArray = MainActivity.getProductNameArray();
     private ArrayList<EditText> eCommerceInfoArray = MainActivity.geteCommerceInfoArray();
     private ArrayList<EditText> appearanceTimeStartArray = MainActivity.getAppearanceTimeStartArray();
     private ArrayList<EditText> appearanceTimeEndArray = MainActivity.getAppearanceTimeEndArray();
     private ArrayList<EditText> quadrantNumberArray = MainActivity.getQuadrantNumberArray();
-    private ArrayList<Button> removeButtonArray;
-    private ArrayList<TextView> textViewArray;
+
+    RecyclerView myRecyclerView;
+    MyAdapter obj_adapter;
+    public static int REQUEST_PERMISSION = 1;
+    File directory;
+    boolean boolean_permission;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +83,8 @@ public class confirmationActivity extends AppCompatActivity {
                 quadrantNumberArray.remove(0);
                 eCommerceInfoArray.remove(0);
 
+                removedIndices.add(0);
+
                 int j = 0;
                 for (EditText editText : productNameArray) {
                     Log.e(String.valueOf(j), editText.getText().toString());
@@ -91,16 +114,28 @@ public class confirmationActivity extends AppCompatActivity {
             addedButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    int newI = finalI;
 
-                    Log.e("Index", String.valueOf(finalI));
-                    Log.e("Size of string", String.valueOf(productNameArray.size()));
+                    if (!removedIndices.isEmpty()){
+                        for (int k : removedIndices) {
+                            if (k < finalI) {
+                                newI--;
+                            }
+                        }
+                    }
 
                     confirmationPage.removeView(newRowView2);
-                    productNameArray.remove(finalI);
-                    appearanceTimeStartArray.remove(finalI);
-                    appearanceTimeEndArray.remove(finalI);
-                    quadrantNumberArray.remove(finalI);
-                    eCommerceInfoArray.remove(finalI);
+                    productNameArray.remove(newI);
+                    appearanceTimeStartArray.remove(newI);
+                    appearanceTimeEndArray.remove(newI);
+                    quadrantNumberArray.remove(newI);
+                    eCommerceInfoArray.remove(newI);
+
+                    removedIndices.add(finalI);
+
+
+                    Log.e("Index", String.valueOf(newI));
+                    Log.e("Size of string", String.valueOf(productNameArray.size()));
 
                     //IF THE ORIGINAL REMOVEBUTTON IS PRESSED, finalI = finalI - 1.
                 }
@@ -133,6 +168,152 @@ public class confirmationActivity extends AppCompatActivity {
                 Intent intent = new Intent(confirmationActivity.this, MainActivity.class);
                 startActivity(intent);            }
         });
+
+
+
+
+        final Button uploadVideoButton = findViewById(R.id.buttonUpload);
+        uploadVideoButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                setContentView(R.layout.activity_main);
+
+                myRecyclerView = (RecyclerView)findViewById(R.id.listVideoRecyler);
+
+                //Phone memory and SD card
+                directory = new File("/mnt/");
+
+                //directory = new File("/storage/");
+
+                GridLayoutManager manager = new GridLayoutManager(confirmationActivity.this, 2);
+                myRecyclerView.setLayoutManager(manager);
+
+                permissionForVideo();
+            }
+
+        });
     }
+
+    private void permissionForVideo() {
+        //if not granted
+        if ((ContextCompat.checkSelfPermission(getApplicationContext(),
+                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)){
+            //If I should show UI with rationale for requesting a permission
+            if((ActivityCompat.shouldShowRequestPermissionRationale(confirmationActivity.this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE))){
+
+            }
+            //If I should now show UI with rationale
+            else{
+                ActivityCompat.requestPermissions(confirmationActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        REQUEST_PERMISSION);
+            }
+        }
+        //if permission granted
+        else{
+            boolean_permission = true;
+            getFile(directory);
+            obj_adapter = new MyAdapter(getApplicationContext(), fileArrayList);
+            myRecyclerView.setAdapter(obj_adapter);
+
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if(requestCode == REQUEST_PERMISSION){
+            if(grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
+                boolean_permission = true;
+                getFile(directory);
+                obj_adapter = new MyAdapter(getApplicationContext(), fileArrayList);
+                myRecyclerView.setAdapter(obj_adapter);
+            }
+
+            else{
+                showDetails();
+            }
+
+
+        }
+    }
+
+    public void showDetails(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(confirmationActivity.this);
+        builder.setTitle("Storage Write Permission")
+                .setMessage("This permission is necessary to access the videos on this device.")
+                .setPositiveButton(android.R.string.ok, new Dialog.OnClickListener() {
+
+                    //When the user ok's the alert, onClick function is called.
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (SDK_INT >= Build.VERSION_CODES.M) {
+                            ActivityCompat.requestPermissions(confirmationActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_PERMISSION);
+                        }
+
+                    }
+                });
+        builder.setNegativeButton(android.R.string.cancel, new Dialog.OnClickListener() {
+            //When the user cancels the alert, onClick function is called.
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        builder.create();
+        builder.show();
+    }
+
+    public ArrayList<File> getFile(File directory){
+
+        File listFile[] = directory.listFiles();
+        if(listFile!=null && listFile.length>0){
+
+            for(int i = 0; i<listFile.length; i++){
+                //if listFile[0] is a directory, call a recursive getFile to get all files from that directory
+                if(listFile[i].isDirectory()){
+                    getFile(listFile[i]);
+                }
+                else{
+                    boolean_permission = false;
+                    //can or with whatever type of video file we want, for now I just or'ed with a .m4v to test it out
+                    if(listFile[i].getName().endsWith(".mp4") || listFile[i].getName().endsWith(".m4v")){
+                        //if file already in array, move on. If file not in array, add.
+                        for(int j=0; j<fileArrayList.size();j++){
+                            //go through all files in fileArrayList
+                            //if the first file in listFile (media list) matches any of the files found in fileArrayList, set boolean = true.
+                            if(fileArrayList.get(j).getName().equals(listFile[i].getName())){
+                                boolean_permission = true;
+                            }else {
+
+
+                            }
+
+                        }
+
+                        if(boolean_permission){
+                            boolean_permission = false;
+                        }
+                        else{
+                            fileArrayList.add(listFile[i]);
+                        }
+
+                    }
+                }
+
+            }
+
+        }
+
+        return fileArrayList;
+
+    }
+
+
+
+
 
 }
