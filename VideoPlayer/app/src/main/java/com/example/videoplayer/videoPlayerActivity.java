@@ -61,18 +61,13 @@ public class videoPlayerActivity extends AppCompatActivity {
     int position = -1;
     ImageView img;
 
-    private ArrayList<EditText> productNameArrayList = null;
-    private ArrayList<EditText> eCommerceInfoArrayList = null;
-    private ArrayList<Integer> appearanceTimeStartArrayList = new ArrayList<Integer>();
-    private ArrayList<Integer> appearanceTimeEndArrayList = new ArrayList<Integer>();
-    private ArrayList<Integer> quadrantNumberArrayList = new ArrayList<Integer>();
+    private ArrayList<String> productNameArray = confirmationActivity.getProductNameArray();
+    private ArrayList<String> eCommerceInfoArray = confirmationActivity.geteCommerceInfoArray();
+    private ArrayList<Integer> appearanceTimeStartArray = confirmationActivity.getAppearanceTimeStartArray();
+    private ArrayList<Integer> appearanceTimeEndArray = confirmationActivity.getAppearanceTimeEndArray();
+    private ArrayList<Integer> quadrantNumberArray = confirmationActivity.getQuadrantNumberArray();
+    private ArrayList<Integer> indexArray = confirmationActivity.getIndexArray();
 
-    private ArrayList<Integer> timeStart = null;
-
-    String productName;
-    String eCommerceInfo;
-    int appearanceTimeStart;
-    int appearanceTimeEnd;
     int quadrantNumber;
 
     Bitmap screenshot;
@@ -106,40 +101,41 @@ public class videoPlayerActivity extends AppCompatActivity {
 
         cVideoView = (CustomVideoView) findViewById(R.id.my_player);
 
-        Log.e("Product name", String.valueOf(MainActivity.getProductNameArray().get(0).getText().toString()));
-        Log.e("Time Start", String.valueOf(MainActivity.getAppearanceTimeStartArray().get(0).getText().toString()));
-        Log.e("Time End", String.valueOf(MainActivity.getAppearanceTimeEndArray().get(0).getText().toString()));
-        Log.e("Quadrant Number", String.valueOf(MainActivity.getQuadrantNumberArray().get(0).getText().toString()));
-        Log.e("eCommerce Info", String.valueOf(MainActivity.geteCommerceInfoArray().get(0).getText().toString()));
-
-
-
-        //SET VALUES
-        productNameArrayList = MainActivity.getProductNameArray();
-        //productName = productNameArrayList.get(0).getText().toString();
-
-        eCommerceInfoArrayList = MainActivity.geteCommerceInfoArray();
-        //eCommerceInfo = eCommerceInfoArrayList.get(0).getText().toString();
-
-
-        for (int i = 0; i < MainActivity.getQuadrantNumberArray().size(); i++){
-            quadrantNumberArrayList.add(Integer.parseInt(MainActivity.getQuadrantNumberArray().get(i).getText().toString()));
-            //quadrantNumberArrayList = MainActivity.getQuadrantNumberArray();
-            //quadrantNumber = Integer.parseInt(quadrantNumberArrayList.get(2).getText().toString());
+        int j = 0;
+        for (String product : productNameArray) {
+            Log.e(String.valueOf(j), product);
+            j++;
         }
 
-        for (int i = 0; i < MainActivity.getAppearanceTimeStartArray().size(); i++){
-            appearanceTimeStartArrayList.add((convertTime(MainActivity.getAppearanceTimeStartArray().get(i).getText().toString()))*1000);
-            //appearanceTimeStartArrayList = MainActivity.getAppearanceTimeStartArray();
-            //appearanceTimeStart = convertTime(appearanceTimeStartArrayList.get(2).getText().toString());
+        int k = 0;
+        for (String info : eCommerceInfoArray) {
+            Log.e(String.valueOf(k), info);
+            k++;
         }
 
-        for (int i = 0; i < MainActivity.getAppearanceTimeEndArray().size(); i++){
-            appearanceTimeEndArrayList.add((convertTime(MainActivity.getAppearanceTimeEndArray().get(i).getText().toString()))*1000);
-            //appearanceTimeEndArrayList = MainActivity.getAppearanceTimeEndArray();
-            //appearanceTimeEnd = convertTime(appearanceTimeEndArrayList.get(2).getText().toString());
+        int l = 0;
+        for (int startTime : appearanceTimeStartArray) {
+            Log.e(String.valueOf(l), String.valueOf(startTime));
+            l++;
         }
 
+        int r = 0;
+        for (int endTime : appearanceTimeEndArray) {
+            Log.e(String.valueOf(r), String.valueOf(endTime));
+            r++;
+        }
+
+        int q = 0;
+        for (int loc : quadrantNumberArray) {
+            Log.e(String.valueOf(q), String.valueOf(loc));
+            q++;
+        }
+
+        int d = 0;
+        for (int ind : indexArray) {
+            Log.e(String.valueOf(d), String.valueOf(ind));
+            d++;
+        }
 
         cVideoView.setPlayPauseListener(new CustomVideoView.PlayPauseListener() {
             @Override
@@ -154,21 +150,44 @@ public class videoPlayerActivity extends AppCompatActivity {
 
             @Override
             public void onPause() {
-                execMetaDataRetriever(3);
-                /*
-                int closest = appearanceTimeStartArrayList.get(0);
-                int distance = Math.abs(closest - cVideoView.getCurrentPosition());
-                for(int i: appearanceTimeStartArrayList){
+
+                int closestStart = appearanceTimeStartArray.get(0);
+                int distance = Math.abs(closestStart - cVideoView.getCurrentPosition());
+                for(int i: appearanceTimeStartArray){
                     int distanceI = Math.abs(i - cVideoView.getCurrentPosition());
                     if(distance > distanceI) {
-                        closest = i;
+                        closestStart = i;
                         distance = distanceI;
                     }
                 }
-                if (cVideoView.getCurrentPosition() <= closest+1000 && cVideoView.getCurrentPosition() >= closest){
-                    execMetaDataRetriever(appearanceTimeStartArrayList.indexOf(closest));
+
+                int timeIndex = appearanceTimeStartArray.indexOf(closestStart); //when getting times and locations, use timeIndex
+                int featureIndex = indexArray.get(timeIndex); //when getting name and info, use featureIndex
+
+                int end = appearanceTimeEndArray.get(timeIndex);
+
+                Log.e("current position", String.valueOf(cVideoView.getCurrentPosition()));
+                Log.e("Closest starttime is", String.valueOf(closestStart));
+                Log.e("Starttime's index is", String.valueOf(timeIndex));
+                Log.e("Correspond endtime is", String.valueOf(end));
+
+                //Log.e("feature index", String.valueOf(featureIndex));
+
+
+                // If current is 5860, and closestStart is 5000, it should execute.
+                // If 5860 is less than 5000+1000 = 6000, and if 5860 is greater than or equal to 5000, execute.
+
+                //If current is 5860, closesStart is 2000, and end is 8000, it should execute.
+                //If 5860 is less than 8000+1000 = 9000, and if 5860 is greater than or equal to 2000, execute.
+
+                if (cVideoView.getCurrentPosition() < end+1000 && cVideoView.getCurrentPosition() >= closestStart){
+                    Log.e("We are", "In conditional");
+                    quadrantNumber = quadrantNumberArray.get(timeIndex);
+                    Log.e("Quadrant number", String.valueOf(quadrantNumber));
+                    Log.e("Product", productNameArray.get(featureIndex));
+                    execMetaDataRetriever(timeIndex);
                 }
-                */
+
 
             }
 
@@ -275,15 +294,6 @@ public class videoPlayerActivity extends AppCompatActivity {
         }
         */
 
-
-    }
-
-
-    public int convertTime(String time){
-        String[] units = time.split(":");
-        int minutes = Integer.parseInt(units[0]); //first element
-        int seconds = Integer.parseInt(units[1]); //second element
-        return 60 * minutes + seconds; //add up values
 
     }
 
@@ -500,7 +510,8 @@ public class videoPlayerActivity extends AppCompatActivity {
                     img.setImageBitmap(bmp);
                     img.bringToFront();
 
-                    editImage(0);
+                    screenshotQuadrants = splitBitmap(bmp);
+                    setQuadrants();
                 }
 
                 @Override
@@ -521,13 +532,6 @@ public class videoPlayerActivity extends AppCompatActivity {
         } catch (FFmpegCommandAlreadyRunningException e) {
             // do nothing for now
         }
-    }
-
-    private void editImage(int quadrantIndex){
-        screenshotQuadrants = splitBitmap(bmp);
-        quadrantNumber = quadrantNumberArrayList.get(quadrantIndex);
-        Log.e("Quadrant number", String.valueOf(quadrantNumber));
-        setQuadrants();
     }
 
 

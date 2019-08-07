@@ -35,12 +35,12 @@ public class confirmationActivity extends AppCompatActivity {
     int featureRowIndex = 1;
     private ArrayList<Integer> removedIndices = new ArrayList<Integer>();
 
-    private ArrayList<EditText> productNameArray = MainActivity.getProductNameArray();
-    private ArrayList<EditText> eCommerceInfoArray = MainActivity.geteCommerceInfoArray();
-    private ArrayList<EditText> appearanceTimeStartArray = MainActivity.getAppearanceTimeStartArray();
-    private ArrayList<EditText> appearanceTimeEndArray = MainActivity.getAppearanceTimeEndArray();
-    private ArrayList<EditText> quadrantNumberArray = MainActivity.getQuadrantNumberArray();
-    private ArrayList<Integer> indexArray = MainActivity.getIndexArray();
+    private static ArrayList<EditText> productNameArray = MainActivity.getProductNameArray();
+    private static ArrayList<EditText> eCommerceInfoArray = MainActivity.geteCommerceInfoArray();
+    private static ArrayList<EditText> appearanceTimeStartArray = MainActivity.getAppearanceTimeStartArray();
+    private static ArrayList<EditText> appearanceTimeEndArray = MainActivity.getAppearanceTimeEndArray();
+    private static ArrayList<EditText> quadrantNumberArray = MainActivity.getQuadrantNumberArray();
+    private static ArrayList<Integer> indexArray = MainActivity.getIndexArray();
 
     RecyclerView myRecyclerView;
     MyAdapter obj_adapter;
@@ -330,7 +330,58 @@ public class confirmationActivity extends AppCompatActivity {
 
     }
 
+    public static ArrayList<String> getProductNameArray(){
+        ArrayList<String> productNames = new ArrayList<String>();
 
+        for (EditText element : productNameArray){
+            productNames.add(element.getText().toString());
+        }
+        return productNames;
+    }
+
+    public static ArrayList<String> geteCommerceInfoArray() {
+        ArrayList<String> info = new ArrayList<String>();
+
+        for (EditText element : eCommerceInfoArray){
+            info.add(element.getText().toString());
+        }
+        return info;
+
+    }
+
+    public static ArrayList<Integer> getAppearanceTimeStartArray() {
+        ArrayList<Integer> startTimes = new ArrayList<Integer>();
+
+        for (EditText element : appearanceTimeStartArray){
+            startTimes.add(convertTime(element.getText().toString())*1000);
+        }
+        return startTimes;
+    }
+    public static ArrayList<Integer> getAppearanceTimeEndArray() {
+        ArrayList<Integer> endTimes = new ArrayList<Integer>();
+
+        for (EditText element : appearanceTimeEndArray){
+            endTimes.add(convertTime(element.getText().toString())*1000);
+        }
+        return endTimes;
+    }
+    public static ArrayList<Integer> getQuadrantNumberArray() {
+        ArrayList<Integer> locations = new ArrayList<Integer>();
+
+        for (EditText element : quadrantNumberArray){
+            locations.add(Integer.parseInt(element.getText().toString()));
+        }
+        return locations;
+    }
+    public static ArrayList<Integer> getIndexArray() {return indexArray;}
+
+    public static int convertTime(String time){
+        String[] units = time.split(":");
+        int minutes = Integer.parseInt(units[0]); //first element
+        int seconds = Integer.parseInt(units[1]); //second element
+        return 60 * minutes + seconds; //add up values
+
+    }
 
 
 
