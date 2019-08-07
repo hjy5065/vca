@@ -50,8 +50,9 @@ public class MainActivity extends AppCompatActivity {
     private static ArrayList<EditText> appearanceTimeStartArray = new ArrayList<EditText>();
     private static ArrayList<EditText> appearanceTimeEndArray = new ArrayList<EditText>();
     private static ArrayList<EditText> quadrantNumberArray = new ArrayList<EditText>();
+    private static ArrayList<Integer> indexArray = new ArrayList<Integer>();
 
-    static int timeRowIndex = 4;
+    static int timeArrayIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         eCommerceInfoArray.add(eCommerceInfo);
         final EditText appearanceTimeStart1 = findViewById(R.id.editText_time_start);
         appearanceTimeStartArray.add(appearanceTimeStart1);
+        indexArray.add(timeArrayIndex);
         final EditText appearanceTimeEnd1 = findViewById(R.id.editText_time_end);
         appearanceTimeEndArray.add(appearanceTimeEnd1);
         final EditText quadrantNumber1 = findViewById(R.id.editText_location);
@@ -75,6 +77,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 final LinearLayout linearLayout = findViewById(R.id.linearLayoutInfo);
+
+                int timeRowIndex = linearLayout.getChildCount();
+
+                Log.e(String.valueOf(linearLayout.getChildCount()), String.valueOf(timeRowIndex));
 
                 LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View newRowView = inflater.inflate(R.layout.add_feature, null);
@@ -88,8 +94,10 @@ public class MainActivity extends AppCompatActivity {
                 EditText addedLink = (EditText) view.findViewById(R.id.added_link);
                 eCommerceInfoArray.add(addedLink);
 
+                timeArrayIndex++;
                 EditText addedTimeStart = (EditText) view.findViewById(R.id.added_time_start);
                 appearanceTimeStartArray.add(addedTimeStart);
+                indexArray.add(timeArrayIndex);
 
                 EditText addedTimeEnd = (EditText) view.findViewById(R.id.added_time_end);
                 appearanceTimeEndArray.add(addedTimeEnd);
@@ -97,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                 EditText addedQuadrantNumber = (EditText) view.findViewById(R.id.added_loc);
                 quadrantNumberArray.add(addedQuadrantNumber);
 
-                timeRowIndex++;
+
 
 
             }
@@ -114,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /*
 
         final Button addButton = findViewById(R.id.button_add_times);
 
@@ -123,8 +130,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 final LinearLayout linearLayout = findViewById(R.id.linearLayoutInfo);
-                //getLayoutInflater().inflate(R.layout.add_time, linearLayout);
-                //nthChild++;
+
+                int timeRowIndex = linearLayout.getChildCount();
 
                 LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View newRowView = inflater.inflate(R.layout.add_time, null);
@@ -135,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
 
                 EditText appearanceTimeStart = (EditText) view.findViewById(R.id.editText_added_time_start);
                 appearanceTimeStartArray.add(appearanceTimeStart);
+                indexArray.add(timeArrayIndex);
 
                 EditText appearanceTimeEnd = (EditText) view.findViewById(R.id.editText_added_time_end);
                 appearanceTimeEndArray.add(appearanceTimeEnd);
@@ -142,14 +150,9 @@ public class MainActivity extends AppCompatActivity {
                 EditText quadrantNumber = (EditText) view.findViewById(R.id.editText_added_loc);
                 quadrantNumberArray.add(quadrantNumber);
 
-
-                timeRowIndex++;
-
-
             }
 
         });
-        */
 
 
         /* WHEN READY FOR UPLOAD
@@ -198,5 +201,6 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<EditText> getQuadrantNumberArray() {
         return quadrantNumberArray;
     }
+    public static ArrayList<Integer> getIndexArray() {return indexArray;}
 
 }

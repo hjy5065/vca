@@ -40,6 +40,7 @@ public class confirmationActivity extends AppCompatActivity {
     private ArrayList<EditText> appearanceTimeStartArray = MainActivity.getAppearanceTimeStartArray();
     private ArrayList<EditText> appearanceTimeEndArray = MainActivity.getAppearanceTimeEndArray();
     private ArrayList<EditText> quadrantNumberArray = MainActivity.getQuadrantNumberArray();
+    private ArrayList<Integer> indexArray = MainActivity.getIndexArray();
 
     RecyclerView myRecyclerView;
     MyAdapter obj_adapter;
@@ -47,22 +48,25 @@ public class confirmationActivity extends AppCompatActivity {
     File directory;
     boolean boolean_permission;
 
+    int indexForIndex = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.confirmation_page);
 
         int j = 0;
-        for (EditText editText : productNameArray) {
-            Log.e(String.valueOf(j), editText.getText().toString());
+        for (int index : indexArray) {
+            Log.e(String.valueOf(j), String.valueOf(index));
             j++;
         }
 
-
-
         final TextView feature1 = findViewById(R.id.tv_feature);
-        feature1.setText(productNameArray.get(0).getText().toString() + eCommerceInfoArray.get(0).getText().toString() +
-                appearanceTimeStartArray.get(0).getText().toString() + appearanceTimeEndArray.get(0).getText().toString() +quadrantNumberArray.get(0).getText().toString());
+        feature1.setText("Product: " + productNameArray.get(0).getText().toString() +
+                " / Link: " + eCommerceInfoArray.get(0).getText().toString() +
+                " / Times: " + appearanceTimeStartArray.get(0).getText().toString() + " - " +
+                appearanceTimeEndArray.get(0).getText().toString() +
+                " / Location: " + quadrantNumberArray.get(0).getText().toString());
 
         //textViewArray.add(feature1);
 
@@ -85,13 +89,9 @@ public class confirmationActivity extends AppCompatActivity {
 
                 removedIndices.add(0);
 
-                int j = 0;
-                for (EditText editText : productNameArray) {
-                    Log.e(String.valueOf(j), editText.getText().toString());
-                    j++;
-                }
             }
         });
+
 
 
 
@@ -106,10 +106,27 @@ public class confirmationActivity extends AppCompatActivity {
             View view2 = confirmationPage.getChildAt(featureRowIndex);
 
             TextView addedFeature = (TextView) view2.findViewById(R.id.added_feature);
-            addedFeature.setText(productNameArray.get(i).getText().toString() + eCommerceInfoArray.get(i).getText().toString() +
-                    appearanceTimeStartArray.get(i).getText().toString() + appearanceTimeEndArray.get(i).getText().toString() +quadrantNumberArray.get(i).getText().toString());
 
 
+
+            addedFeature.setText("Product: " + productNameArray.get(i).getText().toString() + " / Link: " + eCommerceInfoArray.get(i).getText().toString() +
+                    " / Times: " + appearanceTimeStartArray.get(indexForIndex).getText().toString() + " - " + appearanceTimeEndArray.get(indexForIndex).getText().toString() +
+                    " / Location: " + quadrantNumberArray.get(indexForIndex).getText().toString());
+
+            if (indexForIndex+1 < indexArray.size()){
+                while (indexArray.get(indexForIndex).equals(indexArray.get(indexForIndex+1))){
+                    addedFeature.append(" / Times: " + appearanceTimeStartArray.get(indexForIndex+1).getText().toString() +
+                            " - " + appearanceTimeEndArray.get(indexForIndex+1).getText().toString() +
+                            " / Location: " + quadrantNumberArray.get(indexForIndex+1).getText().toString());
+                    indexForIndex++;
+                    if ((indexForIndex+1) == (indexArray.size())){
+                        break;
+                    }
+                }
+                indexForIndex++;
+            }
+
+            /*
             Button addedButton = (Button) view2.findViewById(R.id.added_buttonRemove);
             addedButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -152,6 +169,7 @@ public class confirmationActivity extends AppCompatActivity {
 
 
             featureRowIndex++;
+
         }
 
 
