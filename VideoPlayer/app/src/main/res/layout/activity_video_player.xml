@@ -8,6 +8,42 @@
     android:id="@+id/relativeLayout"
     tools:context=".videoPlayerActivity">
 
+    <Spinner
+        android:id="@+id/spinner4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/quadrant4"
+        android:layout_alignLeft="@id/quadrant4"
+        android:background="@android:drawable/btn_dropdown"
+        android:spinnerMode="dropdown"/>
+
+    <Spinner
+        android:id="@+id/spinner3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/quadrant3"
+        android:layout_alignRight="@id/quadrant3"
+        android:background="@android:drawable/btn_dropdown"
+        android:spinnerMode="dropdown"/>
+
+    <Spinner
+        android:id="@+id/spinner2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/quadrant2"
+        android:layout_alignLeft="@id/quadrant2"
+        android:background="@android:drawable/btn_dropdown"
+        android:spinnerMode="dropdown"/>
+
+    <Spinner
+        android:id="@+id/spinner1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/quadrant1"
+        android:layout_alignRight="@id/quadrant1"
+        android:background="@android:drawable/btn_dropdown"
+        android:spinnerMode="dropdown"/>
+
     <ImageView
         android:id="@+id/quadrant4"
         android:layout_width="wrap_content"

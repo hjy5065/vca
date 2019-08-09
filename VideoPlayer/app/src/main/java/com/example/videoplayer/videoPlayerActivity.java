@@ -1,5 +1,8 @@
 package com.example.videoplayer;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -28,12 +31,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
@@ -44,6 +54,7 @@ import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedExceptio
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.sql.Time;
 import java.text.DateFormat;
@@ -55,7 +66,7 @@ import java.util.Date;
 
 import wseemann.media.FFmpegMediaMetadataRetriever;
 
-public class videoPlayerActivity extends AppCompatActivity {
+public class videoPlayerActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     CustomVideoView cVideoView;
     int position = -1;
@@ -92,6 +103,12 @@ public class videoPlayerActivity extends AppCompatActivity {
     private String filePath;
     private Bitmap bmp;
 
+    int timeIndex;
+    int featureIndex;
+
+    Spinner dropDown;
+
+    int currentPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,31 +120,31 @@ public class videoPlayerActivity extends AppCompatActivity {
 
         int j = 0;
         for (String product : productNameArray) {
-            Log.e(String.valueOf(j), product);
+            Log.e("Product " + String.valueOf(j), product);
             j++;
         }
 
         int k = 0;
         for (String info : eCommerceInfoArray) {
-            Log.e(String.valueOf(k), info);
+            Log.e("Info " + String.valueOf(k), info);
             k++;
         }
 
         int l = 0;
         for (int startTime : appearanceTimeStartArray) {
-            Log.e(String.valueOf(l), String.valueOf(startTime));
+            Log.e("Start time " + String.valueOf(l), String.valueOf(startTime));
             l++;
         }
 
         int r = 0;
         for (int endTime : appearanceTimeEndArray) {
-            Log.e(String.valueOf(r), String.valueOf(endTime));
+            Log.e("End time " + String.valueOf(r), String.valueOf(endTime));
             r++;
         }
 
         int q = 0;
         for (int loc : quadrantNumberArray) {
-            Log.e(String.valueOf(q), String.valueOf(loc));
+            Log.e("Location " + String.valueOf(q), String.valueOf(loc));
             q++;
         }
 
@@ -142,7 +159,8 @@ public class videoPlayerActivity extends AppCompatActivity {
             public void onPlay() {
                 cVideoView.bringToFront();
                 if(executed){
-                    //hideQuadrants();
+                    hideQuadrants();
+                    cVideoView.seekTo(currentPosition);
                     executed = false;
                 }
 
@@ -150,49 +168,83 @@ public class videoPlayerActivity extends AppCompatActivity {
 
             @Override
             public void onPause() {
+                currentPosition = cVideoView.getCurrentPosition();
 
                 int closestStart = appearanceTimeStartArray.get(0);
-                int distance = Math.abs(closestStart - cVideoView.getCurrentPosition());
+                int distanceStart = Math.abs(closestStart - currentPosition);
                 for(int i: appearanceTimeStartArray){
-                    int distanceI = Math.abs(i - cVideoView.getCurrentPosition());
-                    if(distance > distanceI) {
+                    int distanceI = Math.abs(i - currentPosition);
+                    if(distanceStart > distanceI) {
                         closestStart = i;
-                        distance = distanceI;
+                        distanceStart = distanceI;
                     }
                 }
 
-                int timeIndex = appearanceTimeStartArray.indexOf(closestStart); //when getting times and locations, use timeIndex
-                int featureIndex = indexArray.get(timeIndex); //when getting name and info, use featureIndex
-
-                int end = appearanceTimeEndArray.get(timeIndex);
-
-                Log.e("current position", String.valueOf(cVideoView.getCurrentPosition()));
-                Log.e("Closest starttime is", String.valueOf(closestStart));
-                Log.e("Starttime's index is", String.valueOf(timeIndex));
-                Log.e("Correspond endtime is", String.valueOf(end));
-
-                //Log.e("feature index", String.valueOf(featureIndex));
-
-
-                // If current is 5860, and closestStart is 5000, it should execute.
-                // If 5860 is less than 5000+1000 = 6000, and if 5860 is greater than or equal to 5000, execute.
-
-                //If current is 5860, closesStart is 2000, and end is 8000, it should execute.
-                //If 5860 is less than 8000+1000 = 9000, and if 5860 is greater than or equal to 2000, execute.
-
-                if (cVideoView.getCurrentPosition() < end+1000 && cVideoView.getCurrentPosition() >= closestStart){
-                    Log.e("We are", "In conditional");
-                    quadrantNumber = quadrantNumberArray.get(timeIndex);
-                    Log.e("Quadrant number", String.valueOf(quadrantNumber));
-                    Log.e("Product", productNameArray.get(featureIndex));
-                    execMetaDataRetriever(timeIndex);
+                int closestEnd = appearanceTimeEndArray.get(0);
+                int distanceEnd = Math.abs(closestEnd - currentPosition);
+                for(int i: appearanceTimeEndArray){
+                    int distanceI = Math.abs(i - currentPosition);
+                    if(distanceEnd > distanceI) {
+                        closestEnd = i;
+                        distanceEnd = distanceI;
+                    }
                 }
 
+                if ((Math.abs(closestStart-currentPosition) < Math.abs(closestEnd-currentPosition)) &&
+                currentPosition >= closestStart){
+                    Log.e("Start value is", "closer");
+                    timeIndex = appearanceTimeStartArray.indexOf(closestStart); //when getting times and locations, use timeIndex
+                    featureIndex = indexArray.get(timeIndex); //when getting name and info, use featureIndex
+                    int corresEnd = appearanceTimeEndArray.get(timeIndex);
 
-            }
+                    Log.e("current position", String.valueOf(currentPosition));
+                    Log.e("Closest starttime is", String.valueOf(closestStart));
+                    Log.e("Starttime's index is", String.valueOf(timeIndex));
+                    Log.e("Correspond endtime is", String.valueOf(corresEnd));
+                    Log.e("feature index", String.valueOf(featureIndex));
 
-            @Override
-            public void onResume() {
+                    // If current is 5860, and closestStart is 5000, it should execute.
+                    // If 5860 is less than 5000+1000 = 6000, and if 5860 is greater than or equal to 5000, execute.
+
+                    //If current is 5860, closesStart is 2000, and end is 8000, it should execute.
+                    //If 5860 is less than 8000+1000 = 9000, and if 5860 is greater than or equal to 2000, execute.
+
+                    if (currentPosition < corresEnd+1000){
+                        quadrantNumber = quadrantNumberArray.get(timeIndex);
+                        Log.e("Quadrant number", String.valueOf(quadrantNumber));
+                        Log.e("Product", productNameArray.get(featureIndex));
+                        execMetaDataRetriever(timeIndex);
+                        executed = true;
+                    }
+                }
+                else if ((Math.abs(closestStart-currentPosition) > Math.abs(closestEnd-currentPosition)) &&
+                        currentPosition < closestEnd+1000) {
+                    Log.e("End value is", "closer");
+
+                    timeIndex = appearanceTimeEndArray.indexOf(closestEnd); //when getting times and locations, use timeIndex
+                    featureIndex = indexArray.get(timeIndex); //when getting name and info, use featureIndex
+                    int corresStart = appearanceTimeStartArray.get(timeIndex);
+
+                    Log.e("current position", String.valueOf(currentPosition));
+                    Log.e("Closest endTime is", String.valueOf(closestEnd));
+                    Log.e("EndTime's index is", String.valueOf(timeIndex));
+                    Log.e("Correspond startTime is", String.valueOf(corresStart));
+                    Log.e("feature index", String.valueOf(featureIndex));
+
+                    // If current is 5860, and closestEnd is 6000, it should execute.
+                    // If 5860 is less than 5000+1000 = 6000, and if 5860 is greater than or equal to 5000, execute.
+
+                    //If current is 5860, closesEnd is 6000, and start is 5000, it should execute.
+                    //If 5860 is less than 8000+1000 = 9000, and if 5860 is greater than or equal to 2000, execute.
+
+                    if (currentPosition >= corresStart){
+                        quadrantNumber = quadrantNumberArray.get(timeIndex);
+                        Log.e("Quadrant number", String.valueOf(quadrantNumber));
+                        Log.e("Product", productNameArray.get(featureIndex));
+                        execMetaDataRetriever(timeIndex);
+                        executed = true;
+                    }
+                }
 
             }
         });
@@ -253,7 +305,6 @@ public class videoPlayerActivity extends AppCompatActivity {
 
 
     private void execMetaDataRetriever(int quadrantIndex) {
-        int currentPosition = cVideoView.getCurrentPosition();
         double position = (double)currentPosition/(double)1000;
         extractImagesVideo(position);
 
@@ -308,6 +359,12 @@ public class videoPlayerActivity extends AppCompatActivity {
             quadrant1.requestLayout();
             quadrant1.setColorFilter(0x808fd2ea);
             quadrant1.bringToFront();
+            quadrant1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dropDownMenu();
+                }
+            });
         }
         else if (quadrantNumber == 2){
             Log.e("Quadrant 2", "Highlighted");
@@ -318,6 +375,12 @@ public class videoPlayerActivity extends AppCompatActivity {
             quadrant2.requestLayout();
             quadrant2.setColorFilter(0x808fd2ea);
             quadrant2.bringToFront();
+            quadrant2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dropDownMenu();
+                }
+            });
         }
         else if (quadrantNumber == 3){
             Log.e("Quadrant 3", "Highlighted");
@@ -328,6 +391,12 @@ public class videoPlayerActivity extends AppCompatActivity {
             quadrant3.requestLayout();
             quadrant3.setColorFilter(0x808fd2ea);
             quadrant3.bringToFront();
+            quadrant3.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dropDownMenu();
+                }
+            });
         }
         else{
             Log.e("Quadrant 4", "Highlighted");
@@ -338,25 +407,38 @@ public class videoPlayerActivity extends AppCompatActivity {
             quadrant4.requestLayout();
             quadrant4.setColorFilter(0x808fd2ea);
             quadrant4.bringToFront();
+            quadrant4.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dropDownMenu();
+                }
+            });
         }
     }
 
-    /*
-    public void hideQuadrants(){
+
+    private void hideQuadrants(){
         if (quadrantNumber == 1){
             quadrant1.setColorFilter(null);
+            quadrant1.setOnClickListener(null);
         }
         else if (quadrantNumber == 2){
             quadrant2.setColorFilter(null);
+            quadrant2.setOnClickListener(null);
+
         }
         else if (quadrantNumber == 3){
             quadrant3.setColorFilter(null);
+            quadrant3.setOnClickListener(null);
         }
-        else{
+        else {
             quadrant4.setColorFilter(null);
+            quadrant4.setOnClickListener(null);
         }
+        dropDown.setEnabled(false);
+        dropDown.setClickable(false);
     }
-    */
+
 
     public Bitmap[] splitBitmap(Bitmap picture)
     {
@@ -414,6 +496,8 @@ public class videoPlayerActivity extends AppCompatActivity {
     */
 
     private void extractImagesVideo(double startTime) {
+        Log.e("In", "ExtractImages");
+
         File moviesDir = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES
         );
@@ -440,6 +524,7 @@ public class videoPlayerActivity extends AppCompatActivity {
         filePath = dir.getAbsolutePath();
         File dest = new File(dir, filePrefix + "%03d" + fileExtn);
         String[] complexCommand = {"-y", "-i", String.valueOf(MainActivity.fileArrayList.get(position)), "-preset", "ultrafast", "-vframes", "1", "-ss", "" + startTime, dest.getAbsolutePath()};
+        Log.e("Complex command", complexCommand.toString());
         execFFmpegBinary(complexCommand);
 
     }
@@ -498,7 +583,7 @@ public class videoPlayerActivity extends AppCompatActivity {
 
                 @Override
                 public void onSuccess(String s) {
-                    Log.e("VCA", "SUCCESS" + s);
+                    Log.e("VCA", "SUCCESS");
 
                     File dir = new File(filePath);
 
@@ -532,6 +617,47 @@ public class videoPlayerActivity extends AppCompatActivity {
         } catch (FFmpegCommandAlreadyRunningException e) {
             // do nothing for now
         }
+    }
+
+    private void dropDownMenu(){
+        if (quadrantNumber == 1){
+            dropDown = findViewById(R.id.spinner1);
+        }
+        else if(quadrantNumber == 2){
+            dropDown = findViewById(R.id.spinner2);
+        }
+        else if(quadrantNumber == 3){
+            dropDown = findViewById(R.id.spinner3);
+        }
+        else if(quadrantNumber == 4){
+            dropDown = findViewById(R.id.spinner4);
+        }
+
+        dropDown.setEnabled(true);
+        dropDown.setClickable(true);
+        String[] items = new String[]{productNameArray.get(featureIndex),
+                "Order now ", "Receive a product message", "View information"}; //eCommerceInfoArray.get(featureIndex)
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_dropdown_item, items);
+        dropDown.setAdapter(adapter);
+        dropDown.setOnItemSelectedListener(this);
+        dropDown.bringToFront();
+
+    }
+
+    public void onItemSelected(AdapterView<?> parent, View view,
+                               int pos, long id) {
+        String selected = parent.getItemAtPosition(pos).toString();
+        if (selected.equals("View information")){
+            Intent intent = new Intent(videoPlayerActivity.this, webPageActivity.class);
+            intent.putExtra("link", eCommerceInfoArray.get(featureIndex));
+            Log.e("Link in videoplayer", eCommerceInfoArray.get(featureIndex));
+            startActivity(intent);
+        }
+    }
+
+    public void onNothingSelected(AdapterView<?> parent) {
+        // Another interface callback
     }
 
 

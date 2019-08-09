@@ -33,13 +33,13 @@
                 <TextView
                         android:id="@+id/tv_feature"
                         android:layout_width="287dp"
-                        android:layout_height="66dp"
+                        android:layout_height="match_parent"
                         android:layout_marginStart="1dp"
                         android:layout_marginLeft="1dp"
                         android:layout_toEndOf="@+id/buttonRemove"
-                        android:layout_toRightOf="@+id/buttonRemove"
-                        android:gravity="center_vertical"
-                        android:text="TextView" />
+                        android:gravity="top|left"
+                        android:text="TextView"
+                        android:autoSizeTextType="uniform" />
 
             </LinearLayout>
         </LinearLayout>

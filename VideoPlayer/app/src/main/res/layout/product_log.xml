@@ -61,7 +61,9 @@ xmlns:android="http://schemas.android.com/apk/res/android"
                             android:layout_height="45dp"
                             android:ems="10"
                             android:gravity="center"
-                            android:hint="@string/name_hint" />
+                            android:hint="@string/name_hint"
+                            android:scrollHorizontally="true"
+                            android:singleLine="true"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -84,7 +86,9 @@ xmlns:android="http://schemas.android.com/apk/res/android"
                             android:layout_height="45dp"
                             android:ems="10"
                             android:gravity="center"
-                            android:hint="@string/link_hint" />
+                            android:hint="@string/link_hint"
+                            android:scrollHorizontally="true"
+                            android:singleLine="true" />
 
                     </LinearLayout>
 
@@ -108,7 +112,9 @@ xmlns:android="http://schemas.android.com/apk/res/android"
                             android:ems="10"
                             android:gravity="center"
                             android:hint="@string/location_hint"
-                            android:inputType="number" />
+                            android:inputType="number"
+                            android:scrollHorizontally="true"
+                            android:singleLine="true"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -132,7 +138,9 @@ xmlns:android="http://schemas.android.com/apk/res/android"
                             android:ems="10"
                             android:gravity="center"
                             android:hint="@string/time_hint_start"
-                            android:inputType="time" />
+                            android:inputType="time"
+                            android:scrollHorizontally="true"
+                            android:singleLine="true"/>
 
                         <EditText
                             android:id="@+id/editText_time_end"
@@ -141,7 +149,9 @@ xmlns:android="http://schemas.android.com/apk/res/android"
                             android:ems="10"
                             android:gravity="center"
                             android:hint="@string/time_hint_end"
-                            android:inputType="time" />
+                            android:inputType="time"
+                            android:scrollHorizontally="true"
+                            android:singleLine="true"/>
 
                     </LinearLayout>
 

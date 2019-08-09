@@ -25,7 +25,9 @@
             android:ems="10"
             android:gravity="center"
             android:hint="@string/location_hint"
-            android:inputType="number" />
+            android:inputType="number"
+            android:scrollHorizontally="true"
+            android:singleLine="true"/>
     </LinearLayout>
 
     <LinearLayout
@@ -49,7 +51,9 @@
             android:ems="10"
             android:gravity="center"
             android:hint="@string/time_hint_start"
-            android:inputType="time" />
+            android:inputType="time"
+            android:scrollHorizontally="true"
+            android:singleLine="true"/>
 
         <EditText
             android:id="@+id/editText_added_time_end"
@@ -58,7 +62,9 @@
             android:ems="10"
             android:gravity="center"
             android:hint="@string/time_hint_end"
-            android:inputType="time" />
+            android:inputType="time"
+            android:scrollHorizontally="true"
+            android:singleLine="true"/>
 
     </LinearLayout>
 

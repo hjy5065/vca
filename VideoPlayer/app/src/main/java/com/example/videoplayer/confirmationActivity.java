@@ -62,11 +62,15 @@ public class confirmationActivity extends AppCompatActivity {
         }
 
         final TextView feature1 = findViewById(R.id.tv_feature);
-        feature1.setText("Product: " + productNameArray.get(0).getText().toString() +
-                " / Link: " + eCommerceInfoArray.get(0).getText().toString() +
-                " / Times: " + appearanceTimeStartArray.get(0).getText().toString() + " - " +
-                appearanceTimeEndArray.get(0).getText().toString() +
-                " / Location: " + quadrantNumberArray.get(0).getText().toString());
+        feature1.setText("Product: " + productNameArray.get(0).getText().toString());
+        if (eCommerceInfoArray.get(0).getText().toString().length() > 30){
+            feature1.append("\nLink: " + eCommerceInfoArray.get(0).getText().toString().substring(0, 30) + "...");
+        }
+        else{
+            feature1.append("\nLink: " + eCommerceInfoArray.get(0).getText().toString());
+        }
+        feature1.append("\n" + "Location: " + quadrantNumberArray.get(0).getText().toString() +
+                ", Times: " + appearanceTimeStartArray.get(0).getText().toString() + " - " + appearanceTimeEndArray.get(0).getText().toString());
 
         //textViewArray.add(feature1);
 
@@ -107,17 +111,21 @@ public class confirmationActivity extends AppCompatActivity {
 
             TextView addedFeature = (TextView) view2.findViewById(R.id.added_feature);
 
-
-
-            addedFeature.setText("Product: " + productNameArray.get(i).getText().toString() + " / Link: " + eCommerceInfoArray.get(i).getText().toString() +
-                    " / Times: " + appearanceTimeStartArray.get(indexForIndex).getText().toString() + " - " + appearanceTimeEndArray.get(indexForIndex).getText().toString() +
-                    " / Location: " + quadrantNumberArray.get(indexForIndex).getText().toString());
+            addedFeature.setText("Product: " + productNameArray.get(i).getText().toString());
+            if (eCommerceInfoArray.get(i).getText().toString().length() > 30){
+                addedFeature.append("\nLink: " + eCommerceInfoArray.get(i).getText().toString().substring(0, 30) + "...");
+            }
+            else{
+                addedFeature.append("\nLink: " + eCommerceInfoArray.get(i).getText().toString());
+            }
+            addedFeature.append("\n" + "Location: " + quadrantNumberArray.get(indexForIndex).getText().toString() +
+                    ", Times: " + appearanceTimeStartArray.get(indexForIndex).getText().toString() + " - " + appearanceTimeEndArray.get(indexForIndex).getText().toString());
 
             if (indexForIndex+1 < indexArray.size()){
                 while (indexArray.get(indexForIndex).equals(indexArray.get(indexForIndex+1))){
-                    addedFeature.append(" / Times: " + appearanceTimeStartArray.get(indexForIndex+1).getText().toString() +
-                            " - " + appearanceTimeEndArray.get(indexForIndex+1).getText().toString() +
-                            " / Location: " + quadrantNumberArray.get(indexForIndex+1).getText().toString());
+                    addedFeature.append("\nLocation: " + quadrantNumberArray.get(indexForIndex+1).getText().toString() +
+                            ", Times: " + appearanceTimeStartArray.get(indexForIndex+1).getText().toString() +
+                            " - " + appearanceTimeEndArray.get(indexForIndex+1).getText().toString());
                     indexForIndex++;
                     if ((indexForIndex+1) == (indexArray.size())){
                         break;

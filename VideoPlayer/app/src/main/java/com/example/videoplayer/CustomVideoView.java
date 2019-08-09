@@ -27,6 +27,7 @@ public class CustomVideoView extends VideoView {
 
     @Override
     public void pause() {
+
         super.pause();
         if (mListener != null) {
             mListener.onPause();
@@ -35,24 +36,16 @@ public class CustomVideoView extends VideoView {
 
     @Override
     public void start() {
-        super.start();
         if (mListener != null) {
             mListener.onPlay();
         }
+        super.start();
     }
 
-    @Override
-    public void resume() {
-        super.start();
-        if (mListener != null) {
-            mListener.onResume();
-        }
-    }
 
     public static interface PlayPauseListener {
         void onPlay();
         void onPause();
-        void onResume();
     }
 
 }
