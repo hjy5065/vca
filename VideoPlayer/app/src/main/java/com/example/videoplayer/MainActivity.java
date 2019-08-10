@@ -80,8 +80,6 @@ public class MainActivity extends AppCompatActivity {
 
                 int timeRowIndex = linearLayout.getChildCount();
 
-                Log.e(String.valueOf(linearLayout.getChildCount()), String.valueOf(timeRowIndex));
-
                 LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View newRowView = inflater.inflate(R.layout.add_feature, null);
                 linearLayout.addView(newRowView, timeRowIndex);

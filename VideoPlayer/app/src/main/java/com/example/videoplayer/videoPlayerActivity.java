@@ -214,7 +214,6 @@ public class videoPlayerActivity extends AppCompatActivity implements AdapterVie
                         Log.e("Quadrant number", String.valueOf(quadrantNumber));
                         Log.e("Product", productNameArray.get(featureIndex));
                         execMetaDataRetriever(timeIndex);
-                        executed = true;
                     }
                 }
                 else if ((Math.abs(closestStart-currentPosition) > Math.abs(closestEnd-currentPosition)) &&
@@ -242,7 +241,6 @@ public class videoPlayerActivity extends AppCompatActivity implements AdapterVie
                         Log.e("Quadrant number", String.valueOf(quadrantNumber));
                         Log.e("Product", productNameArray.get(featureIndex));
                         execMetaDataRetriever(timeIndex);
-                        executed = true;
                     }
                 }
 
@@ -414,6 +412,7 @@ public class videoPlayerActivity extends AppCompatActivity implements AdapterVie
                 }
             });
         }
+        executed = true;
     }
 
 
@@ -574,6 +573,7 @@ public class videoPlayerActivity extends AppCompatActivity implements AdapterVie
     }
 
     private void execFFmpegBinary(final String[] command) {
+        Log.e("In execFFmpeg", "Don't worry");
         try {
             ffmpeg.execute(command, new ExecuteBinaryResponseHandler() {
                 @Override
