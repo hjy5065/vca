@@ -114,9 +114,14 @@ public class MainActivity extends AppCompatActivity {
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, confirmationActivity.class);
-                startActivity(intent);
-
+                if (productNameArray.size() == 0 || eCommerceInfoArray.size() == 0 || appearanceTimeStartArray.size() == 0 ||
+                        appearanceTimeEndArray.size() == 0 || quadrantNumberArray.size() == 0){
+                    Toast.makeText(MainActivity.this, "Please log all required information", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Intent intent = new Intent(MainActivity.this, confirmationActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 

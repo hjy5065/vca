@@ -81,28 +81,11 @@ public class videoPlayerActivity extends AppCompatActivity implements AdapterVie
 
     int quadrantNumber;
 
-    Bitmap screenshot;
-    Bitmap[] screenshotQuadrants;
-    Bitmap finalScreenshot;
-
     FFmpegMediaMetadataRetriever retriever;
     String rotation;
 
-    private Rect mSelection;
-
-    ImageView quadrant1;
-    ImageView quadrant2;
-    ImageView quadrant3;
-    ImageView quadrant4;
 
     boolean executed = false;
-
-    private MediaPlayer mediaPlayer;
-
-    private FFmpeg ffmpeg;
-    private String filePath;
-    private Bitmap bmp;
-
     int timeIndex;
     int featureIndex;
 
@@ -114,7 +97,6 @@ public class videoPlayerActivity extends AppCompatActivity implements AdapterVie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_player);
-        loadFFMpegBinary();
 
         cVideoView = (CustomVideoView) findViewById(R.id.my_player);
 
@@ -159,7 +141,7 @@ public class videoPlayerActivity extends AppCompatActivity implements AdapterVie
             public void onPlay() {
                 cVideoView.bringToFront();
                 if(executed){
-                    hideQuadrants();
+                    hideDropDown();
                     cVideoView.seekTo(currentPosition);
                     executed = false;
                 }
@@ -213,7 +195,7 @@ public class videoPlayerActivity extends AppCompatActivity implements AdapterVie
                         quadrantNumber = quadrantNumberArray.get(timeIndex);
                         Log.e("Quadrant number", String.valueOf(quadrantNumber));
                         Log.e("Product", productNameArray.get(featureIndex));
-                        execMetaDataRetriever(timeIndex);
+                        enableSpinner(timeIndex);
                     }
                 }
                 else if ((Math.abs(closestStart-currentPosition) > Math.abs(closestEnd-currentPosition)) &&
@@ -240,7 +222,7 @@ public class videoPlayerActivity extends AppCompatActivity implements AdapterVie
                         quadrantNumber = quadrantNumberArray.get(timeIndex);
                         Log.e("Quadrant number", String.valueOf(quadrantNumber));
                         Log.e("Product", productNameArray.get(featureIndex));
-                        execMetaDataRetriever(timeIndex);
+                        enableSpinner(timeIndex);
                     }
                 }
 
@@ -302,154 +284,19 @@ public class videoPlayerActivity extends AppCompatActivity implements AdapterVie
     }
 
 
-    private void execMetaDataRetriever(int quadrantIndex) {
+    private void enableSpinner(int quadrantIndex) {
         double position = (double)currentPosition/(double)1000;
-        extractImagesVideo(position);
-
-
-
-        /*
-        try {
-            screenshot = retriever.getFrameAtTime(currentPosition*1000, FFmpegMediaMetadataRetriever.OPTION_CLOSEST);
-            retriever.release();
-            Log.e("Took a screenshot", "Yes");
-            if (rotation.equals("90")){
-                Matrix matrix = new Matrix();
-                matrix.postRotate(90);
-                screenshot = Bitmap.createBitmap(screenshot, 0, 0, screenshot.getWidth(), screenshot.getHeight(), matrix, true);
-            }
-            screenshotQuadrants = splitBitmap(screenshot);
-            //screenshotQuadrants[2] = highlightImage(screenshotQuadrants[2]);
-            img = (ImageView) findViewById(R.id.img);
-            img.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            img.bringToFront();
-            img.setImageBitmap(screenshot);
-            quadrantNumber = quadrantNumberArrayList.get(quadrantIndex);
-            setQuadrants();
-            executed = true;
-        } catch (IllegalArgumentException ex) {
-            Log.e("Catch", "Illegal argument exception");
-            ex.printStackTrace();
-        } catch (RuntimeException ex) {
-            Log.e("Catch", "RuntimeException");
-            ex.printStackTrace();
-        } finally {
-            Log.e("Finally","retriever.release");
-            try {
-                retriever.release();
-            } catch (RuntimeException ex) {
-                Log.e("Catch inside finally", "Runtime Exception");
-            }
-        }
-        */
-
-
-    }
-
-    public void setQuadrants(){
-
-        if (quadrantNumber == 1){
-            Log.e("Quadrant 1", "Highlighted");
-            quadrant1 = findViewById(R.id.quadrant1);
-            quadrant1.setImageBitmap(screenshotQuadrants[0]);
-            quadrant1.getLayoutParams().width = img.getWidth()/2;
-            quadrant1.getLayoutParams().height = img.getHeight()/2;
-            quadrant1.requestLayout();
-            quadrant1.setColorFilter(0x808fd2ea);
-            quadrant1.bringToFront();
-            quadrant1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dropDownMenu();
-                }
-            });
-        }
-        else if (quadrantNumber == 2){
-            Log.e("Quadrant 2", "Highlighted");
-            quadrant2 = findViewById(R.id.quadrant2);
-            quadrant2.setImageBitmap(screenshotQuadrants[1]);
-            quadrant2.getLayoutParams().width = img.getWidth()/2;
-            quadrant2.getLayoutParams().height = img.getHeight()/2;
-            quadrant2.requestLayout();
-            quadrant2.setColorFilter(0x808fd2ea);
-            quadrant2.bringToFront();
-            quadrant2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dropDownMenu();
-                }
-            });
-        }
-        else if (quadrantNumber == 3){
-            Log.e("Quadrant 3", "Highlighted");
-            quadrant3 = findViewById(R.id.quadrant3);
-            quadrant3.setImageBitmap(screenshotQuadrants[2]);
-            quadrant3.getLayoutParams().width = (img.getWidth()/2);
-            quadrant3.getLayoutParams().height = (img.getHeight()/2);
-            quadrant3.requestLayout();
-            quadrant3.setColorFilter(0x808fd2ea);
-            quadrant3.bringToFront();
-            quadrant3.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dropDownMenu();
-                }
-            });
-        }
-        else{
-            Log.e("Quadrant 4", "Highlighted");
-            quadrant4 = findViewById(R.id.quadrant4);
-            quadrant4.setImageBitmap(screenshotQuadrants[3]);
-            quadrant4.getLayoutParams().width = img.getWidth()/2;
-            quadrant4.getLayoutParams().height = img.getHeight()/2;
-            quadrant4.requestLayout();
-            quadrant4.setColorFilter(0x808fd2ea);
-            quadrant4.bringToFront();
-            quadrant4.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dropDownMenu();
-                }
-            });
-        }
+        dropDownMenu();
         executed = true;
     }
 
 
-    private void hideQuadrants(){
-        if (quadrantNumber == 1){
-            quadrant1.setColorFilter(null);
-            quadrant1.setOnClickListener(null);
-        }
-        else if (quadrantNumber == 2){
-            quadrant2.setColorFilter(null);
-            quadrant2.setOnClickListener(null);
 
-        }
-        else if (quadrantNumber == 3){
-            quadrant3.setColorFilter(null);
-            quadrant3.setOnClickListener(null);
-        }
-        else {
-            quadrant4.setColorFilter(null);
-            quadrant4.setOnClickListener(null);
-        }
+    private void hideDropDown(){
         dropDown.setEnabled(false);
         dropDown.setClickable(false);
     }
 
-
-    public Bitmap[] splitBitmap(Bitmap picture)
-    {
-        Log.e("Split bitmap", "Yes");
-        Bitmap[] imgs = new Bitmap[4];
-        imgs[0] = Bitmap.createBitmap(picture, 0, 0, picture.getWidth()/2 , picture.getHeight()/2);
-        imgs[1] = Bitmap.createBitmap(picture, picture.getWidth()/2, 0, picture.getWidth()/2, picture.getHeight()/2);
-        imgs[2] = Bitmap.createBitmap(picture,0, picture.getHeight()/2, picture.getWidth()/2,picture.getHeight()/2);
-        imgs[3] = Bitmap.createBitmap(picture, picture.getWidth()/2, picture.getHeight()/2, picture.getWidth()/2, picture.getHeight()/2);
-
-        return imgs;
-    }
 
     /*
     public Bitmap highlightImage(Bitmap src) {
@@ -478,146 +325,7 @@ public class videoPlayerActivity extends AppCompatActivity implements AdapterVie
         // return out final image
         return bmOut;
     }
-    /*
-    public Bitmap getResizedBitmap(Bitmap image) {
-        int width = image.getWidth();
-        int height = image.getHeight();
-        float bitmapRatio = (float)width / (float) height;
-        if (bitmapRatio > 1) {
-            width = screenshot.getWidth()/2;
-            height = (int) (width / bitmapRatio);
-        } else {
-            height = screenshot.getHeight()/2;
-            width = (int) (height * bitmapRatio);
-        }
-        return Bitmap.createScaledBitmap(image, width, height, true);
-    }
     */
-
-    private void extractImagesVideo(double startTime) {
-        Log.e("In", "ExtractImages");
-
-        File moviesDir = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES
-        );
-
-        String filePrefix = "extract_picture";
-        String fileExtn = ".jpg";
-
-
-        File dir = new File(moviesDir, "VCA");
-        int fileNo = 0;
-
-        if (!dir.exists()){
-            dir.mkdir();
-            Log.e("Just made one", "VCA folder");
-        }
-
-        /*If VCA20 already exists, next folder will be VCA21.
-        while (dir.exists()) {
-            fileNo++;
-            dir = new File(moviesDir, "VCA" + fileNo);
-        }
-        */
-        dir.mkdir();
-        filePath = dir.getAbsolutePath();
-        File dest = new File(dir, filePrefix + "%03d" + fileExtn);
-        String[] complexCommand = {"-y", "-i", String.valueOf(MainActivity.fileArrayList.get(position)), "-preset", "ultrafast", "-vframes", "1", "-ss", "" + startTime, dest.getAbsolutePath()};
-        Log.e("Complex command", complexCommand.toString());
-        execFFmpegBinary(complexCommand);
-
-    }
-
-    /**
-     * Load FFmpeg binary
-     */
-    private void loadFFMpegBinary() {
-        try {
-            if (ffmpeg == null) {
-                Log.d("VCA", "ffmpeg : era nulo");
-                ffmpeg = FFmpeg.getInstance(this);
-            }
-            ffmpeg.loadBinary(new LoadBinaryResponseHandler() {
-                @Override
-                public void onFailure() {
-                    showUnsupportedExceptionDialog();
-                }
-
-                @Override
-                public void onSuccess() {
-                    Log.d("VCA", "ffmpeg : correct Loaded");
-                }
-            });
-        } catch (FFmpegNotSupportedException e) {
-            showUnsupportedExceptionDialog();
-        } catch (Exception e) {
-            Log.d("VCA", "EXception no controlada : " + e);
-        }
-    }
-
-    private void showUnsupportedExceptionDialog() {
-        new AlertDialog.Builder(videoPlayerActivity.this)
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setTitle("Not Supported")
-                .setMessage("Device Not Supported")
-                .setCancelable(false)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        videoPlayerActivity.this.finish();
-                    }
-                })
-                .create()
-                .show();
-
-    }
-
-    private void execFFmpegBinary(final String[] command) {
-        Log.e("In execFFmpeg", "Don't worry");
-        try {
-            ffmpeg.execute(command, new ExecuteBinaryResponseHandler() {
-                @Override
-                public void onFailure(String s) {
-                    Log.d("VCA", "FAILED with output : " + s);
-                }
-
-                @Override
-                public void onSuccess(String s) {
-                    Log.e("VCA", "SUCCESS");
-
-                    File dir = new File(filePath);
-
-                    File[] listFile = dir.listFiles();
-
-
-                    bmp = BitmapFactory.decodeFile(String.valueOf(listFile[0]));
-                    img = findViewById(R.id.img);
-                    img.setImageBitmap(bmp);
-                    img.bringToFront();
-
-                    screenshotQuadrants = splitBitmap(bmp);
-                    setQuadrants();
-                }
-
-                @Override
-                public void onProgress(String s) {
-                    Log.d("VCA", "progress : " + s);
-                }
-
-                @Override
-                public void onStart() {
-                    Log.d("VCA", "Started command : ffmpeg " + command);
-                }
-
-                @Override
-                public void onFinish() {
-                    Log.d("VCA", "Finished command : ffmpeg " + command);
-                }
-            });
-        } catch (FFmpegCommandAlreadyRunningException e) {
-            // do nothing for now
-        }
-    }
 
     private void dropDownMenu(){
         if (quadrantNumber == 1){

@@ -12,8 +12,8 @@
         android:id="@+id/spinner4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/quadrant4"
-        android:layout_alignLeft="@id/quadrant4"
+        android:layout_alignTop="@id/anchor"
+        android:layout_alignLeft="@id/anchor"
         android:background="@android:drawable/btn_dropdown"
         android:spinnerMode="dropdown"/>
 
@@ -21,8 +21,8 @@
         android:id="@+id/spinner3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/quadrant3"
-        android:layout_alignRight="@id/quadrant3"
+        android:layout_alignTop="@id/anchor"
+        android:layout_alignRight="@id/anchor"
         android:background="@android:drawable/btn_dropdown"
         android:spinnerMode="dropdown"/>
 
@@ -30,8 +30,8 @@
         android:id="@+id/spinner2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/quadrant2"
-        android:layout_alignLeft="@id/quadrant2"
+        android:layout_alignBottom="@id/anchor"
+        android:layout_alignLeft="@id/anchor"
         android:background="@android:drawable/btn_dropdown"
         android:spinnerMode="dropdown"/>
 
@@ -39,56 +39,16 @@
         android:id="@+id/spinner1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/quadrant1"
-        android:layout_alignRight="@id/quadrant1"
+        android:layout_alignBottom="@id/anchor"
+        android:layout_alignRight="@id/anchor"
         android:background="@android:drawable/btn_dropdown"
         android:spinnerMode="dropdown"/>
 
-    <ImageView
-        android:id="@+id/quadrant4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/img"
-        android:layout_alignRight="@id/img"
-        android:scaleType="fitStart"
-        app:srcCompat="@drawable/highlight" />
-
-    <ImageView
-        android:id="@+id/quadrant3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/img"
-        android:layout_alignLeft="@id/img"
-        android:scaleType="fitEnd"
-        app:srcCompat="@drawable/highlight" />
-
-    <ImageView
-        android:id="@+id/quadrant2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/img"
-        android:layout_alignRight="@id/img"
-        android:scaleType="fitStart"
-        app:srcCompat="@drawable/highlight" />
-
-    <ImageView
-        android:id="@+id/quadrant1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/img"
-        android:layout_alignLeft="@id/img"
-        android:scaleType="fitEnd"
-        app:srcCompat="@drawable/highlight" />
-
-    <ImageView
-        android:id="@+id/img"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:layout_centerInParent="true"
-        android:layout_gravity="center"
-        app:srcCompat="@color/cardview_dark_background" />
+    <View
+        android:id="@+id/anchor"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_centerInParent="true" />
 
     <VideoView
         android:id="@+id/videoView"
