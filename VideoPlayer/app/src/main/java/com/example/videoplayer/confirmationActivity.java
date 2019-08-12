@@ -61,10 +61,14 @@ public class confirmationActivity extends AppCompatActivity {
         //indexForIndex is index for each time and quadrant -- aka indexArray index. But both indices start at the same spot - 0, or childCount.
         indexForIndex = featureRowIndex;
 
-        Log.e("featureRowIndex", String.valueOf(featureRowIndex));
+        printLog();
 
         for (int i = featureRowIndex; i < productNameArray.size(); i++){
+            Log.e("featureRowIndex", String.valueOf(featureRowIndex));
+            Log.e("indexForindex", String.valueOf(indexForIndex));
+
             final int finalI = i;
+            Log.e("finalI", String.valueOf(finalI));
 
             LayoutInflater inflater2 = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             final View newRowView2 = inflater2.inflate(R.layout.add_confirmation, null);
@@ -111,13 +115,19 @@ public class confirmationActivity extends AppCompatActivity {
                             }
                         }
                     }
+                    Log.e("newI", String.valueOf(newI));
+
 
                     confirmationPage.removeView(newRowView2);
 
                     productNameArray.remove(newI);
                     eCommerceInfoArray.remove(newI);
 
+                    //What is being removed is item of newI, therefore find the value newI in indexArray and get THAT value's index to get
+                    //the indexNo for times.
                     int indexNo = indexArray.indexOf(newI);
+                    Log.e("indexNo", String.valueOf(indexNo));
+
 
 
                     if (indexNo+1 < indexArray.size()){
@@ -131,8 +141,14 @@ public class confirmationActivity extends AppCompatActivity {
                     appearanceTimeEndArray.remove(indexNo);
                     indexArray.remove(indexNo);
 
+                    for (int j = indexNo; j < indexArray.size(); j++){
+                        indexArray.set(j, indexArray.get(j)-1);
+                    }
+
 
                     removedIndices.add(finalI);
+
+                    printLog();
                 }
             });
 
@@ -355,6 +371,43 @@ public class confirmationActivity extends AppCompatActivity {
 
     }
 
+    private void printLog(){
+        int j = 0;
+        for (EditText product : productNameArray) {
+            Log.e("Product " + String.valueOf(j), product.getText().toString());
+            j++;
+        }
+
+        int k = 0;
+        for (EditText info : eCommerceInfoArray) {
+            Log.e("Info " + String.valueOf(k), info.getText().toString());
+            k++;
+        }
+
+        int l = 0;
+        for (EditText startTime : appearanceTimeStartArray) {
+            Log.e("Start time " + String.valueOf(l), String.valueOf(startTime.getText().toString()));
+            l++;
+        }
+
+        int r = 0;
+        for (EditText endTime : appearanceTimeEndArray) {
+            Log.e("End time " + String.valueOf(r), String.valueOf(endTime.getText().toString()));
+            r++;
+        }
+
+        int q = 0;
+        for (EditText loc : quadrantNumberArray) {
+            Log.e("Location " + String.valueOf(q), String.valueOf(loc.getText().toString()));
+            q++;
+        }
+
+        int g = 0;
+        for (int in : indexArray){
+            Log.e("Index " + String.valueOf(g), String.valueOf(in));
+            g++;
+        }
+    }
 
 
 }
