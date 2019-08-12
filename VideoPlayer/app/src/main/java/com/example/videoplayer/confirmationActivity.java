@@ -32,7 +32,6 @@ import static com.example.videoplayer.MainActivity.fileArrayList;
 
 public class confirmationActivity extends AppCompatActivity {
 
-    int featureRowIndex = 1;
     private ArrayList<Integer> removedIndices = new ArrayList<Integer>();
 
     private static ArrayList<EditText> productNameArray = MainActivity.getProductNameArray();
@@ -48,146 +47,30 @@ public class confirmationActivity extends AppCompatActivity {
     File directory;
     boolean boolean_permission;
 
-    int indexForIndex = 0;
+    int indexForIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.confirmation_page);
 
-        int j = 0;
-        for (EditText product : productNameArray) {
-            Log.e("Product " + String.valueOf(j), product.getText().toString());
-            j++;
-        }
+        final LinearLayout confirmationPage = findViewById(R.id.confirmation_page);
 
-        int k = 0;
-        for (EditText info : eCommerceInfoArray) {
-            Log.e("Info " + String.valueOf(k), info.getText().toString());
-            k++;
-        }
+        //featureRowIndex is index for each textViews made -- aka productArray index.
+        int featureRowIndex = confirmationPage.getChildCount();
+        //indexForIndex is index for each time and quadrant -- aka indexArray index. But both indices start at the same spot - 0, or childCount.
+        indexForIndex = featureRowIndex;
 
-        int l = 0;
-        for (EditText startTime : appearanceTimeStartArray) {
-            Log.e("Start time " + String.valueOf(l), String.valueOf(startTime.getText().toString()));
-            l++;
-        }
-
-        int r = 0;
-        for (EditText endTime : appearanceTimeEndArray) {
-            Log.e("End time " + String.valueOf(r), String.valueOf(endTime.getText().toString()));
-            r++;
-        }
-
-        int q = 0;
-        for (EditText loc : quadrantNumberArray) {
-            Log.e("Location " + String.valueOf(q), String.valueOf(loc.getText().toString()));
-            q++;
-        }
-
-        final TextView feature1 = findViewById(R.id.tv_feature);
-        feature1.setText("Product: " + productNameArray.get(0).getText().toString());
-        if (eCommerceInfoArray.get(0).getText().toString().length() > 30){
-            feature1.append("\nLink: " + eCommerceInfoArray.get(0).getText().toString().substring(0, 30) + "...");
-        }
-        else{
-            feature1.append("\nLink: " + eCommerceInfoArray.get(0).getText().toString());
-        }
-        feature1.append("\n" + "Location: " + quadrantNumberArray.get(0).getText().toString() +
-                ", Times: " + appearanceTimeStartArray.get(0).getText().toString() + " - " + appearanceTimeEndArray.get(0).getText().toString());
-
-
-        if (indexForIndex+1 < indexArray.size()){
-            while ((indexArray.get(indexForIndex).equals(indexArray.get(indexForIndex+1)))){
-                feature1.append("\nLocation: " + quadrantNumberArray.get(indexForIndex+1).getText().toString() +
-                        ", Times: " + appearanceTimeStartArray.get(indexForIndex+1).getText().toString() +
-                        " - " + appearanceTimeEndArray.get(indexForIndex+1).getText().toString());
-                indexForIndex++;
-
-                if ((indexForIndex+1) == (indexArray.size())) {
-                    break;
-                }
-            }
-            indexForIndex++;
-
-        }
-
-        Button removeButton = findViewById(R.id.buttonRemove);
-        removeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LinearLayout confirmationPage = findViewById(R.id.confirmation_page);
-                final LinearLayout firstList = confirmationPage.findViewById(R.id.firstList);
-
-
-                confirmationPage.removeView(firstList);
-                productNameArray.remove(0);
-                eCommerceInfoArray.remove(0);
-
-                int indexNo = indexArray.indexOf(0);
-
-
-                if (indexNo+1 < indexArray.size()){
-                    while (indexArray.get(indexNo).equals(indexArray.get(indexNo+1))){
-                        appearanceTimeStartArray.remove(indexNo);
-                        appearanceTimeEndArray.remove(indexNo);
-                        indexArray.remove(indexNo);
-                    }
-                }
-                appearanceTimeStartArray.remove(indexNo);
-                appearanceTimeEndArray.remove(indexNo);
-                indexArray.remove(indexNo);
-
-
-
-                removedIndices.add(0);
-
-                int j = 0;
-                for (EditText product : productNameArray) {
-                    Log.e("Product " + String.valueOf(j), product.getText().toString());
-                    j++;
-                }
-
-                int k = 0;
-                for (EditText info : eCommerceInfoArray) {
-                    Log.e("Info " + String.valueOf(k), info.getText().toString());
-                    k++;
-                }
-
-                int l = 0;
-                for (EditText startTime : appearanceTimeStartArray) {
-                    Log.e("Start time " + String.valueOf(l), String.valueOf(startTime.getText().toString()));
-                    l++;
-                }
-
-                int r = 0;
-                for (EditText endTime : appearanceTimeEndArray) {
-                    Log.e("End time " + String.valueOf(r), String.valueOf(endTime.getText().toString()));
-                    r++;
-                }
-
-                int q = 0;
-                for (EditText loc : quadrantNumberArray) {
-                    Log.e("Location " + String.valueOf(q), String.valueOf(loc.getText().toString()));
-                    q++;
-                }
-
-
-            }
-        });
-
-
-
+        Log.e("featureRowIndex", String.valueOf(featureRowIndex));
 
         for (int i = featureRowIndex; i < productNameArray.size(); i++){
             final int finalI = i;
 
-            final LinearLayout confirmationPage = findViewById(R.id.confirmation_page);
             LayoutInflater inflater2 = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             final View newRowView2 = inflater2.inflate(R.layout.add_confirmation, null);
-            confirmationPage.addView(newRowView2, featureRowIndex);
+            confirmationPage.addView(newRowView2, i);
 
-            View view2 = confirmationPage.getChildAt(featureRowIndex);
+            View view2 = confirmationPage.getChildAt(i);
 
             TextView addedFeature = (TextView) view2.findViewById(R.id.added_feature);
 
@@ -231,8 +114,6 @@ public class confirmationActivity extends AppCompatActivity {
 
                     confirmationPage.removeView(newRowView2);
 
-
-
                     productNameArray.remove(newI);
                     eCommerceInfoArray.remove(newI);
 
@@ -252,49 +133,13 @@ public class confirmationActivity extends AppCompatActivity {
 
 
                     removedIndices.add(finalI);
-
-                    int j = 0;
-                    for (EditText product : productNameArray) {
-                        Log.e("Product " + String.valueOf(j), product.getText().toString());
-                        j++;
-                    }
-
-                    int k = 0;
-                    for (EditText info : eCommerceInfoArray) {
-                        Log.e("Info " + String.valueOf(k), info.getText().toString());
-                        k++;
-                    }
-
-                    int l = 0;
-                    for (EditText startTime : appearanceTimeStartArray) {
-                        Log.e("Start time " + String.valueOf(l), String.valueOf(startTime.getText().toString()));
-                        l++;
-                    }
-
-                    int r = 0;
-                    for (EditText endTime : appearanceTimeEndArray) {
-                        Log.e("End time " + String.valueOf(r), String.valueOf(endTime.getText().toString()));
-                        r++;
-                    }
-
-                    int q = 0;
-                    for (EditText loc : quadrantNumberArray) {
-                        Log.e("Location " + String.valueOf(q), String.valueOf(loc.getText().toString()));
-                        q++;
-                    }
                 }
             });
-
 
             /*
             removeButtonArray.add(addedButton); //the two arrays' indices correspond with featureRowIndex value
             textViewArray.add(addedFeature);
             */
-
-
-
-
-
             featureRowIndex++;
 
         }
