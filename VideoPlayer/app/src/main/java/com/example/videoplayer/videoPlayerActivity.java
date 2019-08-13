@@ -354,7 +354,7 @@ public class videoPlayerActivity extends AppCompatActivity implements AdapterVie
         String[] items = new String[]{productNameArray.get(featureIndex),
                 "Order now ", "Receive a product message", "View information"}; //eCommerceInfoArray.get(featureIndex)
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_dropdown_item, items);
+                R.layout.spinner_textview, R.id.textview_spinner, items);
         dropDown.setAdapter(adapter);
         dropDown.setOnItemSelectedListener(this);
         dropDown.bringToFront();

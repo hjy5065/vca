@@ -158,13 +158,6 @@ xmlns:android="http://schemas.android.com/apk/res/android"
                 </LinearLayout>
 
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:background="@android:color/transparent"
-                    android:layout_alignBottom="@+id/button_add_times" />
-
-
             </LinearLayout>
 
             <RelativeLayout
@@ -177,7 +170,8 @@ xmlns:android="http://schemas.android.com/apk/res/android"
                     android:layout_width="109dp"
                     android:layout_height="59dp"
                     android:text="@string/add_time_loc_message"
-                    android:layout_alignParentBottom="true"/>
+                    android:layout_alignParentBottom="true"
+                    />
 
                 <Button
                     android:id="@+id/button_add"

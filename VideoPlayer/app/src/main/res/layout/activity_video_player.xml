@@ -52,7 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/anchor"
         android:layout_alignRight="@id/anchor"
-        android:background="@android:drawable/btn_dropdown"
+        style="@style/spinner_style"
         android:spinnerMode="dropdown"/>
 
     <View
