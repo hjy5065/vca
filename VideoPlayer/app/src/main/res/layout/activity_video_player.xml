@@ -35,6 +35,17 @@
         android:background="@android:drawable/btn_dropdown"
         android:spinnerMode="dropdown"/>
 
+    <LinearLayout
+        android:id="@+id/glow1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/anchor"
+        android:layout_alignRight="@+id/anchor"
+        android:background="#ffc107"
+        android:alpha="0.1"
+        android:orientation="horizontal">
+    </LinearLayout>
+
     <Spinner
         android:id="@+id/spinner1"
         android:layout_width="wrap_content"

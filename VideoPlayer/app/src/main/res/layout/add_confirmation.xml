@@ -16,6 +16,8 @@
             android:id="@+id/added_buttonRemove"
             android:layout_width="108dp"
             android:layout_height="66dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:text="@string/button_remove_msg" />
 
         <TextView
@@ -23,7 +25,8 @@
             android:layout_width="287dp"
             android:layout_height="match_parent"
             android:layout_marginStart="1dp"
-            android:layout_marginLeft="1dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
             android:layout_toEndOf="@+id/added_buttonRemove"
             android:gravity="top|left"
             android:text="TextView"

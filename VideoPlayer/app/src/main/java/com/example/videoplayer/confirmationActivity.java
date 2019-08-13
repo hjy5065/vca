@@ -49,6 +49,8 @@ public class confirmationActivity extends AppCompatActivity {
 
     int indexForIndex;
 
+    boolean adapterCalled = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -221,7 +223,7 @@ public class confirmationActivity extends AppCompatActivity {
             getFile(directory);
             obj_adapter = new MyAdapter(getApplicationContext(), fileArrayList);
             myRecyclerView.setAdapter(obj_adapter);
-
+            adapterCalled = true;
         }
 
     }
@@ -412,8 +414,14 @@ public class confirmationActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(confirmationActivity.this, MainActivity.class);
-        startActivity(intent);
+        if (adapterCalled){
+            finish();
+            startActivity(getIntent());
+        }
+        else {
+            Intent intent = new Intent(confirmationActivity.this, MainActivity.class);
+            startActivity(intent);
+        }
     }
 
 
