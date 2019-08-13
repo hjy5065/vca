@@ -1,34 +1,16 @@
 package com.example.videoplayer;
 
-import android.Manifest;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
-import android.support.constraint.ConstraintSet;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.InputType;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -132,17 +114,26 @@ public class MainActivity extends AppCompatActivity {
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (productNameArray.size() == 0 || eCommerceInfoArray.size() == 0 || appearanceTimeStartArray.size() == 0 ||
-                        appearanceTimeEndArray.size() == 0 || quadrantNumberArray.size() == 0){
-                    Toast.makeText(MainActivity.this, "Please log all required information", Toast.LENGTH_SHORT).show();
+                boolean next = true;
+                for (int i = 0; i < productNameArray.size(); i++){
+                    if (productNameArray.get(i).getText().toString().equals("") ||
+                            eCommerceInfoArray.get(i).getText().toString().equals("") ||
+                            appearanceTimeStartArray.get(i).getText().toString().equals("") ||
+                            appearanceTimeEndArray.get(i).getText().toString().equals("") ||
+                            quadrantNumberArray.get(i).getText().toString().equals("")){
+                        next = false;
+                        break;
+                    }
                 }
-                else{
+                if (next){
                     Intent intent = new Intent(MainActivity.this, confirmationActivity.class);
                     startActivity(intent);
                 }
+                else{
+                    Toast.makeText(MainActivity.this, "Please log all required information", Toast.LENGTH_SHORT).show();
+                }
             }
         });
-
     }
 
     public static ArrayList<EditText> getProductNameArray(){ return productNameArray; }

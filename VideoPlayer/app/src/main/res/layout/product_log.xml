@@ -157,19 +157,27 @@ xmlns:android="http://schemas.android.com/apk/res/android"
 
                 </LinearLayout>
 
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:background="@android:color/transparent"
+                    android:layout_alignBottom="@+id/button_add_times" />
+
+
             </LinearLayout>
 
             <RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-
-
+\
                 <Button
                     android:id="@+id/button_add_times"
                     android:layout_width="109dp"
                     android:layout_height="59dp"
-                    android:text="@string/add_time_loc_message"/>
+                    android:text="@string/add_time_loc_message"
+                    android:layout_alignParentBottom="true"/>
 
                 <Button
                     android:id="@+id/button_add"
@@ -177,14 +185,16 @@ xmlns:android="http://schemas.android.com/apk/res/android"
                     android:layout_height="59dp"
                     android:layout_toEndOf="@+id/button_add_times"
                     android:layout_toStartOf="@+id/button_confirm"
-                    android:text="@string/button_add_message" />
+                    android:text="@string/button_add_message"
+                    android:layout_alignParentBottom="true"/>
 
                 <Button
                     android:id="@+id/button_confirm"
                     android:layout_width="109dp"
                     android:layout_height="59dp"
                     android:layout_alignParentEnd="true"
-                    android:text="@string/button_confirm_message" />
+                    android:text="@string/button_confirm_message"
+                    android:layout_alignParentBottom="true"/>
 
             </RelativeLayout>
         </LinearLayout>
