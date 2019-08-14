@@ -157,6 +157,11 @@ xmlns:android="http://schemas.android.com/apk/res/android"
 
                 </LinearLayout>
 
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:background="@android:color/transparent"
+                    android:layout_alignBottom="@+id/button_add_times" />
 
             </LinearLayout>
 

@@ -82,6 +82,7 @@ public class videoPlayerActivity extends AppCompatActivity implements AdapterVie
     private ArrayList<Integer> appearanceTimeEndArray = confirmationActivity.getAppearanceTimeEndArray();
     private ArrayList<Integer> quadrantNumberArray = confirmationActivity.getQuadrantNumberArray();
     private ArrayList<Integer> indexArray = confirmationActivity.getIndexArray();
+    private ArrayList<Integer> takenQuad = new ArrayList<Integer>();
 
     int quadrantNumber;
 
@@ -158,6 +159,25 @@ public class videoPlayerActivity extends AppCompatActivity implements AdapterVie
             @Override
             public void onPause() {
                 currentPosition = cVideoView.getCurrentPosition();
+                Log.e("current position", String.valueOf(currentPosition));
+
+                for (int i = 0; i < appearanceTimeStartArray.size(); i++){
+                    Log.e("Inside", "for loop");
+                    if (appearanceTimeStartArray.get(i) <= currentPosition &&
+                            currentPosition < appearanceTimeEndArray.get(i)+1000){
+                        quadrantNumber = quadrantNumberArray.get(i);
+                        Log.e("Quadrant number", String.valueOf(quadrantNumber));
+                        if (!takenQuad.contains(quadrantNumber)){
+                            takenQuad.add(quadrantNumber);
+                            enableSpinner();
+
+
+                        }
+                    }
+                }
+                takenQuad.clear();
+
+                /*
 
                 int closestStart = appearanceTimeStartArray.get(0);
                 int distanceStart = Math.abs(closestStart - currentPosition);
@@ -202,7 +222,7 @@ public class videoPlayerActivity extends AppCompatActivity implements AdapterVie
                         quadrantNumber = quadrantNumberArray.get(timeIndex);
                         Log.e("Quadrant number", String.valueOf(quadrantNumber));
                         Log.e("Product", productNameArray.get(featureIndex));
-                        enableSpinner(timeIndex);
+                        enableSpinner();
                     }
                 }
                 else if ((Math.abs(closestStart-currentPosition) > Math.abs(closestEnd-currentPosition)) &&
@@ -229,9 +249,10 @@ public class videoPlayerActivity extends AppCompatActivity implements AdapterVie
                         quadrantNumber = quadrantNumberArray.get(timeIndex);
                         Log.e("Quadrant number", String.valueOf(quadrantNumber));
                         Log.e("Product", productNameArray.get(featureIndex));
-                        enableSpinner(timeIndex);
+                        enableSpinner();
                     }
                 }
+                */
 
             }
         });
@@ -291,8 +312,7 @@ public class videoPlayerActivity extends AppCompatActivity implements AdapterVie
     }
 
 
-    private void enableSpinner(int quadrantIndex) {
-        double position = (double)currentPosition/(double)1000;
+    private void enableSpinner() {
         dropDownMenu();
         executed = true;
     }
@@ -303,36 +323,6 @@ public class videoPlayerActivity extends AppCompatActivity implements AdapterVie
         dropDown.setEnabled(false);
         dropDown.setClickable(false);
     }
-
-
-    /*
-    public Bitmap highlightImage(Bitmap src) {
-        Log.e("Highlight","Done");
-        // create new bitmap, which will be painted and becomes result image
-        Bitmap bmOut = Bitmap.createBitmap(src.getWidth()+7, src.getHeight()+7, Bitmap.Config.ARGB_8888);
-        // setup canvas for painting
-        Canvas canvas = new Canvas(bmOut);
-        // setup default color
-        canvas.drawColor(0, PorterDuff.Mode.CLEAR);
-        // create a blur paint for capturing alpha
-        Paint ptBlur = new Paint();
-        ptBlur.setMaskFilter(new BlurMaskFilter(14, BlurMaskFilter.Blur.NORMAL));
-        int[] offsetXY = new int[2];
-        // capture alpha into a bitmap
-        Bitmap bmAlpha = src.extractAlpha(ptBlur, offsetXY);
-        // create a color paint
-        Paint ptAlphaColor = new Paint();
-        ptAlphaColor.setColor(0xFFFFFFFF);
-        // paint color for captured alpha region (bitmap)
-        canvas.drawBitmap(bmAlpha, offsetXY[0], offsetXY[1], ptAlphaColor);
-        // free memory
-        bmAlpha.recycle();
-        // paint the image source
-        canvas.drawBitmap(src, 0, 0, null);
-        // return out final image
-        return bmOut;
-    }
-    */
 
     private void dropDownMenu(){
         if (quadrantNumber == 1){
