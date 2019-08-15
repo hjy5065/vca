@@ -48,6 +48,7 @@ import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
@@ -169,6 +170,7 @@ public class videoPlayerActivity extends AppCompatActivity implements AdapterVie
                         Log.e("Quadrant number", String.valueOf(quadrantNumber));
                         if (!takenQuad.contains(quadrantNumber)){
                             takenQuad.add(quadrantNumber);
+                            featureIndex = indexArray.get(i);
                             enableSpinner();
 
 
@@ -327,7 +329,6 @@ public class videoPlayerActivity extends AppCompatActivity implements AdapterVie
     private void dropDownMenu(){
         if (quadrantNumber == 1){
             dropDown = findViewById(R.id.spinner1);
-            glow = findViewById(R.id.glow1);
         }
         else if(quadrantNumber == 2){
             dropDown = findViewById(R.id.spinner2);
@@ -341,36 +342,15 @@ public class videoPlayerActivity extends AppCompatActivity implements AdapterVie
 
         dropDown.setEnabled(true);
         dropDown.setClickable(true);
-        String[] items = new String[]{productNameArray.get(featureIndex),
+
+        String[] items = new String[]{"Interested in " + productNameArray.get(featureIndex) + "?",
                 "Order now ", "Receive a product message", "View information"}; //eCommerceInfoArray.get(featureIndex)
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 R.layout.spinner_textview, R.id.textview_spinner, items);
         dropDown.setAdapter(adapter);
         dropDown.setOnItemSelectedListener(this);
         dropDown.bringToFront();
-
-        ViewGroup.LayoutParams params = glow.getLayoutParams();
-        params.height = dropDown.getMeasuredHeight()+10;
-        params.width = dropDown.getMeasuredWidth()+10;
-        animatorSet = new AnimatorSet();
-
-        ObjectAnimator fadeout = ObjectAnimator.ofFloat(glow, "alpha", 0.5f, 0.1f);
-        fadeout.setDuration(500);
-
-        ObjectAnimator fadein = ObjectAnimator.ofFloat(glow, "alpha", 0.1f, 0.5f);
-        fadein.setDuration(500);
-        animatorSet.play(fadein).after(fadeout);
-        animatorSet.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                animatorSet.start();
-            }
-        });
-        animatorSet.start();
-        glow.bringToFront();
-        dropDown.bringToFront();
-
     }
 
     public void onItemSelected(AdapterView<?> parent, View view,

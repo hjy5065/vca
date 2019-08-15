@@ -8,16 +8,28 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="spinner_style">
+    <style name="spinner_style13">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/gradient_spinner</item>
+        <item name="android:background">@drawable/bubble1</item>
         <item name="android:layout_margin">10dp</item>
-        <item name="android:paddingLeft">8dp</item>
-        <item name="android:paddingRight">20dp</item>
         <item name="android:paddingTop">5dp</item>
         <item name="android:paddingBottom">5dp</item>
-        <item name="android:popupBackground">#DFFFFFFF</item>
+        <item name="android:paddingStart">5dp</item>
+        <item name="android:paddingEnd">5dp</item>
+        <item name="android:popupBackground">#FFFFFF</item>
+    </style>
+
+    <style name="spinner_style24">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/bubble2</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:paddingStart">5dp</item>
+        <item name="android:paddingEnd">5dp</item>
+        <item name="android:popupBackground">#FFFFFF</item>
     </style>
 
 </resources>

@@ -136,6 +136,14 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+        homeIntent.addCategory( Intent.CATEGORY_HOME );
+        homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(homeIntent);
+    }
+
     public static ArrayList<EditText> getProductNameArray(){ return productNameArray; }
     public static ArrayList<EditText> geteCommerceInfoArray() { return eCommerceInfoArray; }
     public static ArrayList<EditText> getAppearanceTimeStartArray() { return appearanceTimeStartArray; }

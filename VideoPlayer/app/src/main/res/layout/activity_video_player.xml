@@ -14,8 +14,9 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/anchor"
         android:layout_alignLeft="@id/anchor"
-        android:background="@android:drawable/btn_dropdown"
-        android:spinnerMode="dropdown"/>
+        style="@style/spinner_style24"
+        android:spinnerMode="dropdown"
+        android:dropDownVerticalOffset="20dp"/>
 
     <Spinner
         android:id="@+id/spinner3"
@@ -23,8 +24,9 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/anchor"
         android:layout_alignRight="@id/anchor"
-        android:background="@android:drawable/btn_dropdown"
-        android:spinnerMode="dropdown"/>
+        style="@style/spinner_style13"
+        android:spinnerMode="dropdown"
+        android:dropDownVerticalOffset="20dp"/>
 
     <Spinner
         android:id="@+id/spinner2"
@@ -32,19 +34,9 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/anchor"
         android:layout_alignLeft="@id/anchor"
-        android:background="@android:drawable/btn_dropdown"
-        android:spinnerMode="dropdown"/>
-
-    <LinearLayout
-        android:id="@+id/glow1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/anchor"
-        android:layout_alignRight="@+id/anchor"
-        android:background="#ffc107"
-        android:alpha="0.1"
-        android:orientation="horizontal">
-    </LinearLayout>
+        style="@style/spinner_style24"
+        android:spinnerMode="dropdown"
+        android:dropDownVerticalOffset="20dp"/>
 
     <Spinner
         android:id="@+id/spinner1"
@@ -52,8 +44,9 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/anchor"
         android:layout_alignRight="@id/anchor"
-        style="@style/spinner_style"
-        android:spinnerMode="dropdown"/>
+        style="@style/spinner_style13"
+        android:spinnerMode="dropdown"
+        android:dropDownVerticalOffset="20dp"/>
 
     <View
         android:id="@+id/anchor"
