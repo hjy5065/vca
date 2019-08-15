@@ -31,10 +31,14 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
@@ -56,6 +60,8 @@ import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
 import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -84,6 +90,7 @@ public class videoPlayerActivity extends AppCompatActivity implements AdapterVie
     private ArrayList<Integer> quadrantNumberArray = confirmationActivity.getQuadrantNumberArray();
     private ArrayList<Integer> indexArray = confirmationActivity.getIndexArray();
     private ArrayList<Integer> takenQuad = new ArrayList<Integer>();
+    private ArrayList<Spinner> creditsText = new ArrayList<Spinner>();
 
     int quadrantNumber;
 
@@ -101,6 +108,9 @@ public class videoPlayerActivity extends AppCompatActivity implements AdapterVie
     int currentPosition;
 
     AnimatorSet animatorSet;
+
+    private TextView creditsTitle;
+    private Animation animation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -300,8 +310,59 @@ public class videoPlayerActivity extends AppCompatActivity implements AdapterVie
         cVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                videoPlayerActivity.super.onBackPressed();
-                cVideoView.stopPlayback();
+                LinearLayout credits = findViewById(R.id.credits);
+                credits.bringToFront();
+
+                animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.credits_anim);
+
+                animation.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                        // TODO Auto-generated method stub
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+                        // TODO Auto-generated method stub
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        cVideoView.stopPlayback();
+                        videoPlayerActivity.super.onBackPressed();
+                    }
+                });
+
+                creditsTitle = findViewById(R.id.tv_credits);
+                creditsTitle.setText("Credits \n");
+
+                for (int i = 0; i < productNameArray.size(); i++){
+                    Spinner product = new Spinner(videoPlayerActivity.this);
+                    //product.setTextColor(Color.parseColor("#ffffff"));
+                    product.setGravity(Gravity.CENTER_HORIZONTAL);
+                    //product.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.result_font));
+                    //product.setText(productNameArray.get(i) + "\n");
+                    product.setEnabled(true);
+                    product.setClickable(true);
+
+                    String[] items = new String[]{productNameArray.get(i),
+                            "Order now ", "Receive a product message", "View information"}; //eCommerceInfoArray.get(featureIndex)
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(videoPlayerActivity.this,
+                            android.R.layout.simple_list_item_1, items);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    product.setAdapter(adapter);
+                    featureIndex = i;
+                    product.setOnItemSelectedListener(videoPlayerActivity.this);
+                    credits.addView(product);
+                    creditsText.add(product);
+                }
+
+                creditsTitle.startAnimation(animation);
+                for (Spinner credit : creditsText){
+                    credit.startAnimation(animation);
+                }
+
             }
 
         });

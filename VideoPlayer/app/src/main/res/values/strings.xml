@@ -24,4 +24,6 @@
     <string name="button_upload_msg">Upload</string>
     <string name="button_add_msg">Add More</string>
 
+    <string name="credits_msg">Credits</string>
+
 </resources>

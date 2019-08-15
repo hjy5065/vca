@@ -54,6 +54,23 @@
         android:layout_height="0dp"
         android:layout_centerInParent="true" />
 
+    <LinearLayout
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"
+        android:id="@+id/credits">
+
+        <TextView
+            android:id="@+id/tv_credits"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/credits_msg"
+            android:textColor="@android:color/white"
+            android:textSize="40sp"/>
+
+    </LinearLayout>
+
     <VideoView
         android:id="@+id/videoView"
         android:layout_width="match_parent"
