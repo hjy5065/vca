@@ -6,7 +6,9 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -32,6 +34,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -334,12 +337,18 @@ public class videoPlayerActivity extends AppCompatActivity implements AdapterVie
                 });
 
                 creditsTitle = findViewById(R.id.tv_credits);
-                creditsTitle.setText("Credits \n");
 
                 for (int i = 0; i < productNameArray.size(); i++){
                     Spinner product = new Spinner(videoPlayerActivity.this);
                     //product.setTextColor(Color.parseColor("#ffffff"));
-                    product.setGravity(Gravity.CENTER_HORIZONTAL);
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    params.gravity = Gravity.CENTER_HORIZONTAL;
+                    params.setMargins(0,2,2,0);
+                    product.setLayoutParams(params);
+                    product.setGravity(Gravity.CENTER);
+                    product.setBackgroundResource(R.drawable.bubble3);
+                    product.setPopupBackgroundResource(R.drawable.spinner_credit_bg);
                     //product.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.result_font));
                     //product.setText(productNameArray.get(i) + "\n");
                     product.setEnabled(true);
@@ -349,8 +358,7 @@ public class videoPlayerActivity extends AppCompatActivity implements AdapterVie
                             "Order now ", "Receive a product message", "View information"}; //eCommerceInfoArray.get(featureIndex)
 
                     ArrayAdapter<String> adapter = new ArrayAdapter<String>(videoPlayerActivity.this,
-                            android.R.layout.simple_list_item_1, items);
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            R.layout.spinner_credits_textview, R.id.credit, items);
                     product.setAdapter(adapter);
                     featureIndex = i;
                     product.setOnItemSelectedListener(videoPlayerActivity.this);
@@ -362,7 +370,6 @@ public class videoPlayerActivity extends AppCompatActivity implements AdapterVie
                 for (Spinner credit : creditsText){
                     credit.startAnimation(animation);
                 }
-
             }
 
         });
@@ -428,6 +435,7 @@ public class videoPlayerActivity extends AppCompatActivity implements AdapterVie
     public void onNothingSelected(AdapterView<?> parent) {
         // Another interface callback
     }
+
 
 
 

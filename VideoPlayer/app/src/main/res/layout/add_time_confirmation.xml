@@ -13,24 +13,22 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/added_buttonRemove"
+            android:id="@+id/added_time_remove"
             android:layout_width="108dp"
-            android:layout_height="66dp"
+            android:layout_height="match_parent"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:background="@android:color/transparent"/>
+            android:background="@android:color/transparent" />
 
         <TextView
             android:id="@+id/added_feature"
             android:layout_width="287dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="1dp"
             android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
-            android:layout_toEndOf="@+id/added_buttonRemove"
-            android:gravity="top|left"
-            android:text="TextView"
-            android:autoSizeTextType="uniform"/>
+            android:layout_toEndOf="@+id/added_time_remove"
+            android:gravity="center_vertical"/>
 
     </LinearLayout>
 

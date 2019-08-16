@@ -67,7 +67,8 @@
             android:gravity="center_horizontal"
             android:text="@string/credits_msg"
             android:textColor="@android:color/white"
-            android:textSize="40sp"/>
+            android:textSize="40sp"
+            android:layout_marginBottom="4dp"/>
 
     </LinearLayout>
 
