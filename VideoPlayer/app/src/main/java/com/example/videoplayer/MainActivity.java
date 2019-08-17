@@ -1,13 +1,14 @@
 package com.example.videoplayer;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -16,7 +17,6 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.ArrayList;
 
-import static android.os.Build.VERSION.SDK_INT;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.product_log);
 
+        //store editText values in arraylists
         final EditText productName = findViewById(R.id.editText_name);
         productNameArray.add(productName);
         final EditText eCommerceInfo = findViewById(R.id.editText_link);
@@ -46,20 +47,22 @@ public class MainActivity extends AppCompatActivity {
         final EditText quadrantNumber1 = findViewById(R.id.editText_location);
         quadrantNumberArray.add(quadrantNumber1);
 
+
+        //at Add Feature, dynamically produce more editTexts.
         final Button addFeaturesButton = findViewById(R.id.button_add);
 
         addFeaturesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final LinearLayout linearLayout = findViewById(R.id.linearLayoutInfo);
+                final LinearLayout logLayout = findViewById(R.id.linearLayoutInfo);
 
-                int timeRowIndex = linearLayout.getChildCount();
+                int timeRowIndex = logLayout.getChildCount();
 
                 LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View newRowView = inflater.inflate(R.layout.add_feature, null);
-                linearLayout.addView(newRowView, timeRowIndex);
+                logLayout.addView(newRowView, timeRowIndex);
 
-                View view = linearLayout.getChildAt(timeRowIndex);
+                View view = logLayout.getChildAt(timeRowIndex);
 
                 EditText addedName = (EditText) view.findViewById(R.id.added_name);
                 productNameArray.add(addedName);
@@ -80,20 +83,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //at Add times, dynamically produce more editTexts.
         final Button addButton = findViewById(R.id.button_add_times);
 
         addButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                final LinearLayout logLayout = findViewById(R.id.linearLayoutInfo);
 
-                final LinearLayout linearLayout = findViewById(R.id.linearLayoutInfo);
-
-                int timeRowIndex = linearLayout.getChildCount();
+                int timeRowIndex = logLayout.getChildCount();
 
                 LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View newRowView = inflater.inflate(R.layout.add_time, null);
-                linearLayout.addView(newRowView, timeRowIndex);
+                logLayout.addView(newRowView, timeRowIndex);
 
-                View view = linearLayout.getChildAt(timeRowIndex);
+                View view = logLayout.getChildAt(timeRowIndex);
 
                 EditText appearanceTimeStart = (EditText) view.findViewById(R.id.editText_added_time_start);
                 appearanceTimeStartArray.add(appearanceTimeStart);
@@ -109,6 +112,8 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
+        //At confirm, if an editText is left blank, show a toast message.
+        //If all editTexts are filled in, load confirmation page.
         final Button confirmButton = findViewById(R.id.button_confirm);
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
@@ -126,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 if (next){
-                    Intent intent = new Intent(MainActivity.this, confirmationActivity.class);
+                    Intent intent = new Intent(MainActivity.this, ConfirmationActivity.class);
                     startActivity(intent);
                 }
                 else{
@@ -139,11 +144,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Intent homeIntent = new Intent(Intent.ACTION_MAIN);
-        homeIntent.addCategory( Intent.CATEGORY_HOME );
+        homeIntent.addCategory(Intent.CATEGORY_HOME);
         homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(homeIntent);
     }
 
+    //Array getters
     public static ArrayList<EditText> getProductNameArray(){ return productNameArray; }
     public static ArrayList<EditText> geteCommerceInfoArray() { return eCommerceInfoArray; }
     public static ArrayList<EditText> getAppearanceTimeStartArray() { return appearanceTimeStartArray; }

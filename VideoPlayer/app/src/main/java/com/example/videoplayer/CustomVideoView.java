@@ -8,7 +8,6 @@ public class CustomVideoView extends VideoView {
 
     private PlayPauseListener mListener;
 
-
     public CustomVideoView(Context context) {
         super(context);
     }
@@ -42,8 +41,7 @@ public class CustomVideoView extends VideoView {
         super.start();
     }
 
-
-    public static interface PlayPauseListener {
+    public interface PlayPauseListener {
         void onPlay();
         void onPause();
     }

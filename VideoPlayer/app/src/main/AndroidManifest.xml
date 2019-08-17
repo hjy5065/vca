@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".videoPlayerActivity"
+            android:name=".VideoPlayerActivity"
             android:screenOrientation="landscape" />
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -23,8 +23,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".confirmationActivity"/>
-        <activity android:name=".webPageActivity"/>
+        <activity android:name=".ConfirmationActivity"/>
+        <activity android:name=".WebPageActivity"/>
     </application>
 
 </manifest>

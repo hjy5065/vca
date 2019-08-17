@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#000000"
     android:id="@+id/relativeLayout"
-    tools:context=".videoPlayerActivity">
+    tools:context=".VideoPlayerActivity">
 
     <Spinner
         android:id="@+id/spinner4"
@@ -16,7 +16,8 @@
         android:layout_alignLeft="@id/anchor"
         style="@style/spinner_style24"
         android:spinnerMode="dropdown"
-        android:dropDownVerticalOffset="20dp"/>
+        android:dropDownVerticalOffset="40dp"
+        android:popupBackground="#696969"/>
 
     <Spinner
         android:id="@+id/spinner3"
@@ -26,7 +27,8 @@
         android:layout_alignRight="@id/anchor"
         style="@style/spinner_style13"
         android:spinnerMode="dropdown"
-        android:dropDownVerticalOffset="20dp"/>
+        android:dropDownVerticalOffset="40dp"
+        android:popupBackground="#696969"/>
 
     <Spinner
         android:id="@+id/spinner2"
@@ -36,7 +38,8 @@
         android:layout_alignLeft="@id/anchor"
         style="@style/spinner_style24"
         android:spinnerMode="dropdown"
-        android:dropDownVerticalOffset="20dp"/>
+        android:dropDownVerticalOffset="40dp"
+        android:popupBackground="#696969"/>
 
     <Spinner
         android:id="@+id/spinner1"
@@ -46,7 +49,8 @@
         android:layout_alignRight="@id/anchor"
         style="@style/spinner_style13"
         android:spinnerMode="dropdown"
-        android:dropDownVerticalOffset="20dp"/>
+        android:dropDownVerticalOffset="40dp"
+        android:popupBackground="#696969"/>
 
     <View
         android:id="@+id/anchor"

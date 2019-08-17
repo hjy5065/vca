@@ -4,17 +4,13 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+public class WebPageActivity extends Activity {
 
-public class webPageActivity extends Activity {
-
-    private WebView mWebview=null ;
+    private WebView mWebview;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -25,10 +21,8 @@ public class webPageActivity extends Activity {
         Intent intent = getIntent();
         String link = intent.getExtras().getString("link");
 
-        Log.e("Link in webpage", link);
-
         mWebview  = new WebView(this);
-        mWebview.getSettings().setJavaScriptEnabled(true); // enable javascript
+        mWebview.getSettings().setJavaScriptEnabled(true);
 
         final Activity activity = this;
 
@@ -40,11 +34,15 @@ public class webPageActivity extends Activity {
 
         mWebview.loadUrl(link);
         setContentView(mWebview);
-
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        if (mWebview.canGoBack()) {
+            mWebview.goBack();
+        }
+        else{
+            super.onBackPressed();
+        }
     }
 }

@@ -29,13 +29,10 @@ public class MyAdapter extends RecyclerView.Adapter<VideoHolder> {
 
     @Override
     public VideoHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        //LayoutInflater.from returns layout inflater
         View mview = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.video_item, viewGroup, false);
         return new VideoHolder (mview);
     }
 
-
-    //Show video titles and thumbnails
     @Override
     public void onBindViewHolder(@NonNull final VideoHolder videoHolder, int i) {
         videoHolder.txtFileName.setText(MainActivity.fileArrayList.get(i).getName());
@@ -45,7 +42,7 @@ public class MyAdapter extends RecyclerView.Adapter<VideoHolder> {
         videoHolder.mCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, videoPlayerActivity.class);
+                Intent intent = new Intent(context, VideoPlayerActivity.class);
                 intent.putExtra("position", videoHolder.getAdapterPosition());
 
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -78,7 +75,6 @@ class VideoHolder extends RecyclerView.ViewHolder{
         txtFileName = view.findViewById(R.id.txt_videoFileName);
         imageThumbnail = view.findViewById(R.id.iv_thmnail);
         mCardView = view.findViewById(R.id.myCardview);
-
 
     }
 }
