@@ -122,33 +122,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements AdapterVie
         cVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                NestedScrollView scroll = findViewById(R.id.scroll);
-                LinearLayout credits = findViewById(R.id.credits);
-                scroll.bringToFront();
-
-                for (int i = 0; i < productNameArray.size(); i++){
-                    Spinner product = new Spinner(VideoPlayerActivity.this);
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                            ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    params.gravity = Gravity.CENTER;
-                    params.setMargins(0,2,2,0);
-                    product.setLayoutParams(params);
-                    product.setGravity(Gravity.CENTER);
-                    product.setBackgroundResource(R.drawable.bubble3);
-                    product.setPopupBackgroundResource(R.drawable.spinner_credit_bg);
-                    product.setDropDownVerticalOffset(40);
-                    product.setEnabled(true);
-                    product.setClickable(true);
-
-                    String[] items = new String[]{productNameArray.get(i), "Order now ", "Receive a product message", "View information"};
-
-                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(VideoPlayerActivity.this, R.layout.spinner_credits_textview, R.id.credit, items);
-                    product.setAdapter(adapter);
-                    featureIndex = i;
-                    product.setOnItemSelectedListener(VideoPlayerActivity.this);
-                    credits.addView(product);
-                }
-                creditCalled = true;
+                creditsAppendix();
             }
 
         });
@@ -223,5 +197,35 @@ public class VideoPlayerActivity extends AppCompatActivity implements AdapterVie
 
     public void onNothingSelected(AdapterView<?> parent) {
         // Another interface callback
+    }
+
+    private void creditsAppendix(){
+        NestedScrollView scroll = findViewById(R.id.scroll);
+        LinearLayout credits = findViewById(R.id.credits);
+        scroll.bringToFront();
+
+        for (int i = 0; i < productNameArray.size(); i++){
+            Spinner product = new Spinner(VideoPlayerActivity.this);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.gravity = Gravity.CENTER;
+            params.setMargins(0,2,2,0);
+            product.setLayoutParams(params);
+            product.setGravity(Gravity.CENTER);
+            product.setBackgroundResource(R.drawable.bubble3);
+            product.setPopupBackgroundResource(R.drawable.spinner_credit_bg);
+            product.setDropDownVerticalOffset(40);
+            product.setEnabled(true);
+            product.setClickable(true);
+
+            String[] items = new String[]{productNameArray.get(i), "Order now ", "Receive a product message", "View information"};
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(VideoPlayerActivity.this, R.layout.spinner_credits_textview, R.id.credit, items);
+            product.setAdapter(adapter);
+            featureIndex = i;
+            product.setOnItemSelectedListener(VideoPlayerActivity.this);
+            credits.addView(product);
+        }
+        creditCalled = true;
     }
 }
