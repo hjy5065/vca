@@ -58,23 +58,33 @@
         android:layout_height="0dp"
         android:layout_centerInParent="true" />
 
-    <LinearLayout
-        android:orientation="vertical" android:layout_width="match_parent"
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/black"
-        android:id="@+id/credits">
+        android:fillViewport="true"
+        android:id="@+id/scroll">
 
-        <TextView
-            android:id="@+id/tv_credits"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="@string/credits_msg"
-            android:textColor="@android:color/white"
-            android:textSize="40sp"
-            android:layout_marginBottom="4dp"/>
+        <LinearLayout
+            android:orientation="vertical" android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/black"
+            android:gravity="center"
+            android:id="@+id/credits">
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/tv_credits"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/credits_msg"
+                android:textColor="@android:color/white"
+                android:textSize="40sp"
+                android:layout_marginBottom="4dp"/>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
 
     <VideoView
         android:id="@+id/videoView"

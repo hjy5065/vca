@@ -97,8 +97,8 @@ public class ConfirmationActivity extends AppCompatActivity {
             }
 
             //Remove information about the removed product from all arrays
-            Button addedButton = (Button) view2.findViewById(R.id.added_buttonRemove);
-            addedButton.setOnClickListener(new View.OnClickListener() {
+            Button removeButton = (Button) view2.findViewById(R.id.added_buttonRemove);
+            removeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int newI = finalI;
@@ -122,11 +122,13 @@ public class ConfirmationActivity extends AppCompatActivity {
                         while (indexArray.get(indexNo).equals(indexArray.get(indexNo+1))) {
                             appearanceTimeStartArray.remove(indexNo);
                             appearanceTimeEndArray.remove(indexNo);
+                            quadrantNumberArray.remove(indexNo);
                             indexArray.remove(indexNo);
                         }
                     }
                     appearanceTimeStartArray.remove(indexNo);
                     appearanceTimeEndArray.remove(indexNo);
+                    quadrantNumberArray.remove(indexNo);
                     indexArray.remove(indexNo);
 
                     for (int j = indexNo; j < indexArray.size(); j++){

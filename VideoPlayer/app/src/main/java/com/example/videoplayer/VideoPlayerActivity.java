@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +20,9 @@ import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 public class VideoPlayerActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -45,51 +49,12 @@ public class VideoPlayerActivity extends AppCompatActivity implements AdapterVie
     private Spinner dropDown;
     private int currentPosition;
 
-    private TextView creditsTitle;
-    private Animation animation;
+    private boolean creditCalled = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_player);
-
-        int j = 0;
-        for (String product : productNameArray) {
-            Log.e("Product " + String.valueOf(j), product);
-            j++;
-        }
-
-        int k = 0;
-        for (String info : eCommerceInfoArray) {
-            Log.e("Info " + String.valueOf(k), info);
-            k++;
-        }
-
-        int l = 0;
-        for (int startTime : appearanceTimeStartArray) {
-            Log.e("Start time " + String.valueOf(l), String.valueOf(startTime));
-            l++;
-        }
-
-        int r = 0;
-        for (int endTime : appearanceTimeEndArray) {
-            Log.e("End time " + String.valueOf(r), String.valueOf(endTime));
-            r++;
-        }
-
-        int q = 0;
-        for (int loc : quadrantNumberArray) {
-            Log.e("Location " + String.valueOf(q), String.valueOf(loc));
-            q++;
-        }
-
-        int d = 0;
-        for (int ind : indexArray) {
-            Log.e(String.valueOf(d), String.valueOf(ind));
-            d++;
-        }
-
-
 
         cVideoView = (CustomVideoView) findViewById(R.id.my_player);
 
@@ -157,41 +122,21 @@ public class VideoPlayerActivity extends AppCompatActivity implements AdapterVie
         cVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
+                NestedScrollView scroll = findViewById(R.id.scroll);
                 LinearLayout credits = findViewById(R.id.credits);
-                credits.bringToFront();
-
-                animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.credits_anim);
-
-                animation.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-                        // TODO Auto-generated method stub
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-                        // TODO Auto-generated method stub
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        cVideoView.stopPlayback();
-                        VideoPlayerActivity.super.onBackPressed();
-                    }
-                });
-
-                creditsTitle = findViewById(R.id.tv_credits);
+                scroll.bringToFront();
 
                 for (int i = 0; i < productNameArray.size(); i++){
                     Spinner product = new Spinner(VideoPlayerActivity.this);
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                             ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    params.gravity = Gravity.CENTER_HORIZONTAL;
+                    params.gravity = Gravity.CENTER;
                     params.setMargins(0,2,2,0);
                     product.setLayoutParams(params);
                     product.setGravity(Gravity.CENTER);
                     product.setBackgroundResource(R.drawable.bubble3);
                     product.setPopupBackgroundResource(R.drawable.spinner_credit_bg);
+                    product.setDropDownVerticalOffset(40);
                     product.setEnabled(true);
                     product.setClickable(true);
 
@@ -202,13 +147,8 @@ public class VideoPlayerActivity extends AppCompatActivity implements AdapterVie
                     featureIndex = i;
                     product.setOnItemSelectedListener(VideoPlayerActivity.this);
                     credits.addView(product);
-                    creditsText.add(product);
                 }
-
-                creditsTitle.startAnimation(animation);
-                for (Spinner credit : creditsText){
-                    credit.startAnimation(animation);
-                }
+                creditCalled = true;
             }
 
         });
@@ -268,10 +208,16 @@ public class VideoPlayerActivity extends AppCompatActivity implements AdapterVie
         String selected = parent.getItemAtPosition(pos).toString();
         if (selected.equals("View information")){
             Intent intent = new Intent(VideoPlayerActivity.this, WebPageActivity.class);
-            String substring = parent.getItemAtPosition(0).toString().substring(14, parent.getItemAtPosition(0).toString().indexOf("?"));
-            Log.e("substring", substring);
-            intent.putExtra("link", eCommerceInfoArray.get(productNameArray.indexOf(substring)));
-            startActivity(intent);
+            if (creditCalled){
+                creditCalled = false;
+                intent.putExtra("link", eCommerceInfoArray.get(productNameArray.indexOf(parent.getItemAtPosition(0).toString())));
+                startActivity(intent);
+            }
+            else{
+                String substring = parent.getItemAtPosition(0).toString().substring(14, parent.getItemAtPosition(0).toString().indexOf("?"));
+                intent.putExtra("link", eCommerceInfoArray.get(productNameArray.indexOf(substring)));
+                startActivity(intent);
+            }
         }
     }
 
