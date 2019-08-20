@@ -41,15 +41,15 @@ public class VideoPlayerActivity extends AppCompatActivity implements AdapterVie
 
     private int quadrantNumber;
 
-    private String rotation;
-
     private boolean executed = false;
     private int featureIndex;
 
     private Spinner dropDown;
     private int currentPosition;
 
-    private boolean creditCalled = false;
+    private boolean creditCalled;
+    private boolean creditSelected;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +62,13 @@ public class VideoPlayerActivity extends AppCompatActivity implements AdapterVie
             @Override
             public void onPlay() {
                 cVideoView.bringToFront();
-                if(executed){
+                if (creditSelected){
+                    Log.e("creditCalled", String.valueOf(creditCalled));
+                    cVideoView.seekTo(cVideoView.getDuration()+999);
+                    creditSelected = false;
+                }
+                else if(executed){
+                    Log.e("Spinner executed", String.valueOf(executed));
                     hideDropDown();
                     cVideoView.seekTo(currentPosition);
                     executed = false;
@@ -106,7 +112,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements AdapterVie
 
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         retriever.setDataSource(String.valueOf(MainActivity.fileArrayList.get(position)));
-        rotation = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);
+        String rotation = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);
 
         if (rotation.equals("90")){
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -122,7 +128,13 @@ public class VideoPlayerActivity extends AppCompatActivity implements AdapterVie
         cVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                creditsAppendix();
+                if (creditCalled){
+                    resetSelection();
+                    showCredits();
+                }
+                else{
+                    makeCreditsAppendix();
+                }
             }
 
         });
@@ -130,18 +142,36 @@ public class VideoPlayerActivity extends AppCompatActivity implements AdapterVie
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        cVideoView.stopPlayback();
+        if (creditCalled) {
+            creditCalled = false;
+            finish();
+            startActivity(getIntent());
+        }
+        else{
+            super.onBackPressed();
+            cVideoView.stopPlayback();
+        }
     }
 
     private void enableSpinner() {
         dropDownMenu();
         executed = true;
+        creditCalled = false;
     }
 
     private void hideDropDown(){
-        dropDown.setEnabled(false);
-        dropDown.setClickable(false);
+        Spinner spinner1 = findViewById(R.id.spinner1);
+        spinner1.setEnabled(false);
+        spinner1.setClickable(false);
+        Spinner spinner2 = findViewById(R.id.spinner2);
+        spinner2.setEnabled(false);
+        spinner2.setClickable(false);
+        Spinner spinner3 = findViewById(R.id.spinner3);
+        spinner3.setEnabled(false);
+        spinner3.setClickable(false);
+        Spinner spinner4 = findViewById(R.id.spinner4);
+        spinner4.setEnabled(false);
+        spinner4.setClickable(false);
     }
 
     private void dropDownMenu(){
@@ -183,11 +213,12 @@ public class VideoPlayerActivity extends AppCompatActivity implements AdapterVie
         if (selected.equals("View information")){
             Intent intent = new Intent(VideoPlayerActivity.this, WebPageActivity.class);
             if (creditCalled){
-                creditCalled = false;
+                creditSelected = true;
                 intent.putExtra("link", eCommerceInfoArray.get(productNameArray.indexOf(parent.getItemAtPosition(0).toString())));
                 startActivity(intent);
             }
             else{
+                creditSelected = false;
                 String substring = parent.getItemAtPosition(0).toString().substring(14, parent.getItemAtPosition(0).toString().indexOf("?"));
                 intent.putExtra("link", eCommerceInfoArray.get(productNameArray.indexOf(substring)));
                 startActivity(intent);
@@ -199,10 +230,20 @@ public class VideoPlayerActivity extends AppCompatActivity implements AdapterVie
         // Another interface callback
     }
 
-    private void creditsAppendix(){
+    private void showCredits(){
         NestedScrollView scroll = findViewById(R.id.scroll);
-        LinearLayout credits = findViewById(R.id.credits);
         scroll.bringToFront();
+        creditCalled = true;
+    }
+
+    private void resetSelection(){
+        for (Spinner i : creditsText){
+            i.setSelection(0);
+        }
+    }
+
+    private void makeCreditsAppendix(){
+        LinearLayout credits = findViewById(R.id.credits);
 
         for (int i = 0; i < productNameArray.size(); i++){
             Spinner product = new Spinner(VideoPlayerActivity.this);
@@ -225,7 +266,8 @@ public class VideoPlayerActivity extends AppCompatActivity implements AdapterVie
             featureIndex = i;
             product.setOnItemSelectedListener(VideoPlayerActivity.this);
             credits.addView(product);
+            creditsText.add(product);
         }
-        creditCalled = true;
+        showCredits();
     }
 }
