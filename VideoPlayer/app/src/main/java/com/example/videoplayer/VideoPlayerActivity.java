@@ -1,27 +1,19 @@
 package com.example.videoplayer;
 
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.Spinner;
-import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -63,12 +55,10 @@ public class VideoPlayerActivity extends AppCompatActivity implements AdapterVie
             public void onPlay() {
                 cVideoView.bringToFront();
                 if (creditSelected){
-                    Log.e("creditCalled", String.valueOf(creditCalled));
                     cVideoView.seekTo(cVideoView.getDuration()+999);
                     creditSelected = false;
                 }
                 else if(executed){
-                    Log.e("Spinner executed", String.valueOf(executed));
                     hideDropDown();
                     cVideoView.seekTo(currentPosition);
                     executed = false;
@@ -110,13 +100,6 @@ public class VideoPlayerActivity extends AppCompatActivity implements AdapterVie
         cVideoView.setVideoPath(String.valueOf(MainActivity.fileArrayList.get(position)));
         cVideoView.requestFocus();
 
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(String.valueOf(MainActivity.fileArrayList.get(position)));
-        String rotation = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);
-
-        if (rotation.equals("90")){
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
 
         cVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
@@ -270,4 +253,5 @@ public class VideoPlayerActivity extends AppCompatActivity implements AdapterVie
         }
         showCredits();
     }
+
 }
