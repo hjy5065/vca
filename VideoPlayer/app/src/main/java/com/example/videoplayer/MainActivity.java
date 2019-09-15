@@ -7,11 +7,16 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Selection;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -38,11 +43,89 @@ public class MainActivity extends AppCompatActivity {
         final EditText productName = findViewById(R.id.editText_name);
         productNameArray.add(productName);
         final EditText eCommerceInfo = findViewById(R.id.editText_link);
+
+        eCommerceInfo.setText("http://");
+        Selection.setSelection(eCommerceInfo.getText(), eCommerceInfo.getText().length());
+        eCommerceInfo.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(!s.toString().startsWith("http://")){
+                    eCommerceInfo.setText("http://");
+                    Selection.setSelection(eCommerceInfo.getText(), eCommerceInfo.getText().length());
+
+                }
+
+            }
+        });
+
         eCommerceInfoArray.add(eCommerceInfo);
+
         final EditText appearanceTimeStart1 = findViewById(R.id.editText_time_start);
+
+        InputFilter[] filterArray = new InputFilter[1];
+        filterArray[0] = new InputFilter.LengthFilter(5);
+        appearanceTimeStart1.setFilters(filterArray);
+
+        appearanceTimeStart1.addTextChangedListener(new TextWatcher() {
+            int first = 0;
+            int second;
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+                // TODO Auto-generated method stub
+            }
+            @Override
+            public void afterTextChanged(Editable text) {
+                second = first;
+                first = text.length();
+                if(appearanceTimeStart1.length()==2 && first>second){
+                    appearanceTimeStart1.append(":");
+                }
+            }
+        });
+
         appearanceTimeStartArray.add(appearanceTimeStart1);
         indexArray.add(productNameArray.size()-1);
         final EditText appearanceTimeEnd1 = findViewById(R.id.editText_time_end);
+
+        appearanceTimeEnd1.addTextChangedListener(new TextWatcher() {
+            int first = 0;
+            int second;
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+                // TODO Auto-generated method stub
+            }
+            @Override
+            public void afterTextChanged(Editable text) {
+                second = first;
+                first = text.length();
+                if(appearanceTimeEnd1.length()==2 && first>second){
+                    appearanceTimeEnd1.append(":");
+                }
+            }
+        });
+
         appearanceTimeEndArray.add(appearanceTimeEnd1);
         final EditText quadrantNumber1 = findViewById(R.id.editText_location);
         quadrantNumberArray.add(quadrantNumber1);
@@ -67,14 +150,87 @@ public class MainActivity extends AppCompatActivity {
                 EditText addedName = (EditText) view.findViewById(R.id.added_name);
                 productNameArray.add(addedName);
 
-                EditText addedLink = (EditText) view.findViewById(R.id.added_link);
+                final EditText addedLink = (EditText) view.findViewById(R.id.added_link);
+
+                addedLink.setText("http://");
+                Selection.setSelection(addedLink.getText(), addedLink.getText().length());
+                addedLink.addTextChangedListener(new TextWatcher() {
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        // TODO Auto-generated method stub
+
+                    }
+
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count,
+                                                  int after) {
+                        // TODO Auto-generated method stub
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        if(!s.toString().startsWith("http://")){
+                            addedLink.setText("http://");
+                            Selection.setSelection(addedLink.getText(), addedLink.getText().length());
+
+                        }
+
+                    }
+                });
+
                 eCommerceInfoArray.add(addedLink);
 
-                EditText addedTimeStart = (EditText) view.findViewById(R.id.added_time_start);
+                final EditText addedTimeStart = (EditText) view.findViewById(R.id.added_time_start);
+
+                addedTimeStart.addTextChangedListener(new TextWatcher() {
+                    int first = 0;
+                    int second;
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count,
+                                                  int after) {
+                        // TODO Auto-generated method stub
+                    }
+                    @Override
+                    public void afterTextChanged(Editable text) {
+                        second = first;
+                        first = text.length();
+                        if(addedTimeStart.length()==2 && first>second){
+                            addedTimeStart.append(":");
+                        }
+                    }
+                });
+
                 appearanceTimeStartArray.add(addedTimeStart);
                 indexArray.add(productNameArray.size()-1);
 
-                EditText addedTimeEnd = (EditText) view.findViewById(R.id.added_time_end);
+                final EditText addedTimeEnd = (EditText) view.findViewById(R.id.added_time_end);
+
+                addedTimeEnd.addTextChangedListener(new TextWatcher() {
+                    int first = 0;
+                    int second;
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count,
+                                                  int after) {
+                        // TODO Auto-generated method stub
+                    }
+                    @Override
+                    public void afterTextChanged(Editable text) {
+                        second = first;
+                        first = text.length();
+                        if(addedTimeEnd.length()==2 && first>second){
+                            addedTimeEnd.append(":");
+                        }
+                    }
+                });
+
                 appearanceTimeEndArray.add(addedTimeEnd);
 
                 EditText addedQuadrantNumber = (EditText) view.findViewById(R.id.added_loc);
@@ -122,7 +278,7 @@ public class MainActivity extends AppCompatActivity {
                 boolean next = true;
                 for (int i = 0; i < productNameArray.size(); i++){
                     if (productNameArray.get(i).getText().toString().equals("") ||
-                            eCommerceInfoArray.get(i).getText().toString().equals("") ||
+                            eCommerceInfoArray.get(i).getText().toString().substring(7).equals("") ||
                             appearanceTimeStartArray.get(i).getText().toString().equals("") ||
                             appearanceTimeEndArray.get(i).getText().toString().equals("") ||
                             quadrantNumberArray.get(i).getText().toString().equals("")){
@@ -137,7 +293,32 @@ public class MainActivity extends AppCompatActivity {
                 else{
                     Toast.makeText(MainActivity.this, "Please log all required information", Toast.LENGTH_SHORT).show();
                 }
+
+                /*
+                if (true){
+                    for (EditText j: appearanceTimeStartArray){
+                        String hour = j.getText().toString();
+                        if (hour.indexOf(":") != -1){
+                            hour = hour.substring(0, hour.indexOf(":"));
+                        }
+                        if (Integer.parseInt(hour) > 59){
+                            Toast.makeText(MainActivity.this, "Current timestamp available is limited to 59:59", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    for (EditText k: appearanceTimeEndArray){
+                        String min = k.getText().toString();
+                        if (min.indexOf(":") != -1){
+                            min = min.substring(min.indexOf(":"));
+                        }
+                        if (Integer.parseInt(min) > 59){
+                            Toast.makeText(MainActivity.this, "The biggest minute timestamp is 59", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+                */
             }
+
+
         });
     }
 

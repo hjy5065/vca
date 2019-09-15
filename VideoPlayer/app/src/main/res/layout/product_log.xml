@@ -86,7 +86,6 @@ xmlns:android="http://schemas.android.com/apk/res/android"
                             android:layout_height="45dp"
                             android:ems="10"
                             android:gravity="center"
-                            android:hint="@string/link_hint"
                             android:scrollHorizontally="true"
                             android:singleLine="true" />
 
@@ -138,7 +137,6 @@ xmlns:android="http://schemas.android.com/apk/res/android"
                             android:ems="10"
                             android:gravity="center"
                             android:hint="@string/time_hint_start"
-                            android:inputType="time"
                             android:scrollHorizontally="true"
                             android:singleLine="true"/>
 
@@ -149,7 +147,6 @@ xmlns:android="http://schemas.android.com/apk/res/android"
                             android:ems="10"
                             android:gravity="center"
                             android:hint="@string/time_hint_end"
-                            android:inputType="time"
                             android:scrollHorizontally="true"
                             android:singleLine="true"/>
 

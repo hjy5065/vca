@@ -164,6 +164,8 @@ public class ConfirmationActivity extends AppCompatActivity {
         final Button uploadVideoButton = findViewById(R.id.buttonUpload);
         uploadVideoButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+
+                
                 setContentView(R.layout.activity_main);
 
                 myRecyclerView = (RecyclerView)findViewById(R.id.listVideoRecyler);
