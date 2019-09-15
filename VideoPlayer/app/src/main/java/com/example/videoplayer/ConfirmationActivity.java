@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,8 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -23,11 +23,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import static android.os.Build.VERSION.SDK_INT;
-import static com.example.videoplayer.MainActivity.fileArrayList;
 
 public class ConfirmationActivity extends AppCompatActivity {
 
@@ -39,13 +37,10 @@ public class ConfirmationActivity extends AppCompatActivity {
     private static ArrayList<Integer> indexArray = MainActivity.getIndexArray();
     private static ArrayList<Integer> removedIndices = new ArrayList<Integer>();
 
-    RecyclerView myRecyclerView;
-    MyAdapter obj_adapter;
     public static int REQUEST_PERMISSION = 1;
-    File directory;
     boolean boolean_permission;
 
-    private boolean adapterCalled = false;
+    private int GALLERY = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,21 +159,41 @@ public class ConfirmationActivity extends AppCompatActivity {
         final Button uploadVideoButton = findViewById(R.id.buttonUpload);
         uploadVideoButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
-                
-                setContentView(R.layout.activity_main);
-
-                myRecyclerView = (RecyclerView)findViewById(R.id.listVideoRecyler);
-
-                directory = new File("/mnt/");
-
-                GridLayoutManager manager = new GridLayoutManager(ConfirmationActivity.this, 2);
-                myRecyclerView.setLayoutManager(manager);
-
                 permissionForVideo();
             }
 
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        Log.d("result",""+resultCode);
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == this.RESULT_CANCELED) {
+            Log.d("what","cancle");
+            return;
+        }
+        Log.d("what","gale");
+        if (resultCode == RESULT_OK) {
+            Uri selectedMediaUri = data.getData();
+            if (selectedMediaUri.toString().contains("image")) {
+                Toast.makeText(this, "Please choose a video file", Toast.LENGTH_SHORT).show();
+                Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+
+                startActivityForResult(galleryIntent, GALLERY);
+            } else if (selectedMediaUri.toString().contains("video")) {
+                if (data != null) {
+                    Uri contentURI = data.getData();
+                    Intent intent = new Intent(ConfirmationActivity.this, VideoPlayerActivity.class);
+                    intent.putExtra("URI", contentURI);
+
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                    startActivity(intent);
+                }
+            }
+        }
     }
 
     private void permissionForVideo() {
@@ -197,10 +212,10 @@ public class ConfirmationActivity extends AppCompatActivity {
         //if permission granted, show list of videos on phone.
         else{
             boolean_permission = true;
-            getFile(directory);
-            obj_adapter = new MyAdapter(getApplicationContext(), fileArrayList);
-            myRecyclerView.setAdapter(obj_adapter);
-            adapterCalled = true;
+            Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+
+            startActivityForResult(galleryIntent, GALLERY);
+
         }
     }
 
@@ -212,9 +227,10 @@ public class ConfirmationActivity extends AppCompatActivity {
             if(grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
                 boolean_permission = true;
-                getFile(directory);
-                obj_adapter = new MyAdapter(getApplicationContext(), fileArrayList);
-                myRecyclerView.setAdapter(obj_adapter);
+                Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+
+                startActivityForResult(galleryIntent, GALLERY);
+
             }
 
             else{
@@ -249,41 +265,6 @@ public class ConfirmationActivity extends AppCompatActivity {
         });
         builder.create();
         builder.show();
-    }
-
-    //Get videos
-    public ArrayList<File> getFile(File directory){
-
-        File listFile[] = directory.listFiles();
-        if(listFile!=null && listFile.length>0){
-
-            for(int i = 0; i<listFile.length; i++){
-                if(listFile[i].isDirectory()){
-                    getFile(listFile[i]);
-                }
-                else{
-                    boolean_permission = false;
-                    if(listFile[i].getName().endsWith(".mp4") || listFile[i].getName().endsWith(".m4v")){
-                        for(int j=0; j<fileArrayList.size();j++){
-                            if(fileArrayList.get(j).getName().equals(listFile[i].getName())){
-                                boolean_permission = true;
-                            }else {
-
-                            }
-                        }
-
-                        if(boolean_permission){
-                            boolean_permission = false;
-                        }
-                        else{
-                            fileArrayList.add(listFile[i]);
-                        }
-                    }
-                }
-            }
-        }
-
-        return fileArrayList;
     }
 
     public static ArrayList<String> getProductNameArray(){
@@ -342,15 +323,4 @@ public class ConfirmationActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public void onBackPressed() {
-        if (adapterCalled){
-            finish();
-            startActivity(getIntent());
-        }
-        else {
-            Intent intent = new Intent(ConfirmationActivity.this, MainActivity.class);
-            startActivity(intent);
-        }
-    }
 }

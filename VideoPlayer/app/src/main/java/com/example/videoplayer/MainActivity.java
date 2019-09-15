@@ -1,10 +1,7 @@
 package com.example.videoplayer;
 
-import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -16,7 +13,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -25,7 +21,6 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static ArrayList<File> fileArrayList = new ArrayList<>();
     private static ArrayList<EditText> productNameArray = new ArrayList<EditText>();
     private static ArrayList<EditText> eCommerceInfoArray = new ArrayList<EditText>();
     private static ArrayList<EditText> appearanceTimeStartArray = new ArrayList<EditText>();

@@ -2,6 +2,7 @@ package com.example.videoplayer;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 public class VideoPlayerActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private CustomVideoView cVideoView;
-    private int position = -1;
+    private Uri uri;
 
     private ArrayList<String> productNameArray = ConfirmationActivity.getProductNameArray();
     private ArrayList<String> eCommerceInfoArray = ConfirmationActivity.geteCommerceInfoArray();
@@ -85,7 +86,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements AdapterVie
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        position = getIntent().getIntExtra("position", -1);
+        uri = getIntent().getParcelableExtra("URI");
         getSupportActionBar().hide();
 
         playVideo();
@@ -97,7 +98,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements AdapterVie
         mediaController.setAnchorView(cVideoView);
 
         cVideoView.setMediaController(mediaController);
-        cVideoView.setVideoPath(String.valueOf(MainActivity.fileArrayList.get(position)));
+        cVideoView.setVideoURI(uri);
         cVideoView.requestFocus();
 
 
