@@ -55,11 +55,10 @@ public class VideoPlayerActivity extends AppCompatActivity implements AdapterVie
             @Override
             public void onPlay() {
                 cVideoView.bringToFront();
-                if (creditSelected){
-                    cVideoView.seekTo(cVideoView.getDuration()+999);
+                if (creditSelected) {
+                    disableCreditsSpinners();
                     creditSelected = false;
-                }
-                else if(executed){
+                } else if (executed) {
                     hideDropDown();
                     cVideoView.seekTo(currentPosition);
                     executed = false;
@@ -70,10 +69,10 @@ public class VideoPlayerActivity extends AppCompatActivity implements AdapterVie
             public void onPause() {
                 currentPosition = cVideoView.getCurrentPosition();
 
-                for (int i = 0; i < appearanceTimeStartArray.size(); i++){
-                    if (appearanceTimeStartArray.get(i) <= currentPosition && currentPosition < appearanceTimeEndArray.get(i)+1000){
+                for (int i = 0; i < appearanceTimeStartArray.size(); i++) {
+                    if (appearanceTimeStartArray.get(i) <= currentPosition && currentPosition < appearanceTimeEndArray.get(i) + 1000) {
                         quadrantNumber = quadrantNumberArray.get(i);
-                        if (!takenQuad.contains(quadrantNumber)){
+                        if (!takenQuad.contains(quadrantNumber)) {
                             takenQuad.add(quadrantNumber);
                             featureIndex = indexArray.get(i);
                             enableSpinner();
@@ -112,11 +111,10 @@ public class VideoPlayerActivity extends AppCompatActivity implements AdapterVie
         cVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                if (creditCalled){
+                if (creditCalled) {
                     resetSelection();
                     showCredits();
-                }
-                else{
+                } else {
                     makeCreditsAppendix();
                 }
             }
@@ -130,8 +128,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements AdapterVie
             creditCalled = false;
             finish();
             startActivity(getIntent());
-        }
-        else{
+        } else {
             super.onBackPressed();
             cVideoView.stopPlayback();
         }
@@ -143,7 +140,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements AdapterVie
         creditCalled = false;
     }
 
-    private void hideDropDown(){
+    private void hideDropDown() {
         Spinner spinner1 = findViewById(R.id.spinner1);
         spinner1.setEnabled(false);
         spinner1.setClickable(false);
@@ -158,17 +155,14 @@ public class VideoPlayerActivity extends AppCompatActivity implements AdapterVie
         spinner4.setClickable(false);
     }
 
-    private void dropDownMenu(){
-        if (quadrantNumber == 1){
+    private void dropDownMenu() {
+        if (quadrantNumber == 1) {
             dropDown = findViewById(R.id.spinner1);
-        }
-        else if(quadrantNumber == 2){
+        } else if (quadrantNumber == 2) {
             dropDown = findViewById(R.id.spinner2);
-        }
-        else if(quadrantNumber == 3){
+        } else if (quadrantNumber == 3) {
             dropDown = findViewById(R.id.spinner3);
-        }
-        else if(quadrantNumber == 4){
+        } else if (quadrantNumber == 4) {
             dropDown = findViewById(R.id.spinner4);
         }
 
@@ -177,13 +171,12 @@ public class VideoPlayerActivity extends AppCompatActivity implements AdapterVie
 
         String[] items = new String[]{"Interested in " + productNameArray.get(featureIndex) + "?", "Order now ", "Receive a product message", "View information"};
 
-        if (quadrantNumber == 1 || quadrantNumber == 3){
+        if (quadrantNumber == 1 || quadrantNumber == 3) {
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner_textview13, R.id.textview_spinner13, items);
             dropDown.setAdapter(adapter);
             dropDown.setOnItemSelectedListener(this);
             dropDown.bringToFront();
-        }
-        else{
+        } else {
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner_textview24, R.id.textview_spinner24, items);
             dropDown.setAdapter(adapter);
             dropDown.setOnItemSelectedListener(this);
@@ -194,14 +187,13 @@ public class VideoPlayerActivity extends AppCompatActivity implements AdapterVie
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
         String selected = parent.getItemAtPosition(pos).toString();
-        if (selected.equals("View information")){
+        if (selected.equals("View information")) {
             Intent intent = new Intent(VideoPlayerActivity.this, WebPageActivity.class);
-            if (creditCalled){
+            if (creditCalled) {
                 creditSelected = true;
                 intent.putExtra("link", eCommerceInfoArray.get(productNameArray.indexOf(parent.getItemAtPosition(0).toString())));
                 startActivity(intent);
-            }
-            else{
+            } else {
                 creditSelected = false;
                 String substring = parent.getItemAtPosition(0).toString().substring(14, parent.getItemAtPosition(0).toString().indexOf("?"));
                 intent.putExtra("link", eCommerceInfoArray.get(productNameArray.indexOf(substring)));
@@ -214,27 +206,27 @@ public class VideoPlayerActivity extends AppCompatActivity implements AdapterVie
         // Another interface callback
     }
 
-    private void showCredits(){
+    private void showCredits() {
         NestedScrollView scroll = findViewById(R.id.scroll);
         scroll.bringToFront();
         creditCalled = true;
     }
 
-    private void resetSelection(){
-        for (Spinner i : creditsText){
+    private void resetSelection() {
+        for (Spinner i : creditsText) {
             i.setSelection(0);
         }
     }
 
-    private void makeCreditsAppendix(){
+    private void makeCreditsAppendix() {
         LinearLayout credits = findViewById(R.id.credits);
 
-        for (int i = 0; i < productNameArray.size(); i++){
+        for (int i = 0; i < productNameArray.size(); i++) {
             Spinner product = new Spinner(VideoPlayerActivity.this);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.gravity = Gravity.CENTER;
-            params.setMargins(0,2,2,0);
+            params.setMargins(0, 2, 2, 0);
             product.setLayoutParams(params);
             product.setGravity(Gravity.CENTER);
             product.setBackgroundResource(R.drawable.bubble3);
@@ -255,4 +247,8 @@ public class VideoPlayerActivity extends AppCompatActivity implements AdapterVie
         showCredits();
     }
 
+    private void disableCreditsSpinners() {
+        LinearLayout credits = findViewById(R.id.credits);
+        credits.removeAllViews();
+    }
 }

@@ -8,6 +8,7 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Selection;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -249,11 +250,55 @@ public class MainActivity extends AppCompatActivity {
 
                 View view = logLayout.getChildAt(timeRowIndex);
 
-                EditText appearanceTimeStart = (EditText) view.findViewById(R.id.editText_added_time_start);
+                final EditText appearanceTimeStart = (EditText) view.findViewById(R.id.editText_added_time_start);
+
+                appearanceTimeStart.addTextChangedListener(new TextWatcher() {
+                    int first = 0;
+                    int second;
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count,
+                                                  int after) {
+                        // TODO Auto-generated method stub
+                    }
+                    @Override
+                    public void afterTextChanged(Editable text) {
+                        second = first;
+                        first = text.length();
+                        if(appearanceTimeStart.length()==2 && first>second){
+                            appearanceTimeStart.append(":");
+                        }
+                    }
+                });
+
                 appearanceTimeStartArray.add(appearanceTimeStart);
                 indexArray.add(productNameArray.size()-1);
 
-                EditText appearanceTimeEnd = (EditText) view.findViewById(R.id.editText_added_time_end);
+                final EditText appearanceTimeEnd = (EditText) view.findViewById(R.id.editText_added_time_end);
+
+                appearanceTimeEnd.addTextChangedListener(new TextWatcher() {
+                    int first = 0;
+                    int second;
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count,
+                                                  int after) {
+                        // TODO Auto-generated method stub
+                    }
+                    @Override
+                    public void afterTextChanged(Editable text) {
+                        second = first;
+                        first = text.length();
+                        if(appearanceTimeEnd.length()==2 && first>second){
+                            appearanceTimeEnd.append(":");
+                        }
+                    }
+                });
+
                 appearanceTimeEndArray.add(appearanceTimeEnd);
 
                 EditText quadrantNumber = (EditText) view.findViewById(R.id.editText_added_loc);
@@ -270,6 +315,9 @@ public class MainActivity extends AppCompatActivity {
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ConfirmationActivity.class);
+                startActivity(intent);
+                /*
                 boolean next = true;
                 for (int i = 0; i < productNameArray.size(); i++){
                     if (productNameArray.get(i).getText().toString().equals("") ||
@@ -280,6 +328,13 @@ public class MainActivity extends AppCompatActivity {
                         next = false;
                         break;
                     }
+
+                    Log.e("Product", productNameArray.get(i).getText().toString());
+                    Log.e("Link", eCommerceInfoArray.get(i).getText().toString());
+                    Log.e("Time start", appearanceTimeStartArray.get(i).getText().toString());
+                    Log.e("Time end", appearanceTimeEndArray.get(i).getText().toString());
+                    Log.e("Location", quadrantNumberArray.get(i).getText().toString());
+
                 }
                 if (next){
                     Intent intent = new Intent(MainActivity.this, ConfirmationActivity.class);
@@ -288,6 +343,7 @@ public class MainActivity extends AppCompatActivity {
                 else{
                     Toast.makeText(MainActivity.this, "Please log all required information", Toast.LENGTH_SHORT).show();
                 }
+                */
 
                 /*
                 if (true){
